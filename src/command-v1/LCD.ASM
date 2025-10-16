@@ -35,6 +35,15 @@ INIT8B:
 	call    ZAPISI
 	return
 ;********************************************************************************************************************
+LCD_SMAZ_RADEK
+	movlw .20
+	movwf TMP1
+	movlw ' '
+	call ZAPISD
+	decfsz TMP1,f
+	goto $-3	
+	return
+;********************************************************************************************************************
 LCD_1RADEK
 	movlw h'80'		; adresa 00h - 0
 	call ZAPISI
@@ -46,12 +55,12 @@ LCD_2RADEK
 	return
 ;**********************************************************
 LCD_3RADEK
-	movlw h'90'		; adresa 10h - 16
+	movlw h'94'		; adresa 10h - 16
 	call ZAPISI
 	return
 ;**********************************************************
 LCD_4RADEK
-	movlw h'd0'		; adresa 50h - 80
+	movlw h'd4'		; adresa 50h - 80
 	call ZAPISI
 	return
 ;**********************************************************

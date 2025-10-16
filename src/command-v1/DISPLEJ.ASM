@@ -1,149 +1,75 @@
-; ceske znaky na LCD: áíešcrzý
+	; znak0 = 40h	á
+	; znak1 = 48h	í
+	; znak2 = 50h	e s hackem
+	; znak3 = 58h	š
+	; znak4 = 60h	c s hackem
+	; znak5 = 68h	r s hackem
+	; znak6 = 70h	z s hackem
+	; znak7 = 78h	ý
 START
 	CALL INIT_CONFIG	; nakonfiguruje preruseni, WDT, USART, pull ups...
 	call INIT_PORT
 	call INIT_LCD
+;;;;;;;;;;;;;;;;;;;;;;;;;
+	; nastaveni jmena zakladniho adresare
+	INDF_BANK_3
+	movlw 0x91
+	movwf FSR
+	movlw 'R'
+	movwf INDF
+	incf FSR,f
 
-	MOVLW '1'
-	CALL ZAPISD
-	MOVLW '.'
-	CALL ZAPISD
-	MOVLW ' '
-	CALL ZAPISD
-	MOVLW .5
-	CALL ZAPISD
-	MOVLW .0
-	CALL ZAPISD
-	MOVLW 'd'
-	CALL ZAPISD
-	MOVLW 'e'
-	CALL ZAPISD
-	MOVLW 'k'
-	CALL ZAPISD
+	movlw 'O'
+	movwf INDF
+	incf FSR,f
 
-	call LCD_2RADEK
-	MOVLW '2'
-	CALL ZAPISD
-	MOVLW '.'
-	CALL ZAPISD
-	MOVLW ' '
-	CALL ZAPISD
-	MOVLW .5
-	CALL ZAPISD
-	MOVLW .0
-	CALL ZAPISD
-	MOVLW 'd'
-	CALL ZAPISD
-	MOVLW 'e'
-	CALL ZAPISD
-	MOVLW 'k'
-	CALL ZAPISD
+	movlw 'O'
+	movwf INDF
+	incf FSR,f
 
-	call LCD_3RADEK
-	MOVLW '3'
-	CALL ZAPISD
-	MOVLW '.'
-	CALL ZAPISD
-	MOVLW ' '
-	CALL ZAPISD
-	MOVLW .5
-	CALL ZAPISD
-	MOVLW .0
-	CALL ZAPISD
-	MOVLW 'd'
-	CALL ZAPISD
-	MOVLW 'e'
-	CALL ZAPISD
-	MOVLW 'k'
-	CALL ZAPISD
-
-	call LCD_4RADEK
-	MOVLW '4'
-	CALL ZAPISD
-	MOVLW '.'
-	CALL ZAPISD
-	MOVLW ' '
-	CALL ZAPISD
-	MOVLW .5
-	CALL ZAPISD
-	MOVLW .0
-	CALL ZAPISD
-	MOVLW 'd'
-	CALL ZAPISD
-	MOVLW 'e'
-	CALL ZAPISD
-	MOVLW 'k'
-	CALL ZAPISD
-
+	movlw 'T'
+	movwf INDF
+	incf FSR,f
+;;;;;;;;;;;;;;;;;;;;;;;;;
+	bsf LCD_PODSVICENI           
+	call HLASKA_PREPRCAVAC				
+	call HLASKA_AUTORI
 	call ZPOZ_1S
-	call ZPOZ_1S
-	call ZPOZ_1S
-	call ZPOZ_1S
-	call ZPOZ_1S
-	
 	call SMAZ_LCD
-	call LCD_1RADEK
-	; ted zobrazim na LCD ceske znaky....
-; ceske znaky na LCD: áíešcrzý
-	movlw	.4
-	call	ZAPISD
-	movlw	'e'
-	call	ZAPISD
-	movlw	's'
-	call	ZAPISD
-	movlw	'k'
-	call	ZAPISD
-	movlw	.2
-	call	ZAPISD
-	movlw	' '
-	call	ZAPISD
-	movlw	'z'
-	call	ZAPISD
-	movlw	'n'
-	call	ZAPISD
-	movlw	'a'
-	call	ZAPISD
-	movlw	'k'
-	call	ZAPISD
-	movlw	'y'
-	call	ZAPISD
-	movlw	':'
-	call	ZAPISD
+	call HLASKA_PREPRCAVAC
+	call HLASKA_DISK
+	call JMENODISKU
+	call ZPOZ_1S
 
-	call LCD_2RADEK
-	movlw	00h
-	call	ZAPISD
-	movlw	01h
-	call	ZAPISD
-	movlw	02h
-	call	ZAPISD
-	movlw	03h
-	call	ZAPISD
-	movlw	04h
-	call	ZAPISD
-	movlw	05h
-	call	ZAPISD
-	movlw	06h
-	call	ZAPISD
-	movlw	07h
-	call	ZAPISD
-
-	call ZPOZ_1S
-	call ZPOZ_1S
-	call ZPOZ_1S
-	call ZPOZ_1S
-	call ZPOZ_1S
-	
+	call NACTIODDILY
 	call SMAZ_LCD
-	call LCD_1RADEK
-	clrf TMP5
-	bsf LCD_PODSVICENI
-SMYCKA
-	movfw TMP5
-	call ZAPISD
-	call ZPOZ_300MS
-	incf TMP5,f	
-	GOTO SMYCKA
+	movfw TMP4
+	sublw .1
+	btfss STATUS,Z
+	call HLASKA_VICODDILU
+	CALL NASTAVODDIL
+	BTFSS STAV,7
+	CALL HLASKA_CHYBAODDILU
+
+
+	movlw h'80'		;prikayz pro prime hrani mp3
+	CALL WR_USART
+	movlw h'02'
+    CALL WR_USART
+	movlw h'00'
+	CALL WR_USART
+	movlw h'00'
+    CALL WR_USART
+	movlw h'00'
+    CALL WR_USART
+	movlw h'48'
+    CALL WR_USART
+	movlw h'00'
+    CALL WR_USART
+	CALL RD_USART
+
+	 
+    goto PREHRAVANI
 ;********************************************************************************************************************
 ; CEKACI SMYCKY
 ;	call ZPOZ_1S
@@ -177,14 +103,14 @@ INIT_CONFIG 	; nakonfiguruje preruseni, WDT, USART, pull ups....
 		; PS2:PS0: Prescaler Rate Select bits	111 = TMR0 Rate 1 : 256; WDT Rate 1 : 128
 	MOVWF OPTION_REG
 	
-	MOVLW b'00100000'	; povolime preruseni od USARTu (kdyz neco dostanem)
-	MOVLW b'00000000'	; povolime preruseni od USARTu (kdyz neco dostanem)
-	MOVWF PIE1	
-	MOVLW b'00000000'	; ostatni vnejsi preruseni vymaskujeme
-	MOVWF PIE2			
+;	MOVLW b'00100000'	; povolime preruseni od USARTu (kdyz neco dostanem)
+;	MOVLW b'00000000'	; povolime preruseni od USARTu (kdyz neco dostanem)
+;	MOVWF PIE1	
+;	MOVLW b'00000000'	; ostatni vnejsi preruseni vymaskujeme
+;	MOVWF PIE2			
 
-	MOVLW b'11000000' 	; povolime preruseni na vnejsi zarizeni (USART)				
-	MOVWF INTCON
+;	MOVLW b'11000000' 	; povolime preruseni na vnejsi zarizeni (USART)				
+;	MOVWF INTCON
 
 	MOVLW b'00100110'	;konfigurace USARTu (asynchronni, 8bit, bez parity, rychle - (BRGH = 1))
 	MOVWF TXSTA
@@ -232,6 +158,42 @@ ZPOZ_1S ;Delay 4999999 cycles
         GOTO $-5
 		RETURN
 ;**********************************************************
+ZPOZ_500MS
+;Variables: TMP2, TMP1, TMP0
+;Delay 110000 cycles
+        MOVLW 0x01  ;1 DEC
+        MOVWF TMP2
+        MOVLW 0x8F  ;143 DEC
+        MOVWF TMP1
+        MOVLW 0x0D9  ;217 DEC
+        MOVWF TMP0
+		CALL TEST_TLAC
+        DECFSZ TMP0,F
+        GOTO $-2
+        DECFSZ TMP1,F
+        GOTO $-4
+        DECFSZ TMP2,F
+        GOTO $-6
+;End of Delay
+		RETURN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;**********************************************************
+
 ZPOZ_2MS
 ;Variables: TMP1, TMP0
 ;Delay 10001 cycles
@@ -299,3 +261,93 @@ ZPOZ_50US
 ;End of Delay
 		RETURN
 ;**********************************************************
+WR_USART			; odesle slovo ve workingu po USARTu
+	BANK_1	
+	btfss TXSTA,1 
+	goto WR_USART	; cekame do chvile nez bude pripraven transmit buffer 
+	BANK_0	
+	movwf TXREG
+	return
+;**********************************************************
+RD_USART				; pocka nez prijde dato po usartu a pote ho umisti do Workingu
+	btfss PIR1,RCIF
+	goto RD_USART		; Pokud nejde o preruseni od USARTU, tak koncime...
+	movfw RCREG			; !!! vynulovat pøíznak !!!	
+	return	
+;**********************************************************¨
+USART_PRESKOC			; precte tolik bytu z usartu, jaka je hodnota v TMP1
+	CALL RD_USART
+    decfsz TMP1,f
+    GOTO $-2
+	return	
+;**********************************************************¨
+NACTIODDILY
+	bcf STAV,7
+	clrf TMP3			; kolikaty oddil ted prozkoumavame
+	clrf TMP4			; kolik oddilu obsahuje disk
+	INDF_BANK_3
+	movlw 0x90
+	movwf FSR
+
+NACTIODDILY_JEDENODDIL
+	movlw h'02'			; prikaz vrat oddil s FAT32
+	call WR_USART
+	movfw TMP3
+	call WR_USART
+	call RD_USART
+	movwf INDF
+	btfss INDF,0
+	goto NACTIODDILY_NEPLATNY
+	; prohlizeny zaznam obsahuje oddil s FATkou	
+
+	movlw .15
+	movwf TMP2
+	incf FSR,f
+	call RD_USART
+	movwf INDF
+	decfsz TMP2,f
+	goto $-4
+	
+	incf TMP4,f
+	goto NACTIODDILY_DALSI
+NACTIODDILY_NEPLATNY
+	; prohlizeny zaznam NEobsahuje oddil s FATkou	
+	movlw .15
+	movwf TMP1
+	call USART_PRESKOC
+NACTIODDILY_DALSI
+	incf TMP3,f
+	movfw TMP3
+	sublw .4
+	btfss STATUS,Z
+	goto NACTIODDILY_JEDENODDIL
+	return
+;**********************************************************¨
+NASTAVODDIL
+	;ODDIL 1
+	movlw .3
+	CALL WR_USART
+	INDF_BANK_3
+	movlw h'91'
+	movwf FSR
+	movfw INDF
+	CALL WR_USART
+	movlw h'92'
+	movwf FSR
+	movfw INDF
+	CALL WR_USART
+	movlw h'93'
+	movwf FSR
+	movfw INDF
+	CALL WR_USART
+	movlw h'94'
+	movwf FSR
+	movfw INDF
+	CALL WR_USART
+
+	CALL RD_USART
+	movwf TMP5
+	BcF	STAV,7
+	BTFSC TMP5,4
+	BSF	STAV,7
+ 	RETURN

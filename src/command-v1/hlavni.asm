@@ -30,6 +30,8 @@
  org 0x0010
 	include "lcd.asm"	; podprogramy pro praci s LCD
 	include "displej.asm"	; podprogramy na ovladani mp3 decoderu
+	include "menu.asm"	; podprogramy na ovladani mp3 decoderu
+	include "ovladani.asm" ;ovladani 	
 ;**********************************************************
  org 0x0000
   	goto START

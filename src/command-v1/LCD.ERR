@@ -1,0 +1,240 @@
+Error[150]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 4 : Labels must be defined in a code or data section when making an object file
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 5 : Symbol not previously defined (ZPOZ_20MS)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 5 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 6 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 6 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 7 : Symbol not previously defined (ZPOZ_20MS)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 7 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 8 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 8 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 9 : Symbol not previously defined (ZPOZ_20MS)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 9 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 10 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 10 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 11 : Symbol not previously defined (ZPOZ_20MS)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 11 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 12 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 12 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 13 : Symbol not previously defined (ZPOZ_20MS)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 13 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 14 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 14 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 16 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 16 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 18 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 19 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 19 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 20 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 21 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 21 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 22 : Symbol not previously defined (ZPOZ_2MS)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 22 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 23 : Executable code and data must be defined in an appropriate section
+Error[150]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 25 : Labels must be defined in a code or data section when making an object file
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 26 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 27 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 27 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 28 : Symbol not previously defined (ZPOZ_2MS)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 28 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 29 : Executable code and data must be defined in an appropriate section
+Error[150]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 31 : Labels must be defined in a code or data section when making an object file
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 32 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 33 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 33 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 34 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 35 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 35 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 36 : Executable code and data must be defined in an appropriate section
+Error[150]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 38 : Labels must be defined in a code or data section when making an object file
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 39 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 40 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 40 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 41 : Executable code and data must be defined in an appropriate section
+Error[150]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 43 : Labels must be defined in a code or data section when making an object file
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 44 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 45 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 45 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 46 : Executable code and data must be defined in an appropriate section
+Error[150]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 48 : Labels must be defined in a code or data section when making an object file
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 49 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 50 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 50 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 51 : Executable code and data must be defined in an appropriate section
+Error[150]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 53 : Labels must be defined in a code or data section when making an object file
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 54 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 55 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 55 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 56 : Executable code and data must be defined in an appropriate section
+Error[150]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 58 : Labels must be defined in a code or data section when making an object file
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 59 : Symbol not previously defined (TMP3)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 59 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 60 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 61 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 61 : Executable code and data must be defined in an appropriate section
+Error[150]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 62 : Labels must be defined in a code or data section when making an object file
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 63 : Symbol not previously defined (TMP3)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 63 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 64 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 64 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 65 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 65 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 66 : Symbol not previously defined (TMP3)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 66 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 67 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 68 : Symbol not previously defined (TMP3)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 68 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 69 : Symbol not previously defined (STATUS)
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 69 : Symbol not previously defined (Z)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 69 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 70 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 70 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 72 : Executable code and data must be defined in an appropriate section
+Error[150]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 74 : Labels must be defined in a code or data section when making an object file
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 75 : Symbol not previously defined (PCL)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 75 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 78 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 79 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 80 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 81 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 82 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 83 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 84 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 85 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 88 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 89 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 90 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 91 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 92 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 93 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 94 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 95 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 98 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 99 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 100 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 101 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 102 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 103 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 104 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 105 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 108 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 109 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 110 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 111 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 112 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 113 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 114 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 115 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 118 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 119 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 120 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 121 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 122 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 123 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 124 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 125 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 128 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 129 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 130 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 131 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 132 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 133 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 134 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 135 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 138 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 139 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 140 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 141 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 142 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 143 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 144 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 145 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 148 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 149 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 150 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 151 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 152 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 153 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 154 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 155 : Executable code and data must be defined in an appropriate section
+Error[150]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 157 : Labels must be defined in a code or data section when making an object file
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 159 : Symbol not previously defined (LCD_RS)
+Error[128]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 159 : Missing argument(s)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 159 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 160 : Symbol not previously defined (LCD_RW)
+Error[128]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 160 : Missing argument(s)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 160 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 161 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 162 : Symbol not previously defined (PORTD)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 162 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 163 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 164 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 165 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 166 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 167 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 168 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 169 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 170 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 171 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 172 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 173 : Symbol not previously defined (LCD_ENABLE)
+Error[128]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 173 : Missing argument(s)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 173 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 174 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 175 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 176 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 177 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 178 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 179 : Symbol not previously defined (LCD_ENABLE)
+Error[128]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 179 : Missing argument(s)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 179 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 180 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 181 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 182 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 183 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 184 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 185 : Symbol not previously defined (LCD_ENABLE)
+Error[128]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 185 : Missing argument(s)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 185 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 187 : Symbol not previously defined (ZPOZ_50US)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 187 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 188 : Executable code and data must be defined in an appropriate section
+Error[150]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 190 : Labels must be defined in a code or data section when making an object file
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 192 : Symbol not previously defined (LCD_RS)
+Error[128]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 192 : Missing argument(s)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 192 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 193 : Symbol not previously defined (LCD_RW)
+Error[128]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 193 : Missing argument(s)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 193 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 194 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 195 : Symbol not previously defined (PORTD)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 195 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 196 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 197 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 198 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 199 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 200 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 201 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 202 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 203 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 204 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 205 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 206 : Symbol not previously defined (LCD_ENABLE)
+Error[128]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 206 : Missing argument(s)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 206 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 207 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 208 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 209 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 210 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 211 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 212 : Symbol not previously defined (LCD_ENABLE)
+Error[128]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 212 : Missing argument(s)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 212 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 213 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 214 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 215 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 216 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 217 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 220 : Symbol not previously defined (ZPOZ_50US)
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 220 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 221 : Executable code and data must be defined in an appropriate section
+Error[129]   C:\PROJEKTY-PIC\ET4A\PREPRCAVAC\PROGBOGA\LCD.ASM 223 : Expected (END)
