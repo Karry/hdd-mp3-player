@@ -227,7 +227,7 @@ ROOT_DIR_CL2	equ 0x049
 ROOT_DIR_CL3	equ 0x04A
 ROOT_DIR_CL4	equ 0x04B
 
-CLUSTER_SIZE	equ 0x03B		; velikost clusteru (pocet sektoru na claster)
+CLUSTER_SIZE	equ 0x04C		; velikost clusteru (pocet sektoru na claster)
 
 ;**********************************************************
 ; registry pro potreby preruseni (jsou totiz dostupne odkudkoliv)

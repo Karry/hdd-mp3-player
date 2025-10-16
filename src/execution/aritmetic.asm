@@ -189,20 +189,21 @@ POSUNDOPRAVA	; X := X div 2 , PRETECENI := X mod 2
 			; musi se nastavit BANK_1 a vymazat PRETECENI!!!
 			; (je pouze pro pouziti v nasobicich podprogramech)
 			; pouzivat jen POSUNDOPRAVA_1, 2, 3, 4 
+	bcf STATUS,C
 	rrf OPERAND_X4,F
 	rrf OPERAND_X3,F
 	rrf OPERAND_X2,F
 	rrf OPERAND_X1,F
-	rrf PRETECENI,F	
 	return
 ;**********************************************************
 POSUNDOPRAVA_1	; X := X div 2
 				; PRETECENI := X mod 2
 	BANK_1
-	clrf PRETECENI
-	bcf STATUS,C
+	movfw OPERAND_X1
+	andlw b'00000001'
+	movwf PRETECENI		; PRETECENI := X mod 2
 	
-	call POSUNDOLEVA
+	call POSUNDOPRAVA
 
 	BANK_0
 	return
@@ -210,11 +211,12 @@ POSUNDOPRAVA_1	; X := X div 2
 POSUNDOPRAVA_2	; X := X div 4
 				; PRETECENI := X mod 4
 	BANK_1
-	clrf PRETECENI
-	bcf STATUS,C
+	movfw OPERAND_X1
+	andlw b'00000011'
+	movwf PRETECENI		; PRETECENI := X mod 4
 	
-	call POSUNDOLEVA
-	call POSUNDOLEVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
 
 	BANK_0
 	return
@@ -222,12 +224,13 @@ POSUNDOPRAVA_2	; X := X div 4
 POSUNDOPRAVA_3	; X := X div 8
 				; PRETECENI := X mod 8
 	BANK_1
-	clrf PRETECENI
-	bcf STATUS,C
+	movfw OPERAND_X1
+	andlw b'00000111'
+	movwf PRETECENI		; PRETECENI := X mod 8
 	
-	call POSUNDOLEVA
-	call POSUNDOLEVA
-	call POSUNDOLEVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
 
 	BANK_0
 	return
@@ -235,13 +238,14 @@ POSUNDOPRAVA_3	; X := X div 8
 POSUNDOPRAVA_4	; X := X div 16
 				; PRETECENI := X mod 16
 	BANK_1
-	clrf PRETECENI
-	bcf STATUS,C
+	movfw OPERAND_X1
+	andlw b'00001111'
+	movwf PRETECENI		; PRETECENI := X mod 16
 	
-	call POSUNDOLEVA
-	call POSUNDOLEVA
-	call POSUNDOLEVA
-	call POSUNDOLEVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
 
 	BANK_0
 	return
@@ -249,14 +253,33 @@ POSUNDOPRAVA_4	; X := X div 16
 POSUNDOPRAVA_5	; X := X div 32
 				; PRETECENI := X mod 32
 	BANK_1
-	clrf PRETECENI
-	bcf STATUS,C
+	movfw OPERAND_X1
+	andlw b'00011111'
+	movwf PRETECENI		; PRETECENI := X mod 32
 	
-	call POSUNDOLEVA
-	call POSUNDOLEVA
-	call POSUNDOLEVA
-	call POSUNDOLEVA
-	call POSUNDOLEVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
+
+	BANK_0
+	return
+;**********************************************************
+POSUNDOPRAVA_7	; X := X div 128
+				; PRETECENI := X mod 128
+	BANK_1
+	movfw OPERAND_X1
+	andlw b'01111111'
+	movwf PRETECENI		; PRETECENI := X mod 128
+	
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
 
 	BANK_0
 	return

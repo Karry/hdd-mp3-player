@@ -196,6 +196,7 @@ READ_DATA
 ;**********************************************************
 ; stava se, ze obcas nas zajima jen cast vracenych dat, tak ty ktere nas nezajimaji, preskocime
 ; ocakava parametr v registru TEMP1 (kolik slov ma preskocit)
+; pokud TEMP1 = 0 tak preskoci 256 slov
 PRESKOC
 	call READ_DATA
 	decfsz TEMP1,F

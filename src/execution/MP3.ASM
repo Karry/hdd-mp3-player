@@ -1,10 +1,23 @@
-c;********************************************************************
-; Zkusebni program na cteni dat z ATA disku.                      
-; Casem mozna bude prekousavat FAT32 a prehravat z disku MP3.
-; To je zatim jen ale sen
-;                                                                
-; srpen 2005 - zari 2005 Karry - lukas.karas@centrum.cz
-;********************************************************************
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+;  MP3 PREPRCAVAC
+; ================
+; 
+; Program mp3 prehravace pouzivajici jako zdroj dat ATA disk.
+; 
+; Umi identifikovat disk, precist libovolny sektor, v MBR  najit oddily se systemem souboru FAT32, nacist spousteci zaznam FAT32, 
+; prevadet cislo clusteru na LBA adresu, najit dalsi cluster v alokacnim retezci.
+;
+; dodelat:
+;	- Prijem dat po USARTU, udelat software interaktivni (aby na pozadani vypisoval adresare, clustry...)
+;	- Rozchodit komunikaci s mp3 dekoderem (az jej koupime)
+;	- pak uz jen vychytavky...
+;
+; srpen 2005 - rijen 2005 Karry - lukas.karas@centrum.cz
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 
 ;**********************************************************
 ;   HLAVNI SOUBOR 
@@ -14,12 +27,11 @@ c;********************************************************************
 	LIST    	p=PIC16f877,C=132,n=60
 	__CONFIG	_WDT_OFF & _HS_OSC & _PWRTE_OFF & _BODEN_OFF & _LVP_OFF 
 			; LVP_OFF = RB3 jako digitalni I/O
-	errorlevel -302      ; vypnuti Message [302]: Register in operand not in
-                      ; bank 0.
-                      ; ! zjednoduseni vypisu, ale riziko prehlednuti chyby
+	errorlevel -302		; vypnuti Message [302]: Register in operand not in bank 0.
+						; ! zjednoduseni vypisu, ale riziko prehlednuti chyby
 
 	include "P16F877.inc" 	; definice blbosti kolem procesoru
-	include "mp3.inc" 		; definice promennych a portu
+	include "mp3.inc" 		; definice promennych, konstant a portu
 
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -47,14 +59,13 @@ START
 	call DELAY_25us 	; zezacatku dost kolisa...
 	call DELAY_25us
 
-	call POZDRAV
+	call POZDRAV				; abych se u kompu nenudil
 
 	;call MP3_SOFT_RESET
 	call ATA_RESET				; resetujeme disk, koukneme zda tu nejakej mame
 	btfss ATA_ATTRIBUTES,ATA_OK
-	;goto $-2					;pokud neni pripojen disk, tak se jej pokousime neustale najit...
-	nop
-	call DELAY_500ms
+	goto $-2					; pokud neni pripojen disk, tak se jej pokousime neustale najit...
+	nop							; ...pokud tam zadny disk neni, tak bychom se stejne ani sem nemeli dostat, protoze budem porad cekat na WAIT_FOR_READY
 	call IDENTIFY_DEVICE		; koukneme co disk umi
 	call ODESLI_MODEL_NUMBER	; odesleme si jmeno disku 
 
@@ -62,26 +73,59 @@ START
 	call SCAN_MBR				; najdeme oddily s FAT32 a jejich seznam dame do bufferu 2
 	call ODESLI_BUFFER2			; odesleme si seznam oddilu (FAT32) s adresami
 
+	call DELAY_500ms
+;	movlw h'b6'
+;	movwf LBA1
+;	movlw h'3c'
+;	movwf LBA2
+;	movlw h'4c'
+;	movwf LBA3
+;	movlw h'00'
+;	movwf LBA4					; LBA adresa 2. oddilu
+
 	clrf LBA4
 	clrf LBA3
 	clrf LBA2
 	movlw .63
 	movwf LBA1					; LBA adresa 1. oddilu
 
-	call DELAY_500ms
 	call NACTI_FAT32			; nacte parametry zvoleneho oddilu
 	clrf CLUSTER4
 	clrf CLUSTER3
 	clrf CLUSTER2
-	movlw .2
-	movwf CLUSTER1
+	clrf CLUSTER1				; vezmeme cluster 0 -> root adresar
+
+;	; vezmeme cluster 0x00060A5C -> slozka WINDOWS
+;	movlw 0x00
+;	movwf CLUSTER4
+;	movlw 0x06
+;	movwf CLUSTER3
+;	movlw 0x0a
+;	movwf CLUSTER2
+;	movlw 0x5c
+;	movwf CLUSTER1
+
+	clrf POZICE
 	call CLUSTER_TO_LBA			; zjistime skutecnou polohu dat na disku
 	movlw 1
 	movwf SECTOR_C
 	call READ_SECTOR			; dame prikaz je precist
-	movlw .255
+	movlw .0					; 0 -> preskoci 256
 	movwf TEMP1
 	call ODESLI_DATA			; odesleme USARTem
+
+;	call NEXT_CLUSTER			; jen tak ze srandy se kouknem kde adresar pokracuje
+;	movfw POZICE
+;	call WR_USART
+;	movfw CLUSTER1
+;	call WR_USART
+;	movfw CLUSTER2
+;	call WR_USART
+;	movfw CLUSTER3
+;	call WR_USART
+;	movfw CLUSTER4
+;	call WR_USART
+
 
 BIG_LOOP
 	bsf ERROR_LED
@@ -91,9 +135,9 @@ BIG_LOOP
 	call DELAY_500ms
 	
 	movlw 'O'
-	call WR_USART
+	;call WR_USART
 	movlw 'K'
-	call WR_USART
+	;call WR_USART
 
 	goto BIG_LOOP
 ;**********************************************************

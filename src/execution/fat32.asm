@@ -505,18 +505,42 @@ CLUSTER_TO_LBA
 	movwf INDF
 	incf FSR,F
 
+	; Nejdriv se koukneme zda-li CLUSTER se nerovna 0, to bychom pak vratily 
+	; pozici na prvnim clusteru root adresare...
+	call NULA						; if (X =  0) then PRETECENI := 0 else PRETECENI := 1
+	BANK_1
+	btfsc PRETECENI,0
+	goto CLUSTER_TO_LBA_NO_ROOT
+	BANK_0
+	movlw 0xA0					; OPERAND_X
+	movwf FSR
+	movfw ROOT_DIR_CL1
+	movwf INDF
+	incf FSR,F
+	movfw ROOT_DIR_CL2
+	movwf INDF
+	incf FSR,F
+	movfw ROOT_DIR_CL3
+	movwf INDF
+	incf FSR,F
+	movfw ROOT_DIR_CL4
+	movwf INDF
+	incf FSR,F
+		
+CLUSTER_TO_LBA_NO_ROOT
+	BANK_0
 	; CLUSTER_SIZE je vzdy exponentem 2 (1,2,4,8,16,32), proto tento jednoduchy zapis
 	btfsc CLUSTER_SIZE,1		; 2
 	call POSUNDOLEVA_1			; X := X * 2
 	btfsc CLUSTER_SIZE,2		; 4
 	call POSUNDOLEVA_2			; X := X * 4
 	btfsc CLUSTER_SIZE,3		; 8
-	call POSUNDOLEVA_2			; X := X * 8
+	call POSUNDOLEVA_3			; X := X * 8
 	btfsc CLUSTER_SIZE,4		; 16
-	call POSUNDOLEVA_2			; X := X * 4
+	call POSUNDOLEVA_4			; X := X * 4
 	btfsc CLUSTER_SIZE,5		; 32
-	call POSUNDOLEVA_2			; X := X * 32
-
+	call POSUNDOLEVA_5			; X := X * 32
+	
 	movfw POCATEK_DAT1
 	movwf INDF					; OPERAND_Y
 	incf FSR,F
@@ -566,5 +590,163 @@ CLUSTER_TO_LBA
 	movwf LBA4
 	incf FSR,F
 	
+	return
+;**************************************************************************
+NEXT_CLUSTER
+	; V CLUSTER prijme cislo clusteru, podiva se do FATky na disku a v CLUSTER vrati 
+	; hodnotu clustru, ktery nasleduje v retezu clusteru.
+	; Pokud pozadovany cluster byl posledni v retezu vrati v reg. POZICE konstantu FFh
+	; Pokud soucasny cluster je prazdny (coz by se stat nemelo) vrati taky v POZICE FFh
+	; Jinak, pokud s vse povede, dame do POZICE 0
+	
+	clrf POZICE
+	; LBA := [(CLUSTER * 4) / 512 ] + POCATEK_FAT
+	; LBA := ( CLUSTER / 128 ) + POCATEK_FAT
+	; offset := CLUSTER mod 128 
+	INDF_BANK_1 				; neprime adresovani do banku1
+	movlw 0xA0					; OPERAND_X
+	movwf FSR
+	movfw CLUSTER1
+	movwf INDF
+	incf FSR,F
+	movfw CLUSTER2
+	movwf INDF
+	incf FSR,F
+	movfw CLUSTER3
+	movwf INDF
+	incf FSR,F
+	movfw CLUSTER4
+	movwf INDF
+
+	; Nejdriv se koukneme zda-li CLUSTER se nerovna 0, to pak musime jako cluster brat prvni cluster ROOT adr.
+	call NULA						; if (X =  0) then PRETECENI := 0 else PRETECENI := 1
+	BANK_1
+	btfsc PRETECENI,0
+	goto NEXT_CLUSTER_NO_ROOT
+	BANK_0
+	movlw 0xA0					; OPERAND_X
+	movwf FSR
+	movfw ROOT_DIR_CL1
+	movwf INDF
+	incf FSR,F
+	movfw ROOT_DIR_CL2
+	movwf INDF
+	incf FSR,F
+	movfw ROOT_DIR_CL3
+	movwf INDF
+	incf FSR,F
+	movfw ROOT_DIR_CL4
+	movwf INDF
+	incf FSR,F
+		
+NEXT_CLUSTER_NO_ROOT
+	BANK_0
+	
+	call POSUNDOPRAVA_7	; X := X div 128  ; PRETECENI := X mod 128
+	movlw 0xAC					; PRETECENI
+	movwf FSR
+	movfw INDF
+	movwf TEMP1
+
+	movlw 0xA4					; OPERAND_Y
+	movwf FSR
+	movfw POCATEK_FAT1
+	movwf INDF
+	incf FSR,F
+	movfw POCATEK_FAT2
+	movwf INDF
+	incf FSR,F
+	movfw POCATEK_FAT3
+	movwf INDF
+	incf FSR,F
+	movfw POCATEK_FAT4
+	movwf INDF
+	incf FSR,F
+
+	call SOUCET
+	
+	movfw INDF					; FSR ukazuje na VYSLEDEK
+	movwf LBA1
+	incf FSR,F
+	movfw INDF
+	movwf LBA2
+	incf FSR,F
+	movfw INDF
+	movwf LBA3
+	incf FSR,F
+	movfw INDF
+	movwf LBA4
+	incf FSR,F
+	
+	clrf FEATURES
+	movlw .1
+	movwf SECTOR_C
+	call READ_SECTOR
+
+	bcf STATUS,C				; TEMP1 := CLUSTER mod 128 (TEMP1 je v intervalu 0..127)
+	rlf TEMP1,W					; W := TEMP1 * 2
+	movwf TEMP1
+	andlw h'FF'
+	btfss STATUS,Z
+	call PRESKOC				; pokud je zaznam o clusteru na nulte pozici v sektoru, nic preskakovat nebudem...
+
+
+	movlw 0xA0					; OPERAND_X
+	movwf FSR		
+	call READ_DATA	
+	movfw DATA_L
+	movwf INDF
+	movwf CLUSTER1
+	incf FSR,F
+	movfw DATA_H
+	movwf INDF
+	movwf CLUSTER2
+	incf FSR,F	
+	call READ_DATA	
+	movfw DATA_L
+	movwf INDF
+	movwf CLUSTER3
+	incf FSR,F
+	movfw DATA_H
+	movwf INDF
+	movwf CLUSTER4
+	incf FSR,F
+
+	; ted mame hodnotu clusteru ktery nam byl na pocatku predan v reg. CLUSTER, podivame se zda nebyl nasledkem 
+	; nejake chyby prazdny, nebo zda neni posledni v alokacnim retezu
+	call NULA						; if (OPERAND_X =  0) then PRETECENI := 0 else PRETECENI := 1
+	BANK_1
+	btfsc PRETECENI,0
+	goto NEXT_CLUSTER_NEPRAZDNY
+	BANK_0
+	movlw h'FF'
+	movwf POZICE
+	goto NEXT_CLUSTER_KONEC			; Nevim sice jak by se toto mohlo stat, ale cluster byl prazdny, proto neni jiz co resit..
+NEXT_CLUSTER_NEPRAZDNY
+	BANK_0
+	; Ted se podivame zda cluster nebyl posledni v alokacnim retezu -> cluster >= 0x0FFFFFF7
+	movlw 0xF7
+	movwf INDF
+	incf FSR,F
+	movlw 0xFF
+	movwf INDF
+	incf FSR,F
+	movlw 0xFF
+	movwf INDF
+	incf FSR,F
+	movlw 0x0F
+	movwf INDF
+	incf FSR,F
+	
+	call ROZDIL						; VYSLEDEK := X - Y 
+									; pri podteceni PRETECENI = 1 ( VYSLEDEK < 0 => PRETECENI = 1 )
+	BANK_1
+	btfsc PRETECENI,0
+	goto NEXT_CLUSTER_KONEC
+	BANK_0
+	movlw h'FF'
+	movwf POZICE
+NEXT_CLUSTER_KONEC
+	BANK_0
 	return
 ;**************************************************************************
