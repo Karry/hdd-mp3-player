@@ -11,6 +11,9 @@ START
 	call INIT_PORT		; konfigurace vstupu a vystupu (trisy)
 	call INIT_LCD		; init LCD displeje (vcetne definovani 8 ceskych znaku)
 
+	movfw RCREG			; 
+	movfw RCREG			; vyprazdnime buffer usartu (po zapnuti obcas prijme nejakou blbost)
+
 	call HLASKA_PREPRCAVAC
 	call HLASKA_AUTORI
 	call ZPOZ_1S
@@ -22,65 +25,67 @@ START
 	call ZPOZ_1S
 
 	call NACTIODDILY
-	call SMAZ_LCD
 	movfw TMP4
 	sublw .1
 	btfsc STATUS,Z
-	goto $+3
-	call VYBER_ODDILU
 	goto $+4
+	call VYBER_ODDILU
+	bsf STAV,7
+	goto ODDIL_JE_NACTEN
 	CALL NASTAVODDIL			; pokud je na disku pouze jeden oddil, nastavime ten prvni
-	BTFSS STAV,7
+	BTFSC STAV,7
+	goto ODDIL_JE_NACTEN
 	CALL HLASKA_CHYBAODDILU
-
-	call ZAKLADNI_NASTAVENI	 
-	goto PRUZKUMNIK
-
 	nop
 	goto $-1
-;;;;;;;;;;;;;;;;;;;;;;;;;
-	movlw h'80'		; prikaz pro prime hrani mp3
-	CALL WR_USART
-	movlw h'02'
-    CALL WR_USART
-	movlw h'00'
-	CALL WR_USART
-	movlw h'00'
-    CALL WR_USART
-	movlw h'00'
-    CALL WR_USART
-	movlw h'48'
-    CALL WR_USART
-	movlw h'00'
-    CALL WR_USART
-	CALL RD_USART
+ODDIL_JE_NACTEN
+	call ZAKLADNI_NASTAVENI	 
 
-	; nastaveni jmena zakladniho adresare
 	INDF_BANK_3
 	movlw 0x91
 	movwf FSR
 	movlw 'R'
 	movwf INDF
 	incf FSR,f
-
 	movlw 'O'
 	movwf INDF
 	incf FSR,f
-
 	movlw 'O'
 	movwf INDF
 	incf FSR,f
-
 	movlw 'T'
 	movwf INDF
 	incf FSR,f
-
 	movlw h'FF'
 	movwf INDF
-;;;;;;;;;;;;;;;;;;;;;;;;;
+	; nastaveni jmena zakladniho adresare
+	clrf PREH_ADR_CL1
+	clrf PREH_ADR_CL2
+	clrf PREH_ADR_CL3
+	clrf PREH_ADR_CL4
 
-	call ZAKLADNI_NASTAVENI	 
-    goto PREHRAVANI
+	goto PRUZKUMNIK
+
+;	nop
+;	goto $-1
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;	movlw h'80'		; prikaz pro prime hrani mp3
+;	CALL WR_USART
+;	movlw h'02'
+;	CALL WR_USART
+;	movlw h'00'
+;	CALL WR_USART
+;	movlw h'00'
+;	CALL WR_USART
+;	movlw h'00'
+;	CALL WR_USART
+;	movlw h'48'
+;	CALL WR_USART
+;	movlw h'00'
+;	CALL WR_USART
+;	CALL RD_USART
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;	goto PREHRAVANI
 ;********************************************************************************************************************
 ; CEKACI SMYCKY
 ;	call ZPOZ_1S
@@ -94,7 +99,7 @@ INIT_PORT
 	MOVWF TRISA
 	MOVLW B'11111000'
     MOVWF TRISB
-	MOVLW B'11011111'
+	MOVLW B'11001111'
 	MOVWF TRISC
 	MOVLW B'00000000'
 	MOVWF TRISD
@@ -104,8 +109,8 @@ INIT_PORT
 	RETURN
 ;**********************************************************
 INIT_CONFIG 	; nakonfiguruje preruseni, WDT, USART, pull ups....
-	MOVLW b'00001001'	; Configure for external clock,
-	MOVWF T1CON			; Asynchronous operation, external oscillator
+	MOVLW b'00000001'	; 
+	MOVWF T1CON			; 
 
 	movlw h'FF'
 	movwf TMR1H
@@ -156,6 +161,7 @@ INIT_CONFIG 	; nakonfiguruje preruseni, WDT, USART, pull ups....
 	movwf AKTUAL_HLAS
 	bsf STAV,4
 	bcf STAV,5			; zapneme podsviceni
+	clrf EKVALIZER		; vypneme ekvalizer
 	RETURN
 ;**********************************************************
 ;**********************************************************
@@ -371,11 +377,16 @@ USART_PRESKOC			; precte tolik bytu z usartu, jaka je hodnota v TMP1
 	return	
 ;**********************************************************¨
 NACTIODDILY
+; nacte seznam oddilu do bufferu2
+	PROG_PAGE_1
+	call CLEAR_BUFFER2
+	PROG_PAGE_0
+
 	bcf STAV,7
 	clrf TMP3			; kolikaty oddil ted prozkoumavame
 	clrf TMP4			; kolik oddilu obsahuje disk
-	INDF_BANK_3
-	movlw 0x90
+	INDF_BANK_2
+	movlw 0x10
 	movwf FSR
 
 NACTIODDILY_JEDENODDIL
@@ -388,12 +399,13 @@ NACTIODDILY_JEDENODDIL
 	btfss INDF,0
 	goto NACTIODDILY_NEPLATNY
 	; prohlizeny zaznam obsahuje oddil s FATkou	
+	incf FSR,f
 
 	movlw .15
 	movwf TMP2
-	incf FSR,f
 	call RD_USART
 	movwf INDF
+	incf FSR,f
 	decfsz TMP2,f
 	goto $-4
 	
@@ -416,21 +428,18 @@ NASTAVODDIL
 	;ODDIL 1
 	movlw .3
 	CALL WR_USART
-	INDF_BANK_3
-	movlw h'91'
+	INDF_BANK_2
+	movlw h'11'
 	movwf FSR
 	movfw INDF
 	CALL WR_USART
-	movlw h'92'
-	movwf FSR
+	incf FSR,f
 	movfw INDF
 	CALL WR_USART
-	movlw h'93'
-	movwf FSR
+	incf FSR,f
 	movfw INDF
 	CALL WR_USART
-	movlw h'94'
-	movwf FSR
+	incf FSR,f
 	movfw INDF
 	CALL WR_USART
 
@@ -455,4 +464,4 @@ PREVED_ZNAK
 	BANK_0
 
 	return
-;**********************************************************¨
+;**********************************************************

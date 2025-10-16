@@ -45,6 +45,14 @@ COUNTER			equ 0X036
 PRETECENI		equ 0X037
 VYSLEDEK1		equ 0X038
 VYSLEDEK2		equ 0X039
+
+EKVALIZER		equ 0x03A
+;				equ 0x03B
+;				equ 0x03C
+;				equ 0x03D
+;				equ 0x03E
+;				equ 0x03F
+
 POMOCNA1		equ 0X040
 POMOCNA2		equ 0X041	; REGISTRY PRO ARITMETICKE OPERACE
 
@@ -68,6 +76,55 @@ TLACITKA_PRED	equ 0x045	; stav tlacitek pri predchozim testovanim.
 							; pokud nekter bit vynulujeme, muze byt podrzeni tlacitka brano 
 							; jako nekolik stisku
 
+; registry pro uchovavani informaci pri prochazeni slozkami
+PROCHAZENY_ADR1	equ 0x046
+PROCHAZENY_ADR2	equ 0x047
+PROCHAZENY_ADR3	equ 0x048
+PROCHAZENY_ADR4	equ 0x049
+
+AKTUALNI_ZAZNAM1 equ 0x04A
+AKTUALNI_ZAZNAM2 equ 0x04B
+
+ZPUSOB			equ 0x04C		; 0 - hledame dolu
+								; 1 - hledame nahoru
+;				equ 0x04D
+;				equ 0x04E
+;				equ 0x04F
+
+ZAZNAM1_TYP		equ 0x050		; poloha techto registru se nemi menit !!!!!!
+ZAZNAM1_CL1		equ 0x051		; je k nim pristupovano pres neprime adresovani
+ZAZNAM1_CL2		equ 0x052
+ZAZNAM1_CL3		equ 0x053
+ZAZNAM1_CL4		equ 0x054
+ZAZNAM1_CIS1	equ 0x055
+ZAZNAM1_CIS2	equ 0x056
+;				equ 0x057
+
+ZAZNAM2_TYP		equ 0x058
+ZAZNAM2_CL1		equ 0x059
+ZAZNAM2_CL2		equ 0x05A
+ZAZNAM2_CL3		equ 0x05B
+ZAZNAM2_CL4		equ 0x05C
+ZAZNAM2_CIS1	equ 0x05D
+ZAZNAM2_CIS2	equ 0x05E
+;				equ 0x05F
+
+ZAZNAM3_TYP		equ 0x060
+ZAZNAM3_CL1		equ 0x061
+ZAZNAM3_CL2		equ 0x062
+ZAZNAM3_CL3		equ 0x063
+ZAZNAM3_CL4		equ 0x064
+ZAZNAM3_CIS1	equ 0x065
+ZAZNAM3_CIS2	equ 0x066
+
+ADRESAR1		equ 0x067
+ADRESAR2		equ 0x068
+ADRESAR3		equ 0x069
+ADRESAR4		equ 0x06A
+ZAZNAM1			equ 0x06B
+ZAZNAM2			equ 0x06C
+AUDATA1			equ 0x06D
+AUDATA2			equ 0x06E
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ; registry pro potreby preruseni
 TEMP_WORKING	equ 0x070

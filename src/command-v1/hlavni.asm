@@ -11,12 +11,13 @@
 
 
 ;**********************************************************
-;   VERZE 0.2
+;   VERZE 0.3
 ;**********************************************************
 	LIST    	p=PIC16f877,C=132,n=60
 	__CONFIG	_WDT_OFF & _HS_OSC & _PWRTE_OFF & _BODEN_OFF & _LVP_OFF 
 			; LVP_OFF = RB3 jako digitalni I/O
 	errorlevel -302	; vypnuti Message [302]: Register in operand not in bank 0.
+	errorlevel -306	; vypnuti Message[306] : Crossing page boundary -- ensure page bits are set.
 						; ! zjednoduseni vypisu, ale riziko prehlednuti chyby
 ;**********************************************************
 	include "eeprom.inc" 	; definice blbosti kolem procesoru
@@ -49,5 +50,12 @@
 	BANK_0
 	INDF_BANK_0
 	goto INTERRUPT
+ org 0x0800					; PAGE 1
+	include "ostatni.asm"	; par podprogramu, ktere se casto nepouzivaji a v prvni strance by zabirali misto
+	include "menu2.asm"		; menu
+ org 0x1000					; PAGE 2
+	nop						; (aby nas prekladac varoval, az dosahneme teto stranky)
+ org 0x1800					; PAGE 3
+	nop						; (aby nas prekladac varoval, az dosahneme teto stranky)
 ;**********************************************************
 	END

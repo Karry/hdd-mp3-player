@@ -1,3 +1,4 @@
+
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ; smycka prehravani (zobrazuje nazev souboru a slozky, odehrany cas a dalsi blbosti...)
 
@@ -22,102 +23,27 @@ PREHRAVANI
 	CALL USART_PRESKOC
     CALL RD_USART
 	MOVWF PREH_ADR_CL1 	; cl1,cl2,cl3,cl4....4bitove cislo,ktere urcuje 1. cluster adresare
+	movwf ADRESAR1
 	CALL RD_USART
     MOVWF PREH_ADR_CL2
+	movwf ADRESAR2
 	CALL RD_USART
     MOVWF PREH_ADR_CL3
+	movwf ADRESAR3
 	CALL RD_USART
 	MOVWF PREH_ADR_CL4
+	movwf ADRESAR4
 	CALL RD_USART
 	MOVWF PREH_SOUB_1   ; PREH_SOUB_1,PREH_SOUB_2.....cislo zaznamu obsahujici prehravany soubor
+	movwf ZAZNAM1
 	CALL RD_USART
 	MOVWF PREH_SOUB_2
+	movwf ZAZNAM2
 	
 	
-	MOVLW h'0A'   		; zjisteni dlouheho nazvu souboru....
-    CALL WR_USART
-	MOVFW PREH_ADR_CL1
-	CALL WR_USART
-	MOVFW PREH_ADR_CL2
-	CALL WR_USART
-	MOVFW PREH_ADR_CL3
-	CALL WR_USART
-	MOVFW PREH_ADR_CL4
-	CALL WR_USART
-	MOVFW PREH_SOUB_1
-	CALL WR_USART
-	MOVFW PREH_SOUB_2
-	CALL WR_USART
-
-	INDF_BANK_2
-	MOVLW h'10'
-	MOVWF FSR
-	MOVLW .66
-	MOVWF TMP1
-
-	CALL RD_USART
-	call PREVED_ZNAK
-	MOVWF INDF
-	INCF FSR,F
-	DECFSZ TMP1,F
-	GOTO $-5
-
-	movlw h'10'
-	movwf FSR
-	movfw INDF
-	sublw .1
-	btfss STATUS,Z
-	goto PREHRAVANI_NENIDLOUHYNAZEV		; pokud stavovy byte na prikaz 0Ah neni 01h nebyl precten dlouhy nazev
-	incf FSR,f
-	movfw INDF
-	sublw h'FF'							; kdyz prvni znak nazvu je 0 (po prevodu FFh) neni take dlouhy nazev
-	btfss STATUS,Z
-	goto PREHRAVANI_JELOUHYNAZEV
-PREHRAVANI_NENIDLOUHYNAZEV				; budeme si muset vystacit s kratkym nazvem
-	movlw h'05'
-	call WR_USART
-	MOVFW PREH_ADR_CL1
-	CALL WR_USART
-	MOVFW PREH_ADR_CL2
-	CALL WR_USART
-	MOVFW PREH_ADR_CL3
-	CALL WR_USART
-	MOVFW PREH_ADR_CL4
-	CALL WR_USART
-	MOVFW PREH_SOUB_1
-	CALL WR_USART
-	MOVFW PREH_SOUB_2
-	CALL WR_USART
-
-	MOVLW h'10'
-	MOVWF FSR
-	MOVLW .9
-	MOVWF TMP1
-
-	CALL RD_USART
-	;call PREVED_ZNAK
-	MOVWF INDF
-	INCF FSR,F
-	DECFSZ TMP1,F
-	GOTO $-4
-	
-	movlw '.'
-	MOVWF INDF
-	INCF FSR,F
-	MOVLW .3
-	MOVWF TMP1
-
-	CALL RD_USART
-	;call PREVED_ZNAK
-	MOVWF INDF
-	INCF FSR,F
-	DECFSZ TMP1,F
-	GOTO $-4
-
-	MOVLW .4
-	MOVWF TMP1
-	call USART_PRESKOC
-PREHRAVANI_JELOUHYNAZEV
+	PROG_PAGE_1
+	call NACTI_DLOUHY_NAZEV
+	PROG_PAGE_0
 	
 	 	
 	movlw h'11'
@@ -127,7 +53,8 @@ PREHRAVANI_JELOUHYNAZEV
 	movlw .100
 	movwf CASOVAC			; casovac je dekrementovan v preruseni kazdy 5ms, 
 							; timto tedy dosahneme presne 500ms smycky
-	bsf STAV,3
+	clrf TLACITKA
+	bsf STAV,3					; 3. bit = 1 => pri zmene hlasitosti se vypise hlasitost na LCD 
 
 	call SMAZ_LCD
 
@@ -147,6 +74,9 @@ PREHRAVANI_SMYCKA
 	call ROLUJ				; TMP4 = 1 -> rolujeme nazev souboru
 
 	CALL CAS_MP3
+	PROG_PAGE_1
+	call INFO
+	PROG_PAGE_0
 	call ZOBRAZ_HLASITOST
 	BTFSC PREH_STAV0,2
 	GOTO  PREHRAVANI		; pokud byla zmenena prehravana mp3 (automaticky), nactemem si jeji jmeno
@@ -167,9 +97,11 @@ PREHRAVANI_SMYCKA_DELAY
 	GOTO  PREHRAVANI		; pokud byla zmenena prehravana mp3 (tlacitkem), nactemem si jeji jmeno
 
 	btfss TLACITKA,2
-	goto $+3
+	goto PREHRAVANI_NOMENU
 	bcf TLACITKA,2
+	PROG_PAGE_1
 	goto MENU
+PREHRAVANI_NOMENU
 
 	btfsc TLACITKA,0
 	goto $+4
@@ -258,6 +190,9 @@ ROLUJ_INCREMENTUJ
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ; zobrazi aktualni hlasitost na LCD
 ZOBRAZ_HLASITOST
+	btfss STAV,3
+	return
+
 	movlw h'A1'
 	call ZAPISI
 	; kurzor vlevo na 3. radek
@@ -480,6 +415,15 @@ PREVOD_LOOP					; for (COUNTER:=0 ; COUNTER<16 ; COUNTER++):
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;OVLADANI
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+; 7. bit - play
+; 6. bit - stop
+; 5. bit - previjeni dopredu
+; 4. bit - previjeni dozadu
+; 3. bit - [nepouzit]
+; 2. bit - menu
+; 1. bit - menu up
+; 0. bit - menu down
+
 PREH_OBSLUHA_TLACITEK
 ; obsluhuje udalosti jednotlivych tlacitek pri prehravani
 	btfsc TLACITKA,7
@@ -551,7 +495,7 @@ PREH_OBSLUHA_DALSI_MP3
 	call RD_USART
 	movwf PREH_SOUB_2
 
-	movlw h'80'		; prikaz pro prime hrani mp3
+	movlw h'80'		; prikaz pro hrani mp3
 	CALL WR_USART
 	movfw PREH_ADR_CL1
     CALL WR_USART
@@ -575,14 +519,6 @@ PREH_OBSLUHA_NENALEZENO
 	call USART_PRESKOC
 	return
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-; 7. bit - play
-; 6. bit - stop
-; 5. bit - previjeni dopredu
-; 4. bit - previjeni dozadu
-; 3. bit - [nepouzit]
-; 2. bit - menu
-; 1. bit - menu up
-; 0. bit - menu down
 
 TEST_TLAC
 
@@ -635,30 +571,6 @@ PLAY
 ;	CALL WR_USART
 ;	CALL RD_USART
 ;	RETURN
-;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-STOP
-  	MOVLW h'84'
-	CALL WR_USART
-	BSF PREH_STAV0,0
-	MOVFW PREH_STAV0
-	CALL WR_USART
-	MOVFW PREH_STAV1
-	CALL WR_USART	
-	CALL RD_USART
-	RETURN
-;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-DOPREDU
-    MOVLW h'84'
-	CALL WR_USART
-	MOVFW PREH_STAV0
-	CALL WR_USART
-    BSF PREH_STAV1,0
-	MOVFW PREH_STAV1
-	CALL WR_USART	
-	CALL RD_USART
-	RETURN
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 VOLUME_UP
