@@ -12,8 +12,8 @@
 ;
 ;
 ; dodelat:
+;	- podpora podadresaru pri prehravani
 ;	- podporu ID3v1
-;	- pak uz jen vychytavky...	(napr. do vs1001 naprogramovat ekvalizer a nejak ho ovladat...)
 ;	- najit a zabit chyby
 ;
 ; chyby o kterych vim:
@@ -24,24 +24,27 @@
 ;	- pri cteni nekterych clusteru jsou precteny clustery jine
 ;		...tato chyba byla zpusobena chybnym scitanim (MPLAB SIM se chova jinak nez PIC - decf u picu nemeni priznak Carry!!!)
 ;	- Obcas se nechce vs1001k resetovat. Snad tomu pomuze mala hardwarova uprava.
-;		...opravdu tomu znacne pomohlo pridani kondiku a odporu na reset jako u PICu (v datasheetu je tato uprava zminovana jen u vs1002.(?))
+;		...opravdu tomu znacne pomohlo pridani kondiku a odporu na reset jako u PICu
 ;
-; srpen 2005 - duben 2006 Karry - lukas.karas@centrum.cz
+; srpen 2005 - èerven 2006 Karry - lukas.karas@centrum.cz
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
 ;**********************************************************
-;   VERZE 1.2
+;   VERZE 1.3
 ;**********************************************************
 ; !!!!!!!! VSECHNY CASOVE SMYCKY JSOU POCITANY NA Fosc=20MHz !!!!!
-; !!!!!!!! NASTAVENI USARTu TAKY !!!!!!!
+; !!!!!!!! NASTAVENI USARTu a SPI TAKY !!!!!!!
 	LIST		p=PIC16F877A,C=132,n=60
 	__CONFIG	_WDT_OFF & _HS_OSC & _PWRTE_OFF & _BODEN_OFF & _LVP_OFF 
 			; LVP_OFF = RB3 jako digitalni I/O
 	errorlevel -302		; vypnuti Message [302]: Register in operand not in bank 0.
 	errorlevel -306		; vypnuti Message[306] : Crossing page boundary -- ensure page bits are set.
-						; ! zjednoduseni vypisu, ale riziko prehlednuti chyby
+						; ! zjednoduseni vypisu, musim ale davat pozor, z jake banky ctu a kam skacu
+;**********************************************************
+#DEFINE SPI_SOFTWARE 1		; podmineny preklad. bud je SPI generovana softwarove (0) (jistejsi, pomalejsi]
+							; nebo je SPI generovana hardwarove (1)(rychlejsi, neni ale kontrola nad BSYNC)
 ;**********************************************************
 
 	include "P16F877A.inc" 	; definice blbosti kolem procesoru
@@ -76,9 +79,7 @@
  
 
  org 0x0800					; PAGE 1
-;#IF VS1001==1
 	include "vs1001.asm"	; podprogramy na ovladani mp3 decoderu
-;#ENDIF
 	include "commands.asm"	; prni cast podprogramu na obsluhu prikazu (od ridiciho procesoru)
 	include "filesystem.asm"; podprogramy pro praci s adresari a setrideni obsahu adresaru
 
@@ -86,8 +87,42 @@
  org 0x1000					; PAGE 2
 	include "particions.asm"; podprogramy pro analyzu MBR, nacteni a kontrolu FAT oddilu
 	include "commands2.asm"	; druha cast podprogramu na obsluhu prikazu (od ridiciho procesoru)
+	include "subdirectory.asm"; podpora podadresaru pri prehravani
 
  org 0x1800					; PAGE 3
 	include "loudness.asm"	; plugin dekoderu "loudness" a podprogramy pro jeho nahrani a obsluhu
 ;**********************************************************
+ org	0x2100		; tabulka v pameti EEPROM (256 bytu)
+	de	0x30, 0x30, 0xC3, 0x00, 0x00, 0x00, 0x00, 0x00
+	de	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	de	0x00, 0x00, 0x00
 	END
+;**********************************************************
+; data v EEPROM maji nasledujici vyznam:
+;
+;  +----------+------------------------+-----------------+ 
+;  |  adresa  |  ekvivalentni registr  |  kdy se nacita  |  
+;  +----------+------------------------+-----------------+  
+;  |   0      | HLASITOST_L            |                 |
+;  |   1      | HLASITOST_L            |  pri startu     |
+;  |   2      | PREH_STAV0             |                 |
+;  |   3      | PREH_STAV1             |                 |
+;  +----------+------------------------+-----------------+ 
+;  |   4      | ZACATEK_DAT1           |                 |
+;  |   5      | ZACATEK_DAT2           |  po naètení oddílu 
+;  |   6      | ZACATEK_DAT3           |  se zkontroluje PREH_ADR_CL
+;  |   7      | ZACATEK_DAT4           |  v EEPROM, zda se jedna 
+;  |   8      | PREH_ADR_CL1           |  o stejny oddil, ktery byl nacten
+;  |   9      | PREH_ADR_CL2           |  pri posledni prehrane skladbe,
+;  |   A      | PREH_ADR_CL3           |  a pokud ano a zoroven je zvolen
+;  |   B      | PREH_ADR_CL4           |  sedmi bit PREH_STAV0 (prehravat
+;  |   C      | PREH_ZAZNAM1           |  ihned po nacteni oddilu),
+;  |   D      | PREH_ZAZNAM2           |  tak se nactou ostatni hodnoty 
+;  |   E      | PREH_CITAC_PREV	       |  z EEPROM. To má za následek, 
+;  |   F      | PREH_DATA_CL1          |  ze se zacne prehravat od mista, 
+;  |  10      | PREH_DATA_CL2          |  kde se posledne skoncilo...
+;  |  11      | PREH_DATA_CL3          |                 |
+;  |  12      | PREH_DATA_CL4          |                 |
+;  +----------+------------------------+-----------------+ 
+;
+; vsechny hodnoty se do EEPROM z RAM kopiruje pokazde, kdyz skonci MP3

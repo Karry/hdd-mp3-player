@@ -401,7 +401,7 @@ HLEDEJ
 ;				= 06h -> zaznam je soubor s priponou MP3
 ;	2..9   byte -> 8 znaku dlouhe jmeno ("DOSovsky" tvar - napr. slouzka "dokumenty" = "DOKUME~1" )
 ;	10..12 byte -> u souboru tri znaky pripony (u adresaru vetsinou mezery - 20h 20h 20h)
-;	13..16 byte -> 1. cluster souboru
+;	13..16 byte -> 1. cluster souboru / adresare
 ;	17..18 byte -> cislo zaznamu v adresari
 
 ; 	HL_PARAMETRY 	-- parametry hledani
@@ -419,7 +419,10 @@ HLEDEJ
 ;		HL_PARAMETRY := [dalsi]
 ;		ZAZ_REF := 0x0000000.....
 ;		goto hledej_hledani
-;	else:
+;	elseif (HL_PARAMETRY != [vracet '..']):
+;		ZAZ_REF := zaznam 1
+;		HL_PARAMETRY := [dalsi]
+;	else
 ;		ZAZ_N naplnit daty ze zaznamu 1 // prvni polozkou vsech adresaru krome ROOTu jsou ".."
 ;		goto hledej_konec
 ;	endif;
@@ -450,7 +453,7 @@ HLEDEJ
 ;	zaznam++
 ; until (byl zaznam posledni)
 ;
-; if (HL_PARAMETRY = [predchozi]) and (ZAZ_N = 00000) and (!ROOT):
+; if (HL_PARAMETRY = [predchozi]) and (ZAZ_N = 00000) and (!ROOT) and (HL_PARAMETRY = [vracet '..']):
 ;	ZAZ_N naplnit daty ze zaznamu 1
 ; endif;
 ; KONEC
@@ -471,6 +474,9 @@ HLEDEJ
 
 	; protoze to budeme v nasledujicim kodu potrebova, nastavime si 7. bit HL_PARAMETRY podle toho, 
 	; zda predany adresar je ROOT ci nikoliv
+	;		7. bit - tento bit nelze nastavit uzivatelem
+	;			= 0 > adresar je ROOT
+	;			= 1 > adresar neni ROOT
 	bcf HL_PARAMETRY,7
 	movlw h'FF'	
 	andwf CLUSTER1,F
@@ -486,14 +492,35 @@ HLEDEJ
 	btfss STATUS,Z
 		bsf HL_PARAMETRY,7
 
+; if ((HL_PARAMETRY = [prvni]):
+;	if (CLUSTER = ROOT):
+;		HL_PARAMETRY := [dalsi]
+;		ZAZ_REF := 0x0000000.....
+;		goto hledej_hledani
+;	elseif (HL_PARAMETRY != [vracet '..']):
+;		ZAZ_REF := zaznam 1
+;		HL_PARAMETRY := [dalsi]
+;	else
+;		ZAZ_N naplnit daty ze zaznamu 1 // prvni polozkou vsech adresaru krome ROOTu jsou ".."
+;		goto hledej_konec
+;	endif;
+; endif;
 
 	btfss HL_PARAMETRY,3			; if ((HL_PARAMETRY = [prvni]):
 	goto HLEDEJ_NEHLEDAME_PRVNI
 	btfsc HL_PARAMETRY,7			; 		IF (CLUSTER = ROOT):
-	goto HLEDEJ_ELSE1
+	goto HLEDEJ_ELSEIF1
 	bcf HL_PARAMETRY,4
 	goto HLEDEJ_HLEDANI
-HLEDEJ_ELSE1						; 		ELSE:
+HLEDEJ_ELSEIF1						; 		elseif (HL_PARAMETRY = [vracet '..']):
+	btfss HL_PARAMETRY,5
+	goto HLEDEJ_ELSE1
+	movlw .1
+	movwf ZAZNAM1
+	clrf ZAZNAM2					; 			ZAZ_REF := zaznam 1
+	bcf HL_PARAMETRY,4
+	goto HLEDEJ_NEHLEDAME_PRVNI
+HLEDEJ_ELSE1
 	movlw .1
 	movwf ZAZNAM1
 	clrf ZAZNAM2
@@ -622,7 +649,7 @@ HLEDEJ_ENDIF3					;	ENDIF
 	goto HLEDEJ_REPEAT
 HLEDEJ_END_REPEAT
 
-; if (HL_PARAMETRY = [predchozi]) and (ZAZ_N = 00000) and (!ROOT):
+; if (HL_PARAMETRY = [predchozi]) and (ZAZ_N = 00000) and (!ROOT) and (HL_PARAMETRY = [vracet '..']):
 ;	ZAZ_N naplnit daty ze zaznamu 1
 ; endif;
 	btfss HL_PARAMETRY,4		; if (HL_PARAMETRY = [predchozi])
@@ -634,6 +661,8 @@ HLEDEJ_END_REPEAT
 	BANK_0
 	andlw h'FF'
 	btfss STATUS,Z				; 	and (ZAZ_N is empty):
+	goto HLEDEJ_KONEC
+	btfsc HL_PARAMETRY,5		; and (HL_PARAMETRY = [vracet '..'])
 	goto HLEDEJ_KONEC
 
 	movfw HL_ADR_CL1
@@ -653,6 +682,7 @@ HLEDEJ_END_REPEAT
 	call BUF2_LOW_TO_HIGH
 
 HLEDEJ_KONEC					; endif;
+
 	return
 ;**************************************************************************
 ZAPIS_C_ZAZNAMU
@@ -1246,7 +1276,7 @@ HLEDEJ_V_NADRAZENEM
 
 ; v nadrazenem adresari se pokusi najit zaznam odkazujici na tento adresar
 ; na zacatek BUFFERU 1 da cislo clusteru se zacatkem nadrazeneho adresare, 
-; do HL_ADR_CL da prvni cluster hledaneho adresare a v ZAZNAM vratime cislo 
+; do HL_ADR_CL da prvni cluster predaneho adresare a v ZAZNAM vratime cislo 
 ; zaznamu odkazujici na HL_ADR_CL
 	movfw CLUSTER1
 	movwf HL_ADR_CL1

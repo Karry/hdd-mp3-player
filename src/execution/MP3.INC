@@ -114,19 +114,9 @@ D_COMMAND     equ D_STATUS
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ; ROZLOZENI PAMETI PROGRAMU
-;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-;	page 0	0x0000 - 0x07FF
-;				- mp3.asm (hlavni smycka)
-;				- ata.asm
-;				- fat32.asm
-;				- aritmetic.asm
-;	page 1	0x0800 - 0x0FFF
-;				- vs1001.asm
-;				- commands.asm
-;	page 2	0x1000 - 0x17FF
-;	page 3	0x1800 - 0x1FFF
-;
+
+; vis. main.asm
+
 ; Vsechny podprogramy by mely nechat nastaven PCLATH na hodnotu jak se do nich vstoupilo...
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -136,13 +126,19 @@ D_COMMAND     equ D_STATUS
 ; MAPA PAMETI: (368 bytu)
 ; 	BANK 0: 	0x000 - 0x01F = specialni registry,
 ;				0x020 - 0x07F = misto (96bytu) pro nase registry:
-;					0x020 - 0x034 -> 21bytu pro registry a parametry HDD
+;					0x020 - 0x02E -> registry a parametry HDD
+;					0x02F         -> loundes (registr obsahujici aktualne nastaveny filtr)
+;					0x030 - 0x032 -> --------------------------
+;					0x033 - 0x034 -> velikost sektoru
 ;					0x035 - 0x03a -> 6bytu pro parametry podprogramu (musime zajistit, abychom nepouzivali registry, ktere pouzivaji i podprogramy!!!)
 ;					0x03B - 0x04C -> parametry FATky
 ;					0x04D - 0x050 -> registry pro praci s VS1001
-;					0x051 - 0xXXX -> ---------------------------
-;					0x05F - 0x06F -> informace potrebne pro prehravani
-;				0x070 - 0x07F -> registry pro potreby preruseni (dostupne z kterekoliv banky)
+;					0x051 - 0x056 -> registry pro reseni fragmentovanych souboru
+;					0x057 - 0x058 -> citac necinosti, ktery odpocitava dobu do STAND-BY disku
+;					0x059 - 0x05E -> registry pro trideni podle abecedy
+;					0x05F         -> --------------------------
+;					0x060 - 0x06F -> informace potrebne pro prehravani
+
 ;					0x070 - 0x072 -> 3 registry slouzici k zalohovani W, STATUS, FSR
 ;					0x073 - 0x076 -> registry pro prikazy a preruseni + zaloha pro PCLATH
 ;					0x077         -> ---------------------------
@@ -220,6 +216,8 @@ VS_LOUDNESS		equ 0x02F		; registr obsahujici hodnotu s nastavenym ekvalizerem
 
 PARAM_SLOV_V_SEKTORU1	equ 0x33 ; [2B] disky mohou mit velikost sektoru vetsi nez 512 (256sl) 
 PARAM_SLOV_V_SEKTORU2	equ 0x34 
+; taky informace k nicemu. pokud beztak neni 512, tak s diskem neumi program pracovat...
+
 ; pokud je to zapsano takto, nejvyznamejsi bity jsou niz v paneti (PARAM_MAX_LBA + X)
 ; pokud je zapsano jako skupina LBA1, LBA2, LBA3, LBA4, tak nejvyznamejsi bity jsou v LBA4
 ;**********************************************************
@@ -328,6 +326,8 @@ HL_PARAMETRY		equ 0x059
 ;				 1 > hledáme první záznam v adresáøi
 ;		4. bit = 0 > hledáme NÁSLEDUJÍCÍ záznam
 ;				 1 > hledáme PØEDCHOZÍ záznam
+;		5. bit = 0 > pokud hledáme pouze soubory, tak vrací jako první záznam adresáø '..'
+;				 1 > pokud hledáme soubory, tak nevrací adresáø '..'
 ;		7. bit - tento bit nelze nastavit uzivatelem
 ;				= 0 > adresar je ROOT
 ;				= 1 > adresar neni ROOT
@@ -370,17 +370,19 @@ PREH_STAV0			equ 0x06E	; registr obsahuje informace o stavu aktualniho prehravan
 				;			1 => play            (nejaky soubor je prehravan)
 				; 1. bit = 	0 => neni zadny soubor k prehravani (nastaveni bitu play nema zadny ucinek)
 				;			1 => je soubor pripraven k prehravani (muze byt ale pauza - nic nehraje)
-				; 2. bit = 	1 => je nastaven, kdyz se zmeni prehravany soubor (bez volani prikazu) do doby, nez prijde prikaz na dotaz STAVU... (81h)
+				; 2. bit = 	1 => je nastaven, kdyz se zmeni prehravany soubor nebo adresar (bez volani prikazu) do doby, nez prijde prikaz na dotaz STAVU... (81h)
 				; 3. bit = 	0 => po skonceni souboru se pokracuje v prehravani (zavisi na nastaveni repeatu)
 				; 			1 => po skonceni prehravani souboru se nic neprehrava (ceka se na prijeti prikazu k prehravani)
 				; 4. bit = 	0 => repeat off
 				;			1 => repeat on
 				; 5. bit =	0 => repeat adresare (prvni cluster adresare musi byt nastaven v PREH_ADDR_ZACATEK_CL[1-4] )
 				;			1 => repeat souboru (po skonceni prehravani souboru se ten samy soubor zacne prehravat znova)
-				; 6. bit =	0 => 
-				;			1 => rezervovano (pro nahodny vyber, nebo jiny rezim prehravani...)
-				; 7. bit =  0 => 
-				;			1 => rezervovano
+				; 6. bit =	0 => pri dosazeni posledni skladby v adresari se prestane prehravat
+				;			1 => ---------------- // -------------------- se zacnou prohledavat podadresare, ci nasledujici adresar
+				; 7. bit =  0 => po naètení oddílu se nezaène pøehrávat
+				;			1 => po naètení oddílu se zaène pøehrávat mp3, kterou se pøi posledním pøehráváni skonèilo 
+				;				(musí ale na disku stále být a nesmí se mezitím pøehrávat z jiného oddílu)
+				;				Pokud poslední pøehraná skladba nebyla na disku nalezena, naène se pøehrávat první mp3 v ROOT adresáøi.
 PREH_STAV1			equ 0x06F
 				; 0. bit =  0 => normalni prehravani
 				;			1 => previjeni mp3 dopredu

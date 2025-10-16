@@ -9,17 +9,19 @@
 ;**********************************************************
 ; cteni a zapis ATA registru 
 ;**********************************************************
-RD_STATUS         
+RD_STATUS   
 	movlw D_STATUS      ; Status 
+	bcf INTCON,GIE      
 	call RUTR 
+	bsf INTCON,GIE
 	movwf ATA_STATUS
 	return
 ;*****************************************
-RD_ERROR
-	movlw D_ERROR      ; Error
-	call RUTR
-	movwf ATA_ERROR
-	return
+;RD_ERROR
+;	movlw D_ERROR      ; Error
+;	call RUTR
+;	movwf ATA_ERROR
+;	return
 ;*****************************************
 ;RD_STATUS_A     
 ;	movlw D_STATUS_A    ; Alternate Status 
@@ -27,33 +29,35 @@ RD_ERROR
 ;	movwf ATA_STATUS_A
 ;	return
 ;*****************************************
-RD_SC
-	movlw D_SECTOR_C    ; Sector Count
-	call RUTR
-	movwf SECTOR_C
-	return
+;RD_SC
+;	movlw D_SECTOR_C    ; Sector Count
+;	call RUTR
+;	movwf SECTOR_C
+;	return
 ;*****************************************
-RD_LBA1
-	movlw D_LBA1    ; Sector Number 
-	call RUTR                
-	movwf LBA1 
-	return
+;RD_LBA1
+;	movlw D_LBA1    ; Sector Number 
+;	call RUTR                
+;	movwf LBA1 
+;	return
 ;*****************************************
-RD_LBA2
-	movlw D_LBA2  ; Cylinder Low
-	call RUTR
-	movwf LBA2
-	return
+;RD_LBA2
+;	movlw D_LBA2  ; Cylinder Low
+;	call RUTR
+;	movwf LBA2
+;	return
 ;*****************************************
-RD_LBA3
-	movlw D_LBA3  ; Cylinder High   
-	call RUTR
-	movwf LBA3
-	return
+;RD_LBA3
+;	movlw D_LBA3  ; Cylinder High   
+;	call RUTR
+;	movwf LBA3
+;	return
 ;*****************************************
 RD_DEVICE
 	movlw D_DEVICE  ; Device Head
-	call RUTR
+	bcf INTCON,GIE
+	call RUTR 
+	bsf INTCON,GIE
 	movwf DEVICE
 	return
 ;*****************************************
@@ -62,56 +66,72 @@ WR_DC
 	movf DEVICE_C,w     ; Device Control
 	movwf TEMPW
 	movlw D_DEVICE_C
+	bcf INTCON,GIE
 	call RUTW
+	bsf INTCON,GIE
 	return
 ;*****************************************
 WR_COMMAND          
 	movf COMMAND,w      ; Command       
 	movwf TEMPW
 	movlw D_COMMAND
+	bcf INTCON,GIE
 	call RUTW
+	bsf INTCON,GIE
 	return
 ;*****************************************
 WR_SC	                 
     movf SECTOR_C,w     ; Sector Count
 	movwf TEMPW
 	movlw D_SECTOR_C     
+	bcf INTCON,GIE
 	call RUTW
+	bsf INTCON,GIE
 	return
 ;*****************************************
 WR_LBA1
 	movf LBA1,w     
 	movwf TEMPW
 	movlw D_LBA1    
+	bcf INTCON,GIE
 	call RUTW
+	bsf INTCON,GIE
 	return
 ;*****************************************
 WR_LBA2
 	movf LBA2,w   ; Cylinder Low
 	movwf TEMPW
 	movlw D_LBA2
+	bcf INTCON,GIE
 	call RUTW
+	bsf INTCON,GIE
 	return
 ;*****************************************
 WR_LBA3
 	movf LBA3,w   ; Cylinder High
 	movwf TEMPW
 	movlw D_LBA3
+	bcf INTCON,GIE
 	call RUTW
+	bsf INTCON,GIE
 	return
 ;*****************************************
 WR_DEVICE
 	movf DEVICE,w     ; Device Head 
 	movwf TEMPW
 	movlw D_DEVICE
+	bcf INTCON,GIE
 	call RUTW
+	bsf INTCON,GIE
 	return
 ;*****************************************
 WR_FEATURES
 	movf FEATURES,w     ; Features
 	movwf TEMPW
 	movlw D_FEATURES
+	bcf INTCON,GIE
 	call RUTW
+	bsf INTCON,GIE
 	return
 ;*****************************************
 ; zapise vsechny registry potrebne k vykonani prikazu (adresove registry a prikaz)
@@ -180,13 +200,15 @@ RUTW
 	return
 ;**********************************************************
 READ_DATA
-;	call WAIT_FOR_DATA	; tento odskok do dalsich podprogramu si nemohu, dovolit, protoze mam jen 8bit STACK
+;	call WAIT_FOR_DATA	; tento odskok do dalsich podprogramu si nemohu, dovolit, protoze mam jen 8urovnovy STACK
 	; Wait: ( Bsy=0 AND Drq=1 ) OR err=1
 	; 7   6    5  4   3   2    1   0
 	; BSY DRDY DF DSC DRQ CORR IDX ERR
 	; (cekame az disk bude mit pro nas prichystana data)
 	movlw D_STATUS      ; Status 
+	bcf INTCON,GIE
 	call RUTR 
+	bsf INTCON,GIE
 	movwf ATA_STATUS
 	btfsc ATA_STATUS,ERR
 	goto READ_DATA_CTEME		; Nastal error disku. Co budeme delat? S*r*m* na to a data precteme...

@@ -282,7 +282,6 @@ NACTI_FAT32
 	clrf ROOT_DIR_CL3
 	clrf ROOT_DIR_CL4
 
-
 	clrf FEATURES
 	movlw .1
 	movwf SECTOR_C

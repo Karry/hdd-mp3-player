@@ -3,8 +3,18 @@ START
 	call INIT_PORT		; nastavy trisy, a porty do vychozi polohy
 
 	call DELAY_25us 	; chvili pockame, protoze napjeti zdroje co mam doma (stary PC-AT zdroj)
-	call DELAY_25us 	; zezacatku dost kolisa...
+	call DELAY_25us 	; zezacatku dost kolisa a nepomuze tomu ani POR...
 	call DELAY_25us
+
+;LOOP
+;	movlw 'O'
+;	call WR_USART
+;	movlw 'K'
+;	call WR_USART
+;	call DELAY_200ms
+;	call DELAY_200ms
+;	goto LOOP
+
 
 	PROG_PAGE_1
 	call VS_INIT
@@ -23,7 +33,6 @@ CEK_PRIKAZ_01h
 	PROG_PAGE_1
 	call CEKEJ_PRIKAZ
 	PROG_PAGE_0
-
 
 	movfw 0x078					; prvni byte prikazoveho zasobniku
 	clrf PRIJATYCH_DAT			; prikaz byl vybran -> prazdny zasobnik
@@ -44,6 +53,7 @@ CEK_PRIKAZ_02h_03h
 	call CEKEJ_PRIKAZ			; pockame si na prikaz
 	clrf STAV_PRIKAZU			; smazeme registr signalizujici platnost prikazu
 	call PRIKAZ_02h				; testujeme zda prisel prikaz 02h, pokud ano tak jej provedeme a nastavime platnost prikazu
+	PROG_PAGE_2
 	call PRIKAZ_03h				; ---//---
 	PROG_PAGE_0
 	btfss STAV_PRIKAZU,0		; Pokud si zadna z procedur prikaz neprevzala, ...
@@ -51,16 +61,17 @@ CEK_PRIKAZ_02h_03h
 	btfss ATA_ATTRIBUTES,FAT32_LOAD	; cekame dokud nedojde k nasteni nejakeho oddilu
 	goto CEK_PRIKAZ_02h_03h		; pokud byl oddil vporadku nacten, pokracujeme...
 
-	clrf PREH_STAV0
 ;********************************************************************************************************************
 ;********************************************************************************************************************
 ;********************************************************************************************************************
 ;********************************************************************************************************************
-BIG_LOOP
+BIG_LOOP	
 	; Tady ta smycka beha po nacteni disku a nejake FATky porad dokola.
 	; Pri kazdem prubehu smyckou vyresime prikazy, ktere prisly, a pokud prehravame 
 	; nejakou mp3 tak dekoder nakrmime jednim sektorem...
 	; Mimo to je v teto smycce osefovano, ze kdyz skonci mp3, nacteme dalsi... (v zavislosti na nastaveni repeatu)
+	; pokud se dostaneme na konec slozky a je nastaveno vyhledavani dalsich slozek, tak nejakou najdeme...
+
 	movfw PRIJATYCH_DAT
 	andlw h'FF'
 	btfsc STATUS,Z
@@ -69,7 +80,11 @@ BIG_LOOP
 	clrf STAV_PRIKAZU			; smazeme registr signalizujici platnost prikazu
 	; Pokud jsme tady, tak prisel nejaky prikaz, jdem predat prikaz jednotlivym proceduram
 	PROG_PAGE_1
-	call PRIKAZ_04h				; testujeme zda prisel prikaz 04h, pokud ano tak jej provedeme a nastavime platnost prikazu
+	call PRIKAZ_02h				; testujeme zda prisel prikaz 02h, pokud ano tak jej provedeme a nastavime platnost prikazu
+	PROG_PAGE_2
+	call PRIKAZ_03h				; --- // ---
+	PROG_PAGE_1
+	call PRIKAZ_04h				; --- // ---
 	call PRIKAZ_05h				; --- // ---
 	call PRIKAZ_06h				; --- // ---
 	call PRIKAZ_07h				; --- // ---
@@ -89,6 +104,8 @@ BIG_LOOP
 	call PRIKAZ_84h				; --- // ---
 	PROG_PAGE_2
 	call PRIKAZ_85h				; --- // ---
+	call PRIKAZ_86h				; --- // ---
+	call PRIKAZ_87h				; --- // ---
 	PROG_PAGE_0
 	
 	btfss STAV_PRIKAZU,0		; Pokud si zadna z procedur prikaz neprevzala, ...
@@ -136,14 +153,6 @@ BIG_LOOP__NO_STANDBY
 
 	clrf PREH_DATA_POZICE
 	call NEXT_CLUSTER
-	movfw CLUSTER1
-	movwf PREH_DATA_CL1
-	movfw CLUSTER2
-	movwf PREH_DATA_CL2
-	movfw CLUSTER3
-	movwf PREH_DATA_CL3
-	movfw CLUSTER4
-	movwf PREH_DATA_CL4
 	
 	btfss POZICE,0				; Pokud byl cluster posledni v retezci...
 	goto BIG_LOOP_DALSI_FRAGMENT
@@ -157,6 +166,15 @@ BIG_LOOP__NO_STANDBY
 	goto SEND_MP3_DATA
 
 BIG_LOOP_DALSI_FRAGMENT
+	movfw CLUSTER1
+	movwf PREH_DATA_CL1
+	movfw CLUSTER2
+	movwf PREH_DATA_CL2
+	movfw CLUSTER3
+	movwf PREH_DATA_CL3
+	movfw CLUSTER4
+	movwf PREH_DATA_CL4
+
 	call ZJISTI_FRAGMENT
 
 	movfw FRAGMENT1
@@ -290,6 +308,23 @@ SEND_MP3_WORD
 	incf PREH_DATA_POZICE,f
 MP3_NOT_PLAY
 
+	btfss PREH_STAV0,0			; Pokud je zvoleno play,...
+	goto BIG_LOOP
+	btfsc PREH_STAV0,1			; ...neni co prehravat...
+	goto BIG_LOOP
+	btfsc PREH_STAV0,3			; ...ma se pokracovat v prehravani...
+	goto BIG_LOOP
+	btfsc PREH_STAV0,4			; ...neni zvolen repeat...
+	goto BIG_LOOP
+	btfss PREH_STAV0,6			; ...ma se pokracovat v prehravani v dalsich slozkach...
+	goto BIG_LOOP
+
+	; jdeme prozkoumavat podadresare v aktualnim adresari, nebo hledat dalsi adresare s MP3
+	PROG_PAGE_2
+	goto HLEDEJ_ADRESAR
+HLEDEJ_ADRESAR_RETURN
+	PROG_PAGE_0
+
 	goto BIG_LOOP
 ;********************************************************************************************************************
 ;********************************************************************************************************************
@@ -297,7 +332,9 @@ MP3_NOT_PLAY
 ;********************************************************************************************************************
 DALSI_SKLADBA
 	; tato procedura je volana, kdyz skonci mp3, aby nasla v adresari dalsi mp3 ktera se ma prehravat...
-	bcf PREH_STAV0,0		; 0. bit = 	0 => stop nebo pausa (nic nehraje)
+	call ULOZ_KONFIGUTACI
+
+;	bcf PREH_STAV0,0		; 0. bit = 	0 => stop nebo pauza (nic nehraje)
 	bcf PREH_STAV0,1		; 1. bit = 	0 => neni zadny soubor k prehravani (nastaveni bitu play nema zadny ucinek)
 	bcf PREH_STAV0,2		; 2. bit = 	1 => je nastaven, kdyz se zmeni prehravany soubor (bez volani prikazu) do doby, nez prijde prikaz na dotaz STAVU... (81h)
 	bcf PREH_STAV1,0		; 0. bit =  0 => normalni prehravani (mp3 se nepreviji)
@@ -543,8 +580,9 @@ INIT_CONFIG 	; nakonfiguruje preruseni, WDT, USART, pull ups....
 	movlw b'10010000'	;zapnu USART
 	movwf RCSTA
 	BANK_1
-	movlw .129 		; Fosc = 20 MHz, BRGH=1 => rychlost = 9615 bps
-	;movlw .103 	; Fosc = 16 MHz, BRGH=1 => rychlost = 9615 bps
+	movlw .64 		; Fosc = 20 MHz, BRGH=1 => rychlost = 19231 bps
+	;movlw .129 	; Fosc = 20 MHz, BRGH=1 => rychlost =  9615 bps
+	;movlw .103 	; Fosc = 16 MHz, BRGH=1 => rychlost =  9615 bps
 	movwf SPBRG	
 
 	movlw b'00000111'
@@ -552,13 +590,178 @@ INIT_CONFIG 	; nakonfiguruje preruseni, WDT, USART, pull ups....
 	BANK_0	
 	clrf ADCON0			; pro jistotu (vypneme A/D prevodniky)
 
+#IF SPI_SOFTWARE==1
+;spi setup
+	BANK_1
+	clrf SSPSTAT
+	bsf SSPSTAT,CKE
+	BANK_0
+	clrf SSPCON			; SPI master, 5MHz clock
+	bsf SSPCON,SSPEN	; enable port
+#ENDIF
+; mastaveni dulezitych registru
 	clrf PRIJATYCH_DAT	; zasobnik prikazu prazdny...
 	movlw h'70'	
 	movwf KONST_NECINNOSTI1
 	movlw h'17'			; 1770h = 6000d => pri 0.1s preruseni 10 minut
 	movwf KONST_NECINNOSTI2
-KONST_NECINNOSTI2	equ 0x058
 
+	clrf PREH_ADR_CL1
+	clrf PREH_ADR_CL2
+	clrf PREH_ADR_CL3
+	clrf PREH_ADR_CL4
+	clrf PREH_ZAZNAM1
+	clrf PREH_ZAZNAM2
+	clrf PREH_STAV0
+	clrf PREH_STAV1
+
+; nacteni konfigurace z EEPROM
+	BANK_2
+	clrf EEADR
+	BANK_3
+	bsf EECON1,RD
+	BANK_2
+	movfw EEDATA
+	BANK_0
+	movwf VSREG_VOL_L
+
+	BANK_2
+	incf EEADR,f
+	BANK_3
+	bsf EECON1,RD
+	BANK_2
+	movfw EEDATA
+	BANK_0
+	movwf VSREG_VOL_H
+	
+	BANK_2
+	incf EEADR,f
+	BANK_3
+	bsf EECON1,RD
+	BANK_2
+	movfw EEDATA
+	BANK_0
+	movwf PREH_STAV0
+
+	BANK_2
+	incf EEADR,f
+	BANK_3
+	bsf EECON1,RD
+	BANK_2
+	movfw EEDATA
+	BANK_0
+	movwf PREH_STAV1
+	return
+;**********************************************************
+WR_EEPROM				; zapíše data z EEDATA na místo EEADR
+	BANK_2
+	movfw EEDATA
+	BANK_0
+	movwf TEMP1			; zapisovanou hodnotu dame do TEMP1
+	BANK_3
+	bsf EECON1,RD
+	BANK_2
+	subwf EEDATA,W		; podivame se, zda nechceme zapisovat hodnotu, ktera uz je zde ulozena...
+	BANK_0
+	btfsc STATUS,Z
+	return				; pokud ano, tak nic nezapisujeme a koncime
+	movfw TEMP1
+	BANK_2
+	movwf EEDATA
+	BANK_3	
+	bcf INTCON,GIE		; Zákaz pøerušení
+	bsf EECON1,WREN		; Povolení zápisu
+	movlw h'55'			; zapiš hodnotu
+	movwf EECON2 		; do EECON2
+	movlw h'AA'			; zapiš další
+	movwf EECON2 		; do EECON2
+	bsf EECON1,WR 		; Zahájení zápisu
+	bsf INTCON,GIE 		; Povol pøerušení		
+	btfsc EECON1,WR		; èekáme, než se dokonèí zápis
+	goto $-1	
+	bcf EECON1,EEIF
+	BANK_0
+	return
+;**********************************************************
+ULOZ_KONFIGUTACI
+	; uloží do EEPROMy natavení
+	BANK_2	
+	movlw .0
+	movwf EEADR
+	BANK_0
+	movfw VSREG_VOL_L
+	BANK_2
+	movwf EEDATA
+	call WR_EEPROM
+
+	BANK_2
+	movlw .1
+	movwf EEADR
+	BANK_0
+	movfw VSREG_VOL_H
+	BANK_2
+	movwf EEDATA
+	call WR_EEPROM
+
+	BANK_2
+	movlw .2
+	movwf EEADR
+	BANK_0
+	movfw PREH_STAV0
+	BANK_2
+	movwf EEDATA
+	call WR_EEPROM
+
+	BANK_2
+	movlw .3
+	movwf EEADR
+	BANK_0
+	movfw PREH_STAV1
+	BANK_2
+	movwf EEDATA
+	call WR_EEPROM
+
+	INDF_BANK_0
+	movlw .4
+	movwf TEMP2
+	movlw 0x40					; POCATEK_DAT1
+	movwf FSR
+ULOZ_KONFIGUTACI_LOOP1
+	movfw TEMP2
+	BANK_2
+	movwf EEADR
+	movfw INDF
+	movwf EEDATA
+	incf FSR,f
+	call WR_EEPROM
+	; BANK_2	; neni potreba, protoze z predchozi proceduru se vracime v BANCE 0
+	incf TEMP2,f
+	movfw TEMP2
+	sublw .8
+	btfss STATUS,Z
+	goto ULOZ_KONFIGUTACI_LOOP1
+
+	;INDF_BANK_0
+	;movlw .9
+	;movwf TEMP2
+	movlw 0x62					; PREH_ADR_CL1		equ 0x062
+	movwf FSR
+ULOZ_KONFIGUTACI_LOOP2
+	movfw TEMP2
+	BANK_2
+	movwf EEADR
+	movfw INDF
+	movwf EEDATA
+	incf FSR,f
+	call WR_EEPROM
+	; BANK_2	; neni potreba, protoze z predchozi proceduru se vracime v BANCE 0
+	incf TEMP2,f
+	movfw TEMP2
+	sublw .19
+	btfss STATUS,Z
+	goto ULOZ_KONFIGUTACI_LOOP2
+
+	
 	return
 ;**********************************************************
 WR_USART	; odesle slovo ve workingu po USARTu
@@ -685,6 +888,13 @@ INTERRUPT_USART
 	movfw RCREG				; !!! vynulovat pøíznak !!!	
 	movwf PRIJATE_DATO
 
+;	movlw '['
+;	call WR_USART
+;	movfw PRIJATE_DATO
+;	call WR_USART
+;	movlw ']'
+;	call WR_USART
+
 	movfw PRIJATYCH_DAT
 	sublw .7				; pokud je v zasobniku uz plno (PRIJATYCH_DAT=8), tak koncime
 	btfss STATUS,C
@@ -697,13 +907,7 @@ INTERRUPT_USART
 	movwf INDF				; prijate dato na prvni volne misto v zasobniku
 	
 	incf  PRIJATYCH_DAT,F	; pricteme k indikaci zasobniku
-;	movlw '['
-;	call WR_USART
-;	movfw PRIJATYCH_DAT
-;	addlw .48
-;	call WR_USART
-;	movlw ']'
-;	call WR_USART	
+
 END_OF_INTERRUPT			; sem skocime kdyz mame vsechny veci kolem preruseni vyrizeny
 	movfw TEMP_PCLATH
 	movwf PCLATH

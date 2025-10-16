@@ -20,6 +20,21 @@
 ;**********************************************************
 ; co nejrychleji vodesle hodnotu ve W smerem k dekoderu (obsluhuje signaly DSYNC, SI, SCLK)
 VS_WR_BYTE
+#IF SPI_SOFTWARE==1
+	bsf MP3_BSYNC		; bude nasledovat prvni bit bytu, proto nastavime BSYNC
+	movwf SSPBUF		; dame dato do SPI bufferu
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bcf MP3_BSYNC
+	btfss PIR1,SSPIF	; 3. bit
+	goto $-1			; cekame dokud neni prenos kompletni
+	bcf PIR1,SSPIF		; 
+	return
+#ELSE
 	; k praci pouziva TEMPW
 	movwf TEMPW		; dato co mame odeslat si hodime do tempu...
 
@@ -92,9 +107,27 @@ VS_WR_BYTE
 
 	bcf MP3_SCLK
 	return
+#ENDIF
 ;**********************************************************
 ; co nejrychleji prijme dato z vs1001 a umisti jej do W
 VS_RD_BYTE
+#IF SPI_SOFTWARE==1
+	bsf MP3_BSYNC		; bude nasledovat prvni bit bytu, proto nastavime BSYNC
+	movlw .0
+	movwf SSPBUF		; dame dato do SPI bufferu
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bcf MP3_BSYNC
+	btfss PIR1,SSPIF
+	goto $-1			; cekame dokud neni prenos kompletni
+	bcf PIR1,SSPIF
+	movfw SSPBUF
+	return
+#ELSE
 	; k praci pouziva TEMPW
 
 	clrf TEMPW		; vymazeme, sem budeme strkat dato co nam prijde...
@@ -162,6 +195,7 @@ VS_RD_BYTE
 
 	; movfw TEMPW ; tuto operaci jiz nemusime provadet, protoze jsme posledni rotaci hodily do W (rlf TEMPW,W)
 	return
+#ENDIF
 ;**********************************************************
 ; do TEMP1 dame adresu registru 
 ; do TEMP2 dame dolni slabiku zapisovaneho slova
@@ -380,22 +414,30 @@ VS_BEEP
 VS_INIT
 	clrf VSREG_MODE_L
 	clrf VSREG_STATUS_L
-	movlw h'40'
-	movwf VSREG_VOL_L		; VOL=0x40 => nenastavuji maximalni hlasitost, protoze kdyz jsou pripojena sluchatka, tak by z toho jeden ohluchl...
-	movwf VSREG_VOL_H
 
+	movlw .3
+	movwf TEMP5
 	call VS_SOFT_RESET_NO_PLUG		; resetujeme
+	call VS_SET_VOLUME				; nastavime hlasitost
+	decfsz TEMP5,f
+	goto $-3
+	; pro jistotu jej resetuji 5x za sebou...
 	
 	movlw .3
 	movwf TEMP5
-	call VS_SET_VOLUME		; nastavime hlasitost
+VS_INIT_BEEP
 	call VS_BEEP
-	decfsz TEMP5,f
-	goto $-3
-	; asi proto, ze nemam osetreny hardwarovy reset dekoderu, se mu obcas nechce nastartovat....
-	; proto jej 5x za sebou resetuji a zapinam pokusnou sinusovku...
-	
+	PROG_PAGE_0
+	call DELAY_200ms
+	PROG_PAGE_1
 	call VS_END_BEEP
+	PROG_PAGE_0
+	call DELAY_200ms
+	PROG_PAGE_1
+	decfsz TEMP5,f
+	goto VS_INIT_BEEP
+	; pri initu 3x za sebou pipneme (asi pro to ze neposimal uvodni nuly, tak v praxi pipne jenom 2x :)
+
 	call VS_SOFT_RESET_NO_PLUG		; resetujeme
 
 	return

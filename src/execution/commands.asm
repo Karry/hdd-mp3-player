@@ -25,6 +25,9 @@ PRIKAZ_02h						; 02h - vrat oddily se systemem FAT32
 	return						; jeste nemame vsechny parametry
 	; Prisel prikaz 02h s jednim parametrem (vrat oddily se systemem FAT32)
 
+	PROG_PAGE_2
+	call SCAN_MBR				; najdeme oddily s FAT32 a jejich seznam dame do bufferu 2
+	PROG_PAGE_1	
 	movfw 0x079					; parametr prikazu 02h (cislo svazku, jehoz parametry chceme vratit)
 	andlw b'00000011'			; parametr musi byt v rozsahu 0-3
 	movwf TEMP1
@@ -49,37 +52,6 @@ PRIKAZ_02h__ODESILANI_ODDILU
 	clrf PRIJATYCH_DAT
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_03h						; 03h – nastav oddil
-	movfw 0x078					; prvni byte zasobniku prikazu
-	sublw h'03'					
-	btfss STATUS,Z
-	return						; nebyl prijat prikaz 03h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 03h, nastavime byt STAV_PRIKAZU
-	movfw PRIJATYCH_DAT
-	sublw .4					; pro prikaz 03h museji prijit 5 byty (prikaz + 4byty parametr)
-	btfsc STATUS,C
-	return						; jeste nemame vsechny parametry
-	; Prisel prikaz 03h s 4bytovym parametrem (nacti oddily se systemem FAT32)
-
-	movfw 0x079					; parametrem prikazu 03h ma byt 4bytova adresa zacatku svazku, ktery se ma nacist
-	movwf LBA1
-	movfw 0x07A
-	movwf LBA2
-	movfw 0x07B
-	movwf LBA3
-	movfw 0x07C
-	movwf LBA4
-	PROG_PAGE_2
-	call NACTI_FAT32			; nacte parametry zvoleneho oddilu
-	PROG_PAGE_1
-
-	movfw ATA_ATTRIBUTES
-	PROG_PAGE_0
-	call WR_USART
-	PROG_PAGE_1
-	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
-	return
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 PRIKAZ_04h						; 04h – vrat velikost clusteru
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'04'					
@@ -95,7 +67,7 @@ PRIKAZ_04h						; 04h – vrat velikost clusteru
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_05h						; 05h – zjisti, zda je cluster prvni v adresari
+PRIKAZ_05h						; 05h – vrat zaznam v adresari
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'05'
 	btfss STATUS,Z
@@ -590,14 +562,6 @@ PRIKAZ_81h						; 81h – vrat stav prehravaneho souboru
 	movfw TEMP3
 	call WR_USART
 	PROG_PAGE_1
-
-;	movlw VSADDR_STATUS
-;	movwf TEMP1
-;	call VS_RD_REG
-;	movfw TEMP2
-;	PROG_PAGE_0
-;	call WR_USART
-;	PROG_PAGE_1
 
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
 	return
