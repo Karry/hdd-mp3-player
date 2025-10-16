@@ -12,9 +12,8 @@
 ;
 ;
 ; dodelat:
-;	- previjeni souboru (alespon dopredu)
-;	- po skonceni mp3 nacist dalsi mp3
-;	- Nejak udelat aby soubory byly prehravany podle abecedy
+;	- repeat adresare
+;	- Podporu dlouhych nazvu souboru
 ;	- podporu ID3v1
 ;	- pak uz jen vychytavky...	(napr. do vs1001 naprogramovat ekvalizer a nejak ho ovladat...)
 ;
@@ -24,7 +23,7 @@
 
 
 ;**********************************************************
-;   VERZE 0.8b
+;   VERZE 0.9
 ;**********************************************************
 ; !!!!!!!! VSECHNY CASOVE SMYCKY JSOU POCITANY NA Fosc=16MHz !!!!!
 ; !!!!!!!! NASTAVENI USARTu TAKY !!!!!!!
@@ -48,21 +47,9 @@
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;**********************************************************
- org 0x0010
-	include "mp3.asm" 		; hlavni programova smycka
-	include "ata.asm" 		; podprogramy na ovladani ATA disku
-	include "fat32.asm" 	; podprogramy na nacteni a praci s FAT32
-	include "aritmetic.asm"	; podprogramy vykonavajici zakladni aritmetologicke operace
- 
- org 0x0800					; !!!! PAGE 1
-;#IF VS1001==1
-	include "vs1001.asm"	; podprogramy na ovladani mp3 decoderu
-;#ENDIF
-	include "commands.asm"	; podprogramy na obsluhu prikazu (od ridiciho procesoru)
-;**********************************************************
- org 0x0000
+ org 0x0000					; PAGE 0
   	goto START
- org 0x0004
+ org 0x0004					; PAGE 0
 	movwf TEMP_WORKING
 	movfw STATUS
 	movwf TEMP_STATUS
@@ -74,5 +61,20 @@
 	BANK_0
 	INDF_BANK_0
 	goto INTERRUPT
+;**********************************************************
+ org 0x0010					; PAGE 0
+	include "mp3.asm" 		; hlavni programova smycka
+	include "ata.asm" 		; podprogramy na ovladani ATA disku
+	include "fat32.asm" 	; podprogramy na nacteni a praci s FAT32
+	include "aritmetic.asm"	; podprogramy vykonavajici zakladni aritmetologicke operace
+ 
+ org 0x0800					; PAGE 1
+;#IF VS1001==1
+	include "vs1001.asm"	; podprogramy na ovladani mp3 decoderu
+;#ENDIF
+	include "commands.asm"	; podprogramy na obsluhu prikazu (od ridiciho procesoru)
+	include "filesystem.asm"; podprogramy pro praci s adresari a setrideni obsahu adresaru
+ org 0x1000					; PAGE 2
+ org 0x1800					; PAGE 3
 ;**********************************************************
 	END

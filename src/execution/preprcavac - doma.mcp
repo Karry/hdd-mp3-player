@@ -25,6 +25,7 @@ file_005=yes
 file_006=yes
 file_007=yes
 file_008=yes
+file_009=yes
 [FILE_INFO]
 file_000=hlavni.asm
 file_001=MP3.INC
@@ -35,6 +36,7 @@ file_005=aritmetic.asm
 file_006=FAT32.ASM
 file_007=commands.asm
 file_008=MP3.ASM
+file_009=filesystem.asm
 [SUITE_INFO]
 suite_guid={6B3DAA78-59C1-46DD-B6AA-DBDAE4E06484}
 suite_state=

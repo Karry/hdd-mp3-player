@@ -73,6 +73,7 @@ BIG_LOOP
 	call PRIKAZ_06h				; --- // ---
 	call PRIKAZ_07h				; --- // ---
 	call PRIKAZ_08h				; --- // ---
+	call PRIKAZ_09h				; --- // ---
 
 	call PRIKAZ_80h				; --- // ---
 	call PRIKAZ_81h				; --- // ---
@@ -206,9 +207,150 @@ MP3_NOT_PLAY
 ;********************************************************************************************************************
 ;********************************************************************************************************************
 DALSI_SKLADBA
-	bcf PREH_STAV0,0
-	bcf PREH_STAV0,1
-	bcf PREH_STAV0,2	
+	; tato procedura je volana, kdyz skonci mp3, aby nasla v adresari dalsi mp3 ktera se ma prehravat...
+	bcf PREH_STAV0,0		; 0. bit = 	0 => stop nebo pausa (nic nehraje)
+	bcf PREH_STAV0,1		; 1. bit = 	0 => neni zadny soubor k prehravani (nastaveni bitu play nema zadny ucinek)
+	bcf PREH_STAV0,2		; 2. bit = 	1 => je nastaven, kdyz se zmeni prehravany soubor (bez volani prikazu) do doby, nez prijde prikaz na dotaz STAVU... (81h)
+	bcf PREH_STAV1,0		; 0. bit =  0 => normalni prehravani (mp3 se nepreviji)
+	btfsc PREH_STAV0,3		; 3. bit = 	0 => po skonceni souboru se pokracuje v prehravani (zavisi na nastaveni repeatu)
+	return
+
+; PREH_STAV0
+; 	4. bit = 	0 => repeat off
+;				1 => repeat on
+; 	5. bit =	0 => repeat adresare (prvni cluster adresare musi byt nastaven v PREH_ADDR_ZACATEK_CL[1-4] )
+;				1 => repeat souboru (po skonceni prehravani souboru se ten samy soubor zacne prehravat znova)
+	btfss PREH_STAV0,4
+	goto DALSI_SKLADBA_NO_R_S
+	btfss PREH_STAV0,5
+	goto DALSI_SKLADBA_NO_R_S	
+DALSI_SKLADBA_REPAT_SOUBORU
+	movfw PREH_ADR_CL1
+	movwf CLUSTER1
+	movfw PREH_ADR_CL2
+	movwf CLUSTER2
+	movfw PREH_ADR_CL3
+	movwf CLUSTER3
+	movfw PREH_ADR_CL4
+	movwf CLUSTER4
+	movfw PREH_ZAZNAM1
+	movwf ZAZNAM1
+	movfw PREH_ZAZNAM2
+	movwf ZAZNAM2
+
+	PROG_PAGE_1
+	call SKOC_NA_ZAZNAM
+	PROG_PAGE_0
+	btfsc POZICE,0				; tento test by tu byt nemusel, protoze jsme jiz tento soubor hrali, jeden ale nikdy nevi...
+	return
+	PROG_PAGE_1
+	call FILE_INFO
+	PROG_PAGE_0
+
+	INDF_BANK_2
+	; ...nastavime jej jako prehravany soubor.
+	movlw 0x1C					; 13. byte bufferu 2
+	movwf FSR
+	movfw INDF
+	movwf PREH_DATA_CL1
+	incf FSR,f
+	movfw INDF
+	movwf PREH_DATA_CL2
+	incf FSR,f
+	movfw INDF
+	movwf PREH_DATA_CL3
+	incf FSR,f
+	movfw INDF
+	movwf PREH_DATA_CL4
+	goto DALSI_SKLADBA_PLAY		; nic jineho nemusime nastavovat, protoze hrajeme ten samy soubor co predtim
+DALSI_SKLADBA_NO_R_S
+; PREH_STAV0
+; 	4. bit = 	0 => repeat off
+;				1 => repeat on
+; 	5. bit =	0 => repeat adresare (prvni cluster adresare musi byt nastaven v PREH_ADDR_ZACATEK_CL[1-4] )
+;				1 => repeat souboru (po skonceni prehravani souboru se ten samy soubor zacne prehravat znova)
+	; tak ted jdem hledat dalsi soubor v adresari...
+	
+; 	HL_PARAMETRY 	-- parametry hledani
+;	HL_ADR_CL[1-4]	-- prnvi cluster prohledavaneho adresare
+;	ZAZNAM[1-2]		-- zaznam od ktereho hledame
+	movlw b'00000110'
+	movwf HL_PARAMETRY
+	movfw PREH_ADR_CL1
+	movwf HL_ADR_CL1
+	movfw PREH_ADR_CL2
+	movwf HL_ADR_CL2
+	movfw PREH_ADR_CL3
+	movwf HL_ADR_CL3
+	movfw PREH_ADR_CL4
+	movwf HL_ADR_CL4
+	movfw PREH_ZAZNAM1
+	movwf ZAZNAM1
+	movfw PREH_ZAZNAM2
+	movwf ZAZNAM2
+	
+	PROG_PAGE_1
+	call HLEDEJ
+	PROG_PAGE_0	
+
+	INDF_BANK_2
+	movlw 0x30
+	movwf FSR
+	movfw INDF
+	sublw h'06'
+	btfsc STATUS,Z
+	goto DALSI_SKLADBA_MAME_SOUBOR
+
+	; zadny dalsi mp3 soubor v adresari neni...
+	btfss PREH_STAV0,4				; ..podivame se, zda neni nastaven repeat slozky
+	return
+
+	; je nastaven repeat slozky a uz neni co prehravat. Jdem hledat prvni mp3 ve slozce...
+	; !!!!!!!!!!!!!!!!!!!! tady ten kus kodu se musi dodelat....
+	return
+
+DALSI_SKLADBA_MAME_SOUBOR
+	INDF_BANK_2
+	movlw 0x3C
+	movwf FSR
+	movfw INDF
+	movwf PREH_DATA_CL1
+	incf FSR,f
+	movfw INDF
+	movwf PREH_DATA_CL2
+	incf FSR,f
+	movfw INDF
+	movwf PREH_DATA_CL3
+	incf FSR,f
+	movfw INDF
+	movwf PREH_DATA_CL4
+	incf FSR,f
+	movfw INDF
+	movwf PREH_ZAZNAM1
+	incf FSR,f
+	movfw INDF
+	movwf PREH_ZAZNAM2
+
+DALSI_SKLADBA_PLAY
+	clrf PREH_DATA_POZICE
+	bsf PREH_STAV0,0
+	bsf PREH_STAV0,1			; nastavime si vlastosti prehravani: (PREH_STAV[0-1])
+	bsf PREH_STAV0,2
+
+	PROG_PAGE_1
+	call VS_SOFT_RESET
+
+	bcf VSREG_MODE_L,1			; prehravame normalni rychlosti 
+	bcf PREH_STAV1,0			; prehravame normalni rychlosti 
+	
+	movlw VSADDR_MODE
+	movwf TEMP1
+	movfw VSREG_MODE_L
+	movwf TEMP2
+	clrf TEMP3
+	call VS_WR_REG
+	PROG_PAGE_0
+	
 	return
 ;********************************************************************************************************************
 INIT_PORT
@@ -333,6 +475,21 @@ ODESLI_MODEL_NUMBER_ODESILANI
 	INDF_BANK_0	
 	return
 ;**********************************************************
+ODESLI_BUFF2_HIGH
+	; odesle z horni poloviny bufferu2 tolik bytu, kolik je v TEMP1
+	INDF_BANK_2	; BUFFER_2 je v bance 2
+	movlw 0x30	; horni pulka od adresy 30h
+	movwf FSR
+ODESLI_BUFF2_HIGH_ODESILANI
+	movfw INDF
+	call WR_USART
+	incf FSR,F	
+	decfsz TEMP1,F
+	goto ODESLI_BUFF2_HIGH_ODESILANI
+
+	INDF_BANK_0		
+	return
+;**************************************************************************
 ODESLI_BUFFER2
 	; v TEMP1 ocakava hodnotu kolik bytu ma odeslat
 	INDF_BANK_2	; BUFFER_2 je v bance 2

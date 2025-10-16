@@ -136,7 +136,7 @@ D_COMMAND     equ D_STATUS
 ;					0x035 - 0x03a -> 6bytu pro parametry podprogramu (musime zajistit, abychom nepouzivali registry, ktere pouzivaji i podprogramy!!!)
 ;					0x03B - 0x04C -> parametry FATky
 ;					0x04D - 0x050 -> registry pro praci s VS1001
-;					0x051 - 0x05E -> ---------------------------
+;					0x051 - 0xXXX -> ---------------------------
 ;					0x05F - 0x06F -> informace potrebne pro prehravani
 ;				0x070 - 0x07F -> registry pro potreby preruseni (dostupne z kterekoliv banky)
 ;					0x070 - 0x072 -> 3 registry slouzici k zalohovani W, STATUS, FSR
@@ -298,31 +298,54 @@ VSREG_VOL_H		equ 0x050		; levy kanal
 ;				equ 0x056
 ;				equ 0x057
 ;				equ 0x058
-;				equ 0x059
-;				equ 0x05A
-;				equ 0x05B
-;				equ 0x05C
-;				equ 0x05D
-PREH_CITAC_PREV	equ 0x05E		; pokud je mp3 previjena pomalu, sem se zapisuje kolik sektoru se jiz previnulo. 
-								; pokud dosahne urcite velikosti, tak se vzdy jeden sektor pusti normalni rychlosti...
-PREH_STAV1		equ 0x05F		; popis registru je pod popisem registru PREH_STAV0
 ;**********************************************************
+; registry pro ukladani nastaveni hledani
+HL_PARAMETRY	equ 0x059
+;		0. bit = 0 > pokud hledáme soubory, tak pouze MP3
+;				 1 > pokud hledáme soubory, vrací všechny soubory
+;		1. bit = 0 > hledáme klasicky (nejdøíve adresáøe, poté soubory
+;				 1 > hledáme pouze adresáøe, nebo soubory
+;		2. bit = 0 > je-li nastaven 1. bit, hledáme pouze adresáøe
+;				 1 > je-li nastaven 1. bit, hledáme pouze soubory
+;		3. bit = 0 > hledáme podle èísla záznamu buï následující èi pøedchozí záznam
+;				 1 > hledáme první záznam v adresáøi
+;		4. bit = 0 > hledáme NÁSLEDUJÍCÍ záznam
+;				 1 > hledáme PØEDCHOZÍ záznam
+;		7. bit - tento bit nelze nastavit uzivatelem
+;				= 0 > adresar je ROOT
+;				= 1 > adresar neni ROOT
+
+HL_ADR_CL1		equ 0x05A
+HL_ADR_CL2		equ 0x05B
+HL_ADR_CL3		equ 0x05C
+HL_ADR_CL4		equ 0x05D	; v jakem adresari momentalne vyhledavame
+
+;HL_ZAZNAM1		equ 0x05E
+;HL_ZAZNAM2		equ 0x05F	; zaznamu v adresari podle nehoz hledame
+;**********************************************************
+; registry pro praci procedur v filesystem (dalsi registry pozivane proceduramy v filesystem jsou CLUSTER a POZICE)
+ZAZNAM1			equ 0x060
+ZAZNAM2			equ 0x061	; poradi zaznamu v adresari
 ;**********************************************************
 ; informace potrebne pro prehravani
-PREH_ADDR_CL1		equ 0x060
-PREH_ADDR_CL2		equ 0x061
-PREH_ADDR_CL3		equ 0x062
-PREH_ADDR_CL4		equ 0x063
-PREH_ADDR_POZICE	equ 0x064
-PREH_ADDR_ZAZNAM	equ 0x065	; zaznam v adresari ktery se zrovna prehrava (soubor mp3)
+PREH_ADR_CL1		equ 0x062
+PREH_ADR_CL2		equ 0x063
+PREH_ADR_CL3		equ 0x064
+PREH_ADR_CL4		equ 0x065	; prni cluster adresare, ktery se prave prehrava...
 
-PREH_DATA_CL1		equ 0x066
-PREH_DATA_CL2		equ 0x067
-PREH_DATA_CL3		equ 0x068
-PREH_DATA_CL4		equ 0x069
-PREH_DATA_POZICE	equ 0x06A	; aktualni cluster, ktery se prehrava
+PREH_ZAZNAM1		equ 0x066
+PREH_ZAZNAM2		equ 0x067	; poradi zaznamu v adresari ktery se zrovna prehrava (soubor mp3)
 
-PREH_STAV0			equ 0x06B	; registr obsahuje informace o stavu aktualniho prehravani
+PREH_CITAC_PREV		equ 0x068	; pokud je mp3 previjena pomalu, sem se zapisuje kolik sektoru se jiz previnulo. 
+								; (Pøi pomalém pøevíjení je pomìr pøehraných sektorù ku pøeskoèeným 5:20.)
+
+PREH_DATA_CL1		equ 0x069
+PREH_DATA_CL2		equ 0x06A
+PREH_DATA_CL3		equ 0x06B
+PREH_DATA_CL4		equ 0x06C	; aktualni cluster, ktery se prehrava
+PREH_DATA_POZICE	equ 0x06D	; sektor v clusteru, ktery se prehrava
+
+PREH_STAV0			equ 0x06E	; registr obsahuje informace o stavu aktualniho prehravani
 				; 0. bit = 	0 => stop nebo pausa (nic nehraje)
 				;			1 => play            (nejaky soubor je prehravan)
 				; 1. bit = 	0 => neni zadny soubor k prehravani (nastaveni bitu play nema zadny ucinek)
@@ -338,7 +361,7 @@ PREH_STAV0			equ 0x06B	; registr obsahuje informace o stavu aktualniho prehravan
 				;			1 => rezervovano (pro nahodny vyber, nebo jiny rezim prehravani...)
 				; 7. bit =  0 => 
 				;			1 => rezervovano
-;PREH_STAV1			equ 0x05F
+PREH_STAV1			equ 0x06F
 				; 0. bit =  0 => normalni prehravani
 				;			1 => previjeni mp3 dopredu
 				; 1. bit =  0 => 
@@ -351,13 +374,6 @@ PREH_STAV0			equ 0x06B	; registr obsahuje informace o stavu aktualniho prehravan
 				;			1 => MUTE
 				; 5., 6., 7. bit 
 				;			=> rezervovano
-
-
-PREH_ADDR_ZACATEK_CL1	equ 0x06C
-PREH_ADDR_ZACATEK_CL2	equ 0x06D
-PREH_ADDR_ZACATEK_CL3	equ 0x06E
-PREH_ADDR_ZACATEK_CL4	equ 0x06F	; prvni cluster adresare, jez se prave prehrava (pokud je nastaven repeat adresare, tak se po dosazeni konce adresare zacne prehravat znova)
-
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ; registry pro potreby preruseni + prace s prikazy (jsou totiz dostupne odkudkoliv)

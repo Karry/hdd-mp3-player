@@ -116,7 +116,15 @@ WR_FEATURES
 ;*****************************************
 ; zapise vsechny registry potrebne k vykonani prikazu (adresove registry a prikaz)
 WR_BLOCK
-	call WAIT_FOR_READY_FOR_COMMAND
+;	call WAIT_FOR_READY_FOR_COMMAND
+	call RD_STATUS
+	btfsc ATA_STATUS,ERR
+	goto $+5					; Nastal error disku. Co budeme delat? S*r*m* na to a jdeme dal
+	btfsc ATA_STATUS,BSY
+	goto $-4					; Bsy <> 0, cekame dal 
+	btfss ATA_STATUS,DRDY
+	goto $-6
+
 	call WR_FEATURES
 	call WR_SC
 	call WR_LBA1
@@ -172,7 +180,24 @@ RUTW
 	return
 ;**********************************************************
 READ_DATA
-	call WAIT_FOR_DATA
+;	call WAIT_FOR_DATA	; tento odskok do dalsich podprogramu si nemohu, dovolit, protoze mam jen 8bit STACK
+	; Wait: ( Bsy=0 AND Drq=1 ) OR err=1
+	; 7   6    5  4   3   2    1   0
+	; BSY DRDY DF DSC DRQ CORR IDX ERR
+	; (cekame az disk bude mit pro nas prichystana data)
+	movlw D_STATUS      ; Status 
+	call RUTR 
+	movwf ATA_STATUS
+	btfsc ATA_STATUS,ERR
+	goto READ_DATA_CTEME		; Nastal error disku. Co budeme delat? S*r*m* na to a data precteme...
+
+	btfsc ATA_STATUS,BSY
+	goto READ_DATA				; Bsy <> 0, cekame dal 
+	
+	btfss ATA_STATUS,DRQ
+	goto READ_DATA				; Drq <> 1, cekame dal 
+	
+READ_DATA_CTEME
 
     movlw D_DATA_R
 	movwf ATA_ADDRESS
@@ -291,9 +316,30 @@ READ_SECTOR
 	; a LBA1 - LBA4, kde je ulozena LBA adresa sectoru od ktereho mame cist
 	; Postara se o spravne zadani adresy do disku (LBA28 / LBA48) a zavolani prikazu ke cteni...
 	; Samotne cteni se musi obslouzit v jine casti programu (podle toho co cteme...)
-	call WAIT_FOR_READY
-	call SELECT_DEVICE
-	call WAIT_FOR_READY_FOR_COMMAND
+
+;	call WAIT_FOR_READY
+	; Cekame az Bsy bit = 0 
+	call RD_STATUS
+	btfsc ATA_STATUS,ERR
+	goto $+3					; Nastal error disku. Co budeme delat? S*r*m* na to a jdeme dal
+	btfsc ATA_STATUS,BSY
+	goto $-4					; Bsy <> 0, cekame dal 
+
+
+;	call SELECT_DEVICE
+	movlw b'11100000'	; adresy budou v LBA, budeme pracovat s masterem
+	movwf DEVICE
+	call WR_DEVICE
+
+;	call WAIT_FOR_READY_FOR_COMMAND
+	call RD_STATUS
+	btfsc ATA_STATUS,ERR
+	goto $+5					; Nastal error disku. Co budeme delat? S*r*m* na to a jdeme dal
+	btfsc ATA_STATUS,BSY
+	goto $-4					; Bsy <> 0, cekame dal 
+	btfss ATA_STATUS,DRDY
+	goto $-6
+
 	btfsc ATA_ATTRIBUTES,LBA48_SUPPORT
 	goto READ_SECTOR_LBA48
 
@@ -510,21 +556,6 @@ DELAY_25us
 	;End of Delay
 	return
 ;**************************************************************************
-WAIT_FOR_DATA
-	; Wait: ( Bsy=0 AND Drq=1 ) OR err=1
-	; 7   6    5  4   3   2    1   0
-	; BSY DRDY DF DSC DRQ CORR IDX ERR
-	; (cekame az disk bude mit pro nas prichystana data)
-	call WAIT_FOR_READY
-	movfw ATA_STATUS
-	andlw b'10001000'
-	sublw b'00001000'
-	btfsc STATUS,Z
-	return
-	btfss ATA_STATUS,ERR
-	goto WAIT_FOR_DATA
-	return
-;**************************************************************************
 WAIT_FOR_READY
 	; Cekame az Bsy bit = 0 
 	; (cekame az disk nebude zaneprazdnen)
@@ -535,9 +566,9 @@ WAIT_FOR_READY
 	return
 	goto WAIT_FOR_READY
 ;**************************************************************************
-WAIT_FOR_READY_FOR_COMMAND
-	call WAIT_FOR_READY
-	btfss ATA_STATUS,DRDY
-	goto WAIT_FOR_READY_FOR_COMMAND
-	return
+;WAIT_FOR_READY_FOR_COMMAND
+;	call WAIT_FOR_READY
+;	btfss ATA_STATUS,DRDY
+;	goto WAIT_FOR_READY_FOR_COMMAND
+;	return
 ;**************************************************************************
