@@ -10,7 +10,6 @@
 ; prevadet cislo clusteru na LBA adresu, najit dalsi cluster v alokacnim retezci.
 ;
 ; dodelat:
-;	- Prijem dat po USARTU, udelat software interaktivni (aby na pozadani vypisoval adresare, clustry...)
 ;	- Rozchodit komunikaci s mp3 dekoderem (az jej koupime)
 ;	- pak uz jen vychytavky...
 ;
@@ -39,7 +38,7 @@
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	org 0
- 	goto START
+  	goto START
 	org	4
 	goto INTERRUPT
 ;**********************************************************
@@ -66,66 +65,53 @@ START
 	btfss ATA_ATTRIBUTES,ATA_OK
 	goto $-2					; pokud neni pripojen disk, tak se jej pokousime neustale najit...
 	nop							; ...pokud tam zadny disk neni, tak bychom se stejne ani sem nemeli dostat, protoze budem porad cekat na WAIT_FOR_READY
+
 	call IDENTIFY_DEVICE		; koukneme co disk umi
-	call ODESLI_MODEL_NUMBER	; odesleme si jmeno disku 
+CEK_PRIKAZ_01h
+	call CEKEJ_PRIKAZ
+	movfw 0x078					; prvni byte prikazoveho zasobniku
+	clrf PRIJATYCH_DAT			; prikaz byl vybran -> prazdny zasobnik
+	sublw h'01'					; ...pokud to byl prikaz 01h...
+	btfss STATUS,Z
+	goto CEK_PRIKAZ_01h
+	movfw ATA_ATTRIBUTES		; ...vodesleme zpet vlastnosti disku a jeho jmenovku (vis. popis protokolu)
+	call WR_USART
+	call ODESLI_MODEL_NUMBER	; odesleme jmeno disku 
 
-	call DELAY_500ms
 	call SCAN_MBR				; najdeme oddily s FAT32 a jejich seznam dame do bufferu 2
-	call ODESLI_BUFFER2			; odesleme si seznam oddilu (FAT32) s adresami
+CEK_PRIKAZ_02h_03h
+	call CEKEJ_PRIKAZ			; pockame si na prikaz
+	clrf STAV_PRIKAZU			; smazeme registr signalizujici platnost prikazu
+	call PRIKAZ_02h				; testujeme zda prisel prikaz 02h, pokud ano tak jej provedeme a nastavime platnost prikazu
+	call PRIKAZ_03h				; ---//---
+	btfss STAV_PRIKAZU,0		; Pokud si zadna z procedur prikaz neprevzala, ...
+	clrf PRIJATYCH_DAT			; ...vymazeme zasobnik prikazu. (prikaz neni pro tuto chvili platny)
+	btfss ATA_ATTRIBUTES,FAT32_LOAD	; cekame dokud nedojde k nasteni nejakeho oddilu
+	goto CEK_PRIKAZ_02h_03h		; pokud byl oddil vporadku nacten, pokracujeme...
 
-	call DELAY_500ms
-;	movlw h'b6'
-;	movwf LBA1
-;	movlw h'3c'
-;	movwf LBA2
-;	movlw h'4c'
-;	movwf LBA3
-;	movlw h'00'
-;	movwf LBA4					; LBA adresa 2. oddilu
 
-	clrf LBA4
-	clrf LBA3
-	clrf LBA2
-	movlw .63
-	movwf LBA1					; LBA adresa 1. oddilu
-
-	call NACTI_FAT32			; nacte parametry zvoleneho oddilu
 	clrf CLUSTER4
 	clrf CLUSTER3
 	clrf CLUSTER2
-	clrf CLUSTER1				; vezmeme cluster 0 -> root adresar
-
-;	; vezmeme cluster 0x00060A5C -> slozka WINDOWS
-;	movlw 0x00
-;	movwf CLUSTER4
-;	movlw 0x06
-;	movwf CLUSTER3
-;	movlw 0x0a
-;	movwf CLUSTER2
-;	movlw 0x5c
-;	movwf CLUSTER1
-
+	clrf CLUSTER1				; vezmeme cluster 0 -> root adresar (cluster 0x00060A5C -> slozka WINDOWS)
 	clrf POZICE
 	call CLUSTER_TO_LBA			; zjistime skutecnou polohu dat na disku
 	movlw 1
 	movwf SECTOR_C
 	call READ_SECTOR			; dame prikaz je precist
-	movlw .0					; 0 -> preskoci 256
+	movlw .0					; 0 -> odesle 256
 	movwf TEMP1
 	call ODESLI_DATA			; odesleme USARTem
-
 ;	call NEXT_CLUSTER			; jen tak ze srandy se kouknem kde adresar pokracuje
-;	movfw POZICE
-;	call WR_USART
-;	movfw CLUSTER1
-;	call WR_USART
-;	movfw CLUSTER2
-;	call WR_USART
-;	movfw CLUSTER3
-;	call WR_USART
-;	movfw CLUSTER4
-;	call WR_USART
 
+	call DELAY_500ms
+	movlw 1
+	movwf SECTOR_C
+	call READ_SECTOR
+	call FILE_INFO				; prvni soubor ROOT adresare
+	movlw .16
+	movwf TEMP1
+	call ODESLI_BUFFER2			; odesleme si zaznam o souboru	
 
 BIG_LOOP
 	bsf ERROR_LED
@@ -133,11 +119,6 @@ BIG_LOOP
 
 	bcf ERROR_LED
 	call DELAY_500ms
-	
-	movlw 'O'
-	;call WR_USART
-	movlw 'K'
-	;call WR_USART
 
 	goto BIG_LOOP
 ;**********************************************************
@@ -146,7 +127,7 @@ INIT_PORT
 ;	movlw b'00100001' 			; bity SO a DREQ jako vstupy z dekoderu
 	movlw 0xff
 	movwf MP3_PORT_TRIS
-	movlw b'00000000'			; adresovani disku jako vystupy, jen vstup pro USART
+	movlw b'10000000'			; adresovani disku jako vystupy
 	movwf ATA_ADDRESS_TRIS		
 	movlw .0
 	movwf ATA_CONTROL_TRIS		; ovladani disku jako vystupy
@@ -177,6 +158,7 @@ INIT_CONFIG 	; nakonfiguruje preruseni, WDT, USART, pull ups....
 	movwf PIE1	
 	movlw b'00000000'	; ostatni vnejsi preruseni vymaskujeme
 	movwf PIE2			
+
 	movlw b'11000000' 	; povolime preruseni na vnejsi zarizeni (USART)				
 	movwf INTCON
 
@@ -187,17 +169,19 @@ INIT_CONFIG 	; nakonfiguruje preruseni, WDT, USART, pull ups....
 	movwf RCSTA
 	BANK_1
 	;movlw .129 		; Fosc = 20 MHz, BRGH=1 => rychlost = 9615 bps
-	movlw .103 		; Fosc = 16 MHz, BRGH=1 => rychlost = 9615 bps
+	movlw .103 			; Fosc = 16 MHz, BRGH=1 => rychlost = 9615 bps
 	movwf SPBRG	
 
 	movlw b'00000111'
 	movwf ADCON1		; vsechny vstupy (RA,RE) jako digitalni
 	BANK_0	
-	clrf ADCON0		; pro jistotu (vypneme A/D prevodniky)
+	clrf ADCON0			; pro jistotu (vypneme A/D prevodniky)
 
+	clrf PRIJATYCH_DAT	; zasobnik prikazu prazdny...
 	return
 ;**********************************************************
-WR_USART	; odesle slovo ve workingu po ICSP
+WR_USART	; odesle slovo ve workingu po USARTu
+			; prijimani dat je reseno prez preruseni...
 	BANK_1	
 	btfss TXSTA,1 
 	goto WR_USART	; cekame do chvile nez bude pripraven transmit buffer 
@@ -256,11 +240,10 @@ ODESLI_MODEL_NUMBER_ODESILANI
 	return
 ;**********************************************************
 ODESLI_BUFFER2
+	; v TEMP1 ocakava hodnotu kolik bytu ma odeslat
 	INDF_BANK_2	; BUFFER_2 je v bance 2
 	movlw 0x10	; na adrese 10
 	movwf FSR
-	movlw .64	; budeme odesilat 64 bytu
-	movwf TEMP1
 ODESLI_BUFFER2_ODESILANI
 	movfw INDF
 	call WR_USART
@@ -275,20 +258,38 @@ INTERRUPT					; sem se skace po zavolani preruseni...
 	movwf TEMP_WORKING
 	movfw STATUS
 	movwf TEMP_STATUS
+	movfw FSR
+	movwf TEMP_FSR
 	BANK_0
+	INDF_BANK_0
 
-	btfss PIR1,5			; Meli bychom mit povoleno sice jen jedno preruseni (od USARTU), jeden ale nikdy nevi, proto ten test
+	btfss PIR1,RCIF			; Meli bychom mit povoleno sice jen jedno preruseni (od USARTU), jeden ale nikdy nevi, proto ten test
 	goto END_OF_INTERRUPT	; Pokud nejde o preruseni od USARTU, tak koncime...
-	movfw RCREG
-	btfsc RCSTA,1
-	goto END_OF_INTERRUPT
-	btfsc RCSTA,2
-	goto END_OF_INTERRUPT	; Pokud nastala nejaka chyba pri prijimani data, tak na to s*r*m...
+	movfw RCREG				; !!! vynulovat pøíznak !!!	
+	movwf PRIJATE_DATO
 
-	; Sem bychom se podle me meli dostat pri obdrzeni nejakeho slova po USARTU, moc to ale nefunguje...
-	; Budu muset zjistit, jestli to je hardwarem, ci softwarem...
+	movfw PRIJATYCH_DAT
+	sublw .7				; pokud je v zasobniku uz plno (PRIJATYCH_DAT=8), tak koncime
+	btfss STATUS,C
+	goto END_OF_INTERRUPT	; Zasobnik je plny, nic prijimat nebudeme
 
+	movfw PRIJATYCH_DAT
+	addlw 0x78				; zacatek zasobniku prikazu
+	movwf FSR
+	movfw PRIJATE_DATO		; prijmuta data -> do W
+	movwf INDF				; prijate dato na prvni volne misto v zasobniku
+	
+	incf  PRIJATYCH_DAT,F	; pricteme k indikaci zasobniku
+;	movlw '['
+;	call WR_USART
+;	movfw PRIJATYCH_DAT
+;	addlw .48
+;	call WR_USART
+;	movlw ']'
+;	call WR_USART	
 END_OF_INTERRUPT			; sem skocime kdyz mame vsechny veci kolem preruseni vyrizeny
+	movfw TEMP_FSR
+	movwf FSR
 	movfw TEMP_STATUS
 	movwf STATUS
 	movfw TEMP_WORKING
@@ -313,4 +314,79 @@ DELAY_500ms
 ;End of Delay
 	return
 ;**********************************************************
+; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+; tady jsou procedury resici jednotlive prikazy
+; Pokud je v zasobniku prikaz pro nejakou proceduru, musi tato procedura nastavit byt STAV_PRIKAZU do 1 (i kdyz treba nema vsechny parametry)
+; Pokud procedura najde svuj prikaz a jsou prijate vsechny parametry, musi odeslat nejakou odpoved po USARTu a smazat reg. PRIJATYCH_DAT!!!
+; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+CEKEJ_PRIKAZ					; ceka dokud nedostaneme nejaky prikaz
+	movfw PRIJATYCH_DAT
+	andlw h'FF'
+	btfsc STATUS,Z				; koukneme se zda prisel nejaky prikaz...
+	goto CEKEJ_PRIKAZ
+	return
+; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+PRIKAZ_02h	
+	movfw 0x078					; prvni byte zasobniku prikazu
+	sublw h'02'					
+	btfss STATUS,Z
+	return						; nebyl prijat prikaz 02h
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 02h, nastavime byt STAV_REGISTRU
+	movfw PRIJATYCH_DAT
+	sublw .1					; pro prikaz 02h museji prijit 2 byty (prikaz + 1 parametr)
+	btfsc STATUS,C
+	return						; jeste nemame vsechny parametry
+	; Prisel prikaz 02h s jednim parametrem (vrat oddily se systemem FAT32)
+
+	movfw 0x079					; parametr prikazu 02h (cislo svazku, jehoz parametry chceme vratit)
+	andlw b'00000011'			; parametr musi byt v rozsahu 0-3
+	movwf TEMP1
+	bcf STATUS,C
+	rlf TEMP1,F
+	rlf TEMP1,F
+	rlf TEMP1,F
+	rlf TEMP1,W					; parametr vynasobime 16
+	addlw 0x10					; buffer 2 je v bance 2 na adrese 0x10
+	movwf FSR
+	INDF_BANK_2
+	movlw .16					; budeme odesilat 16 bytu
+	movwf TEMP1
+PRIKAZ_02h__ODESILANI_ODDILU
+	movfw INDF
+	call WR_USART
+	incf FSR,F
+	decfsz TEMP1,F
+	goto PRIKAZ_02h__ODESILANI_ODDILU
+	clrf PRIJATYCH_DAT
+	return
+; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+PRIKAZ_03h
+	movfw 0x078					; prvni byte zasobniku prikazu
+	sublw h'03'					
+	btfss STATUS,Z
+	return						; nebyl prijat prikaz 03h
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 03h, nastavime byt STAV_REGISTRU
+	movfw PRIJATYCH_DAT
+	sublw .4					; pro prikaz 03h museji prijit 5 byty (prikaz + 4byty parametr)
+	btfsc STATUS,C
+	return						; jeste nemame vsechny parametry
+	; Prisel prikaz 03h s 4bytovym parametrem (nacti oddily se systemem FAT32)
+
+	movfw 0x079					; parametrem prikazu 03h ma byt 4bytova adresa zacatku svazku, ktery se ma nacist
+	movwf LBA1
+	movfw 0x07A
+	movwf LBA2
+	movfw 0x07B
+	movwf LBA3
+	movfw 0x07C
+	movwf LBA4
+	call NACTI_FAT32			; nacte parametry zvoleneho oddilu
+
+	movfw ATA_ATTRIBUTES
+	call WR_USART
+	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
+	return
+; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	END

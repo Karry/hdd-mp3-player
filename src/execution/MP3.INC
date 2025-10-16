@@ -119,9 +119,9 @@ D_COMMAND     equ D_STATUS
 ;					0x035 - 0x03a -> 6bytu pro parametry podprogramu (musime zajistit, abychom nepouzivali registry, ktere pouzivaji i podprogramy!!!)
 ;					0x03B - 0x069 -> 50bytu rezervovano pro parametry oddilu, pozici v mp3 a dalsi blbosti
 ;				0x070 - 0x07F -> registry pro potreby preruseni (dostupne z kterekoliv banky)
-;					0x070 - 0x071 -> 2registry slouzici k zalohovani W a STATUS
-;					0x072 - 0x077 -> vlajka prikazu, ....
-;					0x078 - 0x07F -> 8bytu obsahujici data prikazu prisla po USARTU
+;					0x070 - 0x072 -> 3 registry slouzici k zalohovani W, STATUS, FSR
+;					0x073 - 0x077 -> vlajka prikazu, ....
+;					0x078 - 0x07F -> 8 bytu zasobniku prikazu (obsahujici data prikazu prisla po USARTU)
 ;
 ; 	BANK 1: 	0x080 - 0x09F = specialni registry,
 ;				0x0A0 - 0x0EF = volne misto (80bytu)
@@ -230,10 +230,16 @@ ROOT_DIR_CL4	equ 0x04B
 CLUSTER_SIZE	equ 0x04C		; velikost clusteru (pocet sektoru na claster)
 
 ;**********************************************************
-; registry pro potreby preruseni (jsou totiz dostupne odkudkoliv)
+; registry pro potreby preruseni + prace s prikazy (jsou totiz dostupne odkudkoliv)
 TEMP_WORKING	equ 0x070
 TEMP_STATUS		equ 0x071
-PRIJATE_DATO	equ 0x071
+TEMP_FSR		equ 0x072
+PRIJATYCH_DAT	equ 0x073		; ukazuje kolik je platnych dat v zasobniku prikazu (0 -> zasobnik je prazdny)
+PRIJATE_DATO	equ 0x074		; pomocna promenna v preruseni
+STAV_PRIKAZU	equ 0x075		; pomocny registr signalizujici stav prikazu umisteneho v zasobniku prikazu
+								; pokud zadna procedura nenastavi do 1, je prikaz v tuto chvili neplatny
+								; pokud prikaz je pro proceduru ale nama zatim dost parametru, muji tento byt nastavit take do 1
+; 0x078 - 0x07F		-> zasobnik prikazu (data prisla po USARTU)
 ;**********************************************************
 ; BANK_1	s touto bankou pracuji procedury provadejici 32 bitove 
 ; 			aritmeto/logicke operace

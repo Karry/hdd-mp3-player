@@ -750,3 +750,124 @@ NEXT_CLUSTER_KONEC
 	BANK_0
 	return
 ;**************************************************************************
+FILE_INFO
+	; z disku nam ted ma prijit 32bytu dat, ktere reprezentuji jeden zaznam ve slozce
+	; tato procedura zaznam precte, analyzuje, a do bufferu 2 da nasledujici informace:
+	;		1.     byte -> = 00h -> zaznam je prazdny; = 01h -> zaznam je adresar; 02h -> zaznam je soubor; 06h -> zaznam je soubor s priponou MP3
+	;		2..9   byte -> 8 znaku dlouhe jmeno ("DOSovsky" tvar - napr. slouzka "dokumenty" = "DOKUME~1" )
+	;		10..12 byte -> u souboru tri znaky pripony (u adresaru vetsinou mezery - 20h 20h 20h)
+	;		13..16 byte -> 1. cluster souboru
+	; Pokud se jedna o adresar, a zaznam o pripone se nerovna 0x202020 (tri mezery), tak skutecne jmeno adresare je : ADRESAR.PRI
+	INDF_BANK_2
+	movlw 0x10					; 1. byte bufferu 2
+	movwf FSR
+	movlw .0					; zatim nevime co zaznam obsahuje, tak ho oznacime jako prazdny
+	movwf INDF
+	incf FSR,F	
+
+	movlw .5					; 5 slov = 10 bytu -> 8 znaku jmena souboru/slozky + 2 znaky pripony
+	movwf TEMP1
+FILE_INFO__READ_NAME
+	call READ_DATA				; 2 znaky jmena souboru/slozky, nebo pripony souboru
+	movfw DATA_L
+	movwf INDF
+	incf FSR,F
+	movfw DATA_H
+	movwf INDF
+	incf FSR,F
+	decf TEMP1,F
+	btfss STATUS,Z
+	goto FILE_INFO__READ_NAME	
+
+	call READ_DATA				; posledni znak pripony a byt s atributy souboru
+	movfw DATA_L
+	movwf INDF
+
+	movlw 0x11					; 2. byte bufferu 2 -> 1. znak jmena souboru
+	movwf FSR
+	movfw INDF					; ted ve W mame 1. znak jmena souboru/slozky
+	andlw h'FF'
+	btfsc STATUS,Z
+	goto FILE_INFO__KONEC		; pokud 1. znak jmena souboru = 00h, je zaznam prazdny
+	sublw h'E5'
+	btfsc STATUS,Z
+	goto FILE_INFO__KONEC		; pokud 1. znak jmena souboru = E5h, je zaznam prazdny
+	
+	; pokud jsme tady, tak zaznam obsahuje soubor, adresar, dlouhe jmeno souboru, nebo jmenovku disku 
+	; (jsou dva zpusoby jak zapsat jmenovku svazku, bud do spousteciho zaznamu, nebo jako polozku ROOT adresare)
+	movfw DATA_H				; byt s atributy souboru
+	andlw h'0F'
+	sublw h'0F'					; if (atributy and 0Fh) = 0Fh -> zaznam s dlouhym nazvem souboru
+	btfsc STATUS,Z
+	goto FILE_INFO__KONEC		; pokud zaznam je dlouhy nazav souboru, koncime
+	btfsc DATA_H,3
+	goto FILE_INFO__KONEC		; if (atributy and 08h) = 08h -> jmenovka disku
+	btfsc DATA_H,4				; if (atributy and 16h) = 16h -> adresar
+	goto FILE_INFO__DIR
+
+	movlw h'02'					; zaznam je soubor
+	movwf TEMP1
+	; tady vime, ze zaznam je soubor, tak se podivame, zda to neni mp3
+	movlw 0x19					; 10. byt bufferu 2 -> 1. znak pripony souboru
+	movwf FSR
+
+	movfw INDF
+	sublw 'M'					; (jmena souboru v "DOSovskem" tvaru maji vzdy velka pismena)
+	btfss STATUS,Z
+	goto FILE_INFO__FILE
+	incf FSR,F
+	movfw INDF
+	sublw 'P'
+	btfss STATUS,Z
+	goto FILE_INFO__FILE
+	incf FSR,F
+	movfw INDF
+	sublw '3'
+	btfss STATUS,Z
+	goto FILE_INFO__FILE
+
+	movlw h'06'					; ted je jasne, ze soubor je mp3
+	movwf TEMP1
+	goto FILE_INFO__FILE
+
+FILE_INFO__DIR
+	movlw h'01'					; zaznam je adresar
+	movwf TEMP1
+
+FILE_INFO__FILE
+	; tady mame v TEMP 1 jednu z nasledujicich hodnot:
+	; 01h -> zaznam je adresar; 02h -> zaznam je soubor; 06h -> zaznam je soubor s priponou MP3
+	movlw 0x10					; 1. byt bufferu 2 -> identifikace zaznamu
+	movwf FSR
+	movfw TEMP1
+	movwf INDF
+
+	movlw .4
+	movwf TEMP1
+	call PRESKOC				; nasledujicich 8 bytu ze zaznamu je pro nas k nicemu (obsahuji cas posledni upravy, otevreni a buh vi co jeste...)
+
+	movlw 0x1E					; 15. byt bufferu 2 -> 2. byt prvniho clusteru
+	movwf FSR
+	call READ_DATA				; jedno slovo -> horni cast cisla prvniho clusteru
+	movfw DATA_L
+	movwf INDF
+	incf FSR,F
+	movfw DATA_H
+	movwf INDF
+
+	call READ_DATA				; cas vytvoreni   (1 word)
+	call READ_DATA				; datum vytvoreni (1 word)
+
+	movlw 0x1C					; 13. byt bufferu 2 -> 0. byt prvniho clusteru
+	movwf FSR
+	call READ_DATA				; jedno slovo -> dolni cast cisla prvniho clusteru
+	movfw DATA_L
+	movwf INDF
+	incf FSR,F
+	movfw DATA_H
+	movwf INDF
+	
+	; Pak jsou v zaznamu jeste 4 byty, ktere obsahuji velikost souboru. Ty mi ale nepotrebujeme...	
+FILE_INFO__KONEC
+	return
+;**************************************************************************
