@@ -363,6 +363,62 @@ PRIKAZ_09h_KONEC
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+PRIKAZ_0Ah						; 0Ah – precti dlouhe jmeno
+	movfw 0x078					; prvni byte zasobniku prikazu
+	sublw h'0A'
+	btfss STATUS,Z
+	return						; nebyl prijat prikaz 0Ah
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 0Ah, nastavime byt STAV_REGISTRU
+	movfw PRIJATYCH_DAT
+	sublw .6					; pro prikaz 0Ah musi prijit 7 bytu (prikaz + 6bytu parametr)
+	btfsc STATUS,C
+	return						; jeste nemame vsechny parametry
+	; Prisel prikaz 0Ah s 6bytovym parametrem 
+
+	movfw 0x079					; nejnizsi cast clusteru adresare
+	movwf HL_ADR_CL1
+	movwf CLUSTER1
+	movfw 0x07A
+	movwf HL_ADR_CL2
+	movwf CLUSTER2
+	movfw 0x07B
+	movwf HL_ADR_CL3
+	movwf CLUSTER3
+	movfw 0x07C
+	movwf HL_ADR_CL4
+	movwf CLUSTER4
+	call PRVNI_CL_ADRESARE
+
+	btfss POZICE,0
+	goto PRIKAZ_0Ah_PAR1_OK
+
+PRIKAZ_0Ah_PAR1_NOT_OK
+	INDF_BANK_2
+	movlw 0x10					; 1. byte bufferu 2
+	movwf FSR
+	movlw h'81'					; jako prvni byte odpovedi dame 81h (Zadany cluster neobsahuje adresar)
+	movwf POZICE
+	goto PRIKAZ_0Ah_KONEC
+PRIKAZ_0Ah_PAR1_OK
+	movfw 0x07D
+	movwf ZAZNAM1
+	movfw 0x07E
+	movwf ZAZNAM2
+
+	call LONG_NAME
+PRIKAZ_0Ah_KONEC
+	PROG_PAGE_0
+	movfw POZICE
+	call WR_USART	
+	; At uz bylo v zaznamu cokoli, odesleme 65 bytu z BUFFERU 2
+	movlw .65
+	movwf TEMP1
+	call ODESLI_BUFFER2			; odesleme si zaznam o souboru	
+	PROG_PAGE_1
+
+	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
+	return
+; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 PRIKAZ_80h						; 80h – hraj mp3 soubor
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'80'

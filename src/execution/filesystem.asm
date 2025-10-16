@@ -179,7 +179,12 @@ SKOC_NA_ZAZNAM_MAME_CL
 	call READ_SECTOR			; dame prikaz precist sektor
 	PROG_PAGE_1
 
-	movfw TEMP5					; kolikaty zaznam v casti adersare (sektoru) mame precist
+	movlw .16
+	movwf ZAZNAMU_vBUFFERU_DISKU
+	movfw TEMP5
+	subwf ZAZNAMU_vBUFFERU_DISKU,f		; ZAZNAMU_vBUFFERU_DISKU := 16 - TEMP5
+
+	movfw TEMP5					; kolikaty zaznam v casti adersare (sektoru) mame precist [0..15]
 	andlw b'00001111'
 	movwf TEMP1					; rozsah by mel byt spravne, pro jistotu jej ale orizneme [0..15]
 	andlw h'FF'
@@ -246,10 +251,10 @@ FILE_INFO__READ_NAME
 	movfw INDF					; ted ve W mame 1. znak jmena souboru/slozky
 	andlw h'FF'
 	btfsc STATUS,Z
-	goto FILE_INFO__KONEC		; pokud 1. znak jmena souboru = 00h, je zaznam prazdny
+	goto FILE_INFO__CTI20_KONEC		; pokud 1. znak jmena souboru = 00h, je zaznam prazdny
 	sublw h'E5'
 	btfsc STATUS,Z
-	goto FILE_INFO__KONEC		; pokud 1. znak jmena souboru = E5h, je zaznam prazdny
+	goto FILE_INFO__CTI20_KONEC		; pokud 1. znak jmena souboru = E5h, je zaznam prazdny
 	
 	; pokud jsme tady, tak zaznam obsahuje soubor, adresar, dlouhe jmeno souboru, nebo jmenovku disku 
 	; (jsou dva zpusoby jak zapsat jmenovku svazku, bud do spousteciho zaznamu, nebo jako polozku ROOT adresare)
@@ -257,9 +262,9 @@ FILE_INFO__READ_NAME
 	andlw h'0F'
 	sublw h'0F'					; if (atributy and 0Fh) = 0Fh -> zaznam s dlouhym nazvem souboru
 	btfsc STATUS,Z
-	goto FILE_INFO__KONEC		; pokud zaznam je dlouhy nazav souboru, koncime
+	goto FILE_INFO__CTI20_KONEC		; pokud zaznam je dlouhy nazav souboru, koncime
 	btfsc DATA_H,3
-	goto FILE_INFO__KONEC		; if (atributy and 08h) = 08h -> jmenovka disku
+	goto FILE_INFO__CTI20_KONEC		; if (atributy and 08h) = 08h -> jmenovka disku
 	btfsc DATA_H,4				; if (atributy and 16h) = 16h -> adresar
 	goto FILE_INFO__DIR
 
@@ -331,8 +336,20 @@ FILE_INFO__FILE
 	movfw DATA_H
 	movwf INDF
 	
-	; Pak jsou v zaznamu jeste 4 byty, ktere obsahuji velikost souboru. Ty mi ale nepotrebujeme...	
-FILE_INFO__KONEC
+	; Pak jsou v zaznamu jeste 4 byty, ktere obsahuji velikost souboru. Ty mi sice nepotrebujeme,
+	; musime je ale precist, aby jsme precetli vsech 32 bytu zaznamu
+	movlw .2
+	movwf TEMP1
+	PROG_PAGE_0
+	call PRESKOC
+	PROG_PAGE_1
+	return
+FILE_INFO__CTI20_KONEC
+	movlw .10
+	movwf TEMP1
+	PROG_PAGE_0
+	call PRESKOC
+	PROG_PAGE_1
 	return
 ;**************************************************************************
 FILE_SIZE
@@ -516,7 +533,7 @@ HLEDEJ_HLEDANI
 	clrf ZAZNAM2
 	btfsc HL_PARAMETRY,7
 	bsf ZAZNAM1,1			; if (!ROOT): ZAZNAM = 2; endif;
-
+	clrf ZAZNAMU_vBUFFERU_DISKU
 HLEDEJ_REPEAT
 	movfw HL_ADR_CL1
 	movwf CLUSTER1
@@ -527,9 +544,16 @@ HLEDEJ_REPEAT
 	movfw HL_ADR_CL4
 	movwf CLUSTER4
 
+
+	clrf POZICE
+	movfw ZAZNAMU_vBUFFERU_DISKU
+	andlw h'FF'
+	btfsc STATUS,Z			; pokud jeste nejake po sobe jdouci zaznamy jsou pripraveny v bufferu disku, tak nemusime volat SKOC_NA_ZAZNAM
 	call SKOC_NA_ZAZNAM		; - pokud ZAZNAM[1-2] ukazuji mimo adresar, vrati v POZICE FFh (jinak 00h)
 	btfsc POZICE,0
 	goto HLEDEJ_END_REPEAT
+
+	decf ZAZNAMU_vBUFFERU_DISKU,f	; ted jeden zaznam precteme, proto jich bude v bufferu disku o jeden min
 	call FILE_INFO
 	call ZAPIS_C_ZAZNAMU
 
@@ -1019,5 +1043,199 @@ BUF2_LOW_TO_HIGH
 	movfw 0x121
 	movwf 0x141
 	BANK_0
+	return
+;**************************************************************************
+LONG_NAME
+; Tato procedura prevezme v HL_ADR_CL[1-4] cislo prvniho clusteru adresare a v ZAZNAM[1-2] cislo zaznamu 
+; od kteremu se pokusi najit dlouhe jmeno. Toto dlouhe jmeno umisti do bufferu 2
+; Dlouhe jmeno je ukonceno nulovym bytem. Pokud v bufferu 2 se nulovy byt nevyskytuje, je delka dlouheho
+; jmena delsi ci rovna 64.
+; V POZICE vraci 00h pri nenalezeni dlouheho jmena a 01h pri pravdepodobnem nalezeni dlouheho jmena.
+
+; 64 znaku neni moc, neco se tam ale vejde "1-3. G & D - Purify (Gabriel & Dresden Remix) featuring Balligom"   (ingo.mp3)
+; vyvojak:
+;
+; CLEAR_BUFFER2
+;
+; ZAZNAMU_vBUFFERU_DISKU := 0
+; IF (ZAZNAM < 5):					// zaznamy cislujeme od 0, 
+;	HL_PARAMETRY := ZAZNAM;
+;	ZAZNAM := 0
+; else:
+; 	ZAZNAM := ZAZNAM - 5 			// protoze chceme prohledat 5 predchozich
+;	HL_PARAMETRY := 5
+; endif
+;
+; while (HL_PARAMETRY <> 0)
+;	if (ZAZNAMU_vBUFFERU_DISKU = 0):
+;		SKOC_NA_ZAZNAM
+;	endif;
+
+;////////////////////
+; if (BUFF1[0] != 0) and (BUFF1[0] != E5h) and (BUFF1[11] = 0Fh):
+;		// v bufferu1 mame zaznam obsahujici dlouhe jmeno 
+;		FSR := (HL_PARAMETRY * 13) + 3
+;		INDF := BUFF1[1]
+;		inc FSR
+;		INDF := BUFF1[3]
+;		inc FSR
+;		...
+; else:
+; 		CLEAR_BUFFER2	// zaznam neobsahuje dlouhe jmeno, proto jsou vsechny predchozi zaznamy k nicemu
+; endif;
+;////////////////////
+
+;	HL_PARAMETRY --
+;	ZAZNAM ++
+;	ZAZNAMU_vBUFFERU_DISKU --
+; endwhile
+	PROG_PAGE_0
+	call CLEAR_BUFFER2				; 		CLEAR_BUFFER2	// zaznam neobsahuje dlouhe jmeno, proto jsou vsechny predchozi zaznamy k nicemu
+	PROG_PAGE_1
+
+	clrf ZAZNAMU_vBUFFERU_DISKU		; ZAZNAMU_vBUFFERU_DISKU := 0
+	clrf POZICE
+	movfw ZAZNAM1
+	sublw .4
+	btfss STATUS,C
+	goto LONG_NAME_ELSE1
+	movfw ZAZNAM2
+	andlw h'FF'
+	btfss STATUS,Z					; IF (ZAZNAM < 5):					// zaznamy cislujeme od 0, 
+	goto LONG_NAME_ELSE1
+
+	movfw ZAZNAM1
+	movwf HL_PARAMETRY				;	HL_PARAMETRY := ZAZNAM;
+	clrf ZAZNAM1					;	ZAZNAM := 0
+	goto LONG_NAME_ENDIF1
+LONG_NAME_ELSE1						; else:
+	movlw .5
+	subwf ZAZNAM1,F					; 	ZAZNAM := ZAZNAM - 5 			// protoze chceme prohledat 5 predchozich
+	btfss STATUS,C
+	decf ZAZNAM2,F
+	movlw .5
+	movwf HL_PARAMETRY				;	HL_PARAMETRY := 5
+LONG_NAME_ENDIF1					; endif
+
+LONG_NAME_WHILE						; while (HL_PARAMETRY <> 0)
+	movfw HL_PARAMETRY
+	andlw h'FF'
+	btfsc STATUS,Z
+	goto LONG_NAME_ENDWHILE
+	
+	movfw HL_ADR_CL1
+	movwf CLUSTER1
+	movfw HL_ADR_CL2
+	movwf CLUSTER2
+	movfw HL_ADR_CL3
+	movwf CLUSTER3
+	movfw HL_ADR_CL4
+	movwf CLUSTER4
+
+	movfw ZAZNAMU_vBUFFERU_DISKU
+	andlw h'FF'
+	btfsc STATUS,Z					;	if (ZAZNAMU_vBUFFERU_DISKU = 0):
+	call SKOC_NA_ZAZNAM 			;		SKOC_NA_ZAZNAM	endif;
+	
+	btfsc POZICE,0		; SKOC_NA_ZAZNAM - pokud ZAZNAM[1-2] ukazuji mimo adresar, vrati v POZICE FFh (jinak 00h)
+	goto LONG_NAME_MIMO_ROZSAH
+
+;////////////////////////////////
+;	//tady probehne cteni zaznamu, zjisteni, zda jde o dlouhe jmeno a jeho cteni;	
+	movlw .16
+	movwf TEMP1
+	PROG_PAGE_0
+	call ZAPIS_DO_BUFFERU_1			; kazdy zaznam v adresari ma 32 bytu
+	PROG_PAGE_1
+
+	BANK_3
+	movfw 0x190
+	andlw h'FF'
+	btfsc STATUS,Z
+	goto LONG_NAME_ELSE2
+	sublw h'E5'
+	btfsc STATUS,Z
+	goto LONG_NAME_ELSE2
+	movfw 0x19B
+	sublw h'0F'
+	btfss STATUS,Z
+	goto LONG_NAME_ELSE2
+LONG_NAME_IF2						; if (BUFF1[0] != 0) and (BUFF1[0] != E5h) and (BUFF1[11] = 0Fh):
+	BANK_0							;		// v bufferu1 mame zaznam obsahujici dlouhe jmeno 
+	movfw HL_PARAMETRY
+	movwf TEMP1
+	movlw .0
+LONG_NAME_NASOBENI
+	addlw .13
+	decfsz TEMP1,f
+	goto LONG_NAME_NASOBENI
+	addlw .3	
+	movwf FSR						;		FSR := (HL_PARAMETRY * 13) + 3
+
+	BANK_3
+	INDF_BANK_2
+	movfw 0x190+.1
+	movwf INDF
+	incf FSR,F
+	movfw 0x190+.3
+	movwf INDF
+	incf FSR,F
+	movfw 0x190+.5
+	movwf INDF
+	incf FSR,F
+	movfw 0x190+.7
+	movwf INDF
+	incf FSR,F
+	movfw 0x190+.9
+	movwf INDF
+	incf FSR,F
+	movfw 0x190+.14
+	movwf INDF
+	incf FSR,F
+	movfw 0x190+.16
+	movwf INDF
+	incf FSR,F
+	movfw 0x190+.18
+	movwf INDF
+	incf FSR,F
+	movfw 0x190+.20
+	movwf INDF
+	incf FSR,F
+	movfw 0x190+.22
+	movwf INDF
+	incf FSR,F
+	movfw 0x190+.24
+	movwf INDF
+	incf FSR,F
+	movfw 0x190+.28
+	movwf INDF
+	incf FSR,F
+	movfw 0x190+.30
+	movwf INDF
+	incf FSR,F
+	INDF_BANK_0
+	BANK_0
+	goto LONG_NAME_ENDIF2
+LONG_NAME_ELSE2						; else:
+	BANK_0
+	PROG_PAGE_0
+	call CLEAR_BUFFER2				; 		CLEAR_BUFFER2	// zaznam neobsahuje dlouhe jmeno, proto jsou vsechny predchozi zaznamy k nicemu
+	PROG_PAGE_1
+LONG_NAME_ENDIF2					; endif;
+;////////////////////////////////
+
+	incf ZAZNAM1,F
+	btfsc STATUS,Z
+	incf ZAZNAM2,F					;	ZAZNAM ++
+	decf HL_PARAMETRY,F				;	HL_PARAMETRY --
+	decf ZAZNAMU_vBUFFERU_DISKU,F	;	ZAZNAMU_vBUFFERU_DISKU --
+	goto LONG_NAME_WHILE
+LONG_NAME_ENDWHILE					; endwhile
+	movlw .1
+	movwf POZICE
+	return
+LONG_NAME_MIMO_ROZSAH
+	movlw .0
+	movwf POZICE
 	return
 ;**************************************************************************

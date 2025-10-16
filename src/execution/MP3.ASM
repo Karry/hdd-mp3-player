@@ -8,11 +8,9 @@ START
 
 	call POZDRAV				; abych se u kompu nenudil
 
-#IF VS1001==1
 	PROG_PAGE_1
 	call VS_INIT
 	PROG_PAGE_0
-#ENDIF
 
 	call ATA_RESET				; resetujeme disk, koukneme zda tu nejakej mame
 	btfss ATA_ATTRIBUTES,ATA_OK
@@ -74,6 +72,7 @@ BIG_LOOP
 	call PRIKAZ_07h				; --- // ---
 	call PRIKAZ_08h				; --- // ---
 	call PRIKAZ_09h				; --- // ---
+	call PRIKAZ_0Ah				; --- // ---
 
 	call PRIKAZ_80h				; --- // ---
 	call PRIKAZ_81h				; --- // ---
@@ -87,8 +86,7 @@ BIG_LOOP
 
 BIG_LOOP__NENI_PRIKAZ
 
-#IF VS1001==1					; pokud mame pripojen dekoder,...
-	btfss PREH_STAV0,0			; ...je zvoleno play,...
+	btfss PREH_STAV0,0			; Pokud je zvoleno play,...
 	goto MP3_NOT_PLAY
 
 	btfss PREH_STAV0,1			; ...a je co prehravat...
@@ -199,7 +197,6 @@ SEND_MP3_WORD
 
 	incf PREH_DATA_POZICE,f
 MP3_NOT_PLAY
-#ENDIF
 
 	goto BIG_LOOP
 ;********************************************************************************************************************
@@ -306,9 +303,33 @@ DALSI_SKLADBA_NO_R_S
 	return
 
 	; je nastaven repeat slozky a uz neni co prehravat. Jdem hledat prvni mp3 ve slozce...
-	; !!!!!!!!!!!!!!!!!!!! tady ten kus kodu se musi dodelat....
-	return
 
+	; HL_PARAMETRY
+	;		7. bit - tento bit nelze nastavit uzivatelem
+	;				= 0 > adresar je ROOT
+	;				= 1 > adresar neni ROOT	
+	movlw b'00000110'				; parametry hledani, pokud hledame prvni mp3 adresari ktery neni ROOT 
+									; (prvni zaznam je ukazatel na predchozi adresar)
+	btfss HL_PARAMETRY,7
+	movlw b'00001110'				; parametry hledani, pokud hledame prvni mp3 v ROOT adresari (prvni zaznam)
+	movwf HL_PARAMETRY
+
+	movlw h'01'						; prvni cluster prohledavaneho adresare mame jiz nastaven,
+	movwf ZAZNAM1					; parametry taky, ted jen zaznam od klereho hledame... 
+	clrf ZAZNAM2					; (pokud hledame v ROOTu, hledame prvni zaznam)
+
+	PROG_PAGE_1
+	call HLEDEJ
+	PROG_PAGE_0	
+
+	INDF_BANK_2
+	movlw 0x30
+	movwf FSR
+	movfw INDF
+	sublw h'06'
+	btfss STATUS,Z
+	return							; sem bychom se nemeli dostat, protoze kdyz uz neco hralo, tak tu nejaky soubor musi byt?!
+	;goto DALSI_SKLADBA_MAME_SOUBOR
 DALSI_SKLADBA_MAME_SOUBOR
 	INDF_BANK_2
 	movlw 0x3C
@@ -356,11 +377,7 @@ DALSI_SKLADBA_PLAY
 INIT_PORT
 	BANK_1
 
-#IF VS1001==1
 	movlw b'00010001' 			; bity SO a DREQ jako vstupy (signaly z dekoderu)
-#ELSE
-	movlw 0xff
-#ENDIF
 
 	movwf MP3_PORT_TRIS
 	movlw b'10000000'			; adresovani disku jako vystupy

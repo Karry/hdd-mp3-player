@@ -12,10 +12,14 @@
 ;
 ;
 ; dodelat:
-;	- repeat adresare
 ;	- Podporu dlouhych nazvu souboru
 ;	- podporu ID3v1
 ;	- pak uz jen vychytavky...	(napr. do vs1001 naprogramovat ekvalizer a nejak ho ovladat...)
+;	- najit a zabit chyby
+;
+; chyby o kterych vim:
+;	- Obcas se nechce vs1001k resetovat. Snad tomu pomuze mala hardwarova uprava.
+;	- Naopak se nekdy stane, ze se resetuje samovolne, snad tomu pomuze pridani tlumivek na napajeni.
 ;
 ; srpen 2005 - rijen 2005 Karry - lukas.karas@centrum.cz
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -23,7 +27,7 @@
 
 
 ;**********************************************************
-;   VERZE 0.9
+;   VERZE 1.0
 ;**********************************************************
 ; !!!!!!!! VSECHNY CASOVE SMYCKY JSOU POCITANY NA Fosc=16MHz !!!!!
 ; !!!!!!!! NASTAVENI USARTu TAKY !!!!!!!
@@ -33,9 +37,6 @@
 	errorlevel -302		; vypnuti Message [302]: Register in operand not in bank 0.
 	errorlevel -306		; vypnuti Message[306] : Crossing page boundary -- ensure page bits are set.
 						; ! zjednoduseni vypisu, ale riziko prehlednuti chyby
-
-	#DEFINE VS1001 1	; 1 = vs1001 pripojen, casti kodu pro vs1001 se prekladaji, ...
-						; ...pokud 0 je pripojen pouze disk, na portA se nic neposila
 ;**********************************************************
 
 	include "P16F877.inc" 	; definice blbosti kolem procesoru

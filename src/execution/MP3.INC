@@ -152,7 +152,8 @@ D_COMMAND     equ D_STATUS
 ; 	BANK 2: 	0x100 - 0x10F = specialni registry,
 ;				0x110 - 0x16F = misto (96bytu) pro nase registry:
 ;					0x110 - 0x14F -> 64bytu BUFFER_2 (pro dlouhe nazvy souboru, tabulku oddilu, a treba pro cast fatky)
-;					0x150 - 0x16F -> --------------------------- (32bytu)
+;					0x150         -> pri cteni dlouheho jmena potrebuju v bufferu2 65 bytu... (ten 65 je tady)
+;					0x151 - 0x16F -> --------------------------- (31bytu)
 ;
 ; 	BANK 3: 	0x180 - 0x18F = specialni registry,
 ;				0x190 - 0x1EF = misto (96bytu) pro nase registry:
@@ -320,8 +321,11 @@ HL_ADR_CL2		equ 0x05B
 HL_ADR_CL3		equ 0x05C
 HL_ADR_CL4		equ 0x05D	; v jakem adresari momentalne vyhledavame
 
-;HL_ZAZNAM1		equ 0x05E
-;HL_ZAZNAM2		equ 0x05F	; zaznamu v adresari podle nehoz hledame
+ZAZNAMU_vBUFFERU_DISKU	equ 0x05E	; sem nam procedura SKOC_NA_ZAZNAM vraci kolik po sobe
+			; jdoucich zaznamu nam nechala pripravenych v bufferu na disku
+			; (znacne totiz zrychluje praci, protoze pokud chceme cist nasledujici zaznam a mame ho jiz 
+			; v bufferu, memusime znova volat SKOC_NA_ZAZNAM ale rovnou FILE_INFO)
+;XXXXXXXXX		equ 0x05F
 ;**********************************************************
 ; registry pro praci procedur v filesystem (dalsi registry pozivane proceduramy v filesystem jsou CLUSTER a POZICE)
 ZAZNAM1			equ 0x060
