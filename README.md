@@ -2,7 +2,7 @@
 
 Archive repository for DIY MP3 player with ATA hardisk. 
 This project is dead and not atively maintained, I publish it 
-here on Github just to be available for indexing and for non-Czech speakers.
+here on Github just to be available for indexing and to be reachable non-Czech speakers.
 
 [Original webside](https://www.karry.cz/mp3_player/) (in Czech) with various materials, story, photos...
 
