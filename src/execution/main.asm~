@@ -48,7 +48,7 @@
 ;**********************************************************
 
 	include "P16F877A.inc" 	; definice blbosti kolem procesoru
-	include "MP3.inc" 		; definice promennych, konstant a portu
+	include "mp3.inc" 		; definice promennych, konstant a portu
 
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

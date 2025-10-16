@@ -12,7 +12,7 @@
 ; A pote do registru WRAM nasledujici tabulka. Prvni dato je dolni byte slova.
 
 ;# addr = 0x4200, 379 32-bit words = 1516 bytes
-; org 0x1800					; PAGE 3
+ org 0x1800					; PAGE 3
 	retlw 0x13
 	retlw 0x36
 	retlw 0x24

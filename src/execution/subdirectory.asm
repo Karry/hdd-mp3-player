@@ -1,10 +1,10 @@
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-; Tady ta Ë·st kÛdu m· jeden jedin˝ smysl. A to aby nalezla dalöÌ adres·¯, kter˝ se m· p¯ehr·vat pokud v aktu·lnÌm 
-; adres·¯i jiû nenÌ û·dn· MP3, kter· nebyla p¯ehr·na. 
+; Tady ta ƒç√°st k√≥du m√° jeden jedin√Ω smysl. A to aby nalezla dal≈°√≠ adres√°≈ô, kter√Ω se m√° p≈ôehr√°vat pokud v aktu√°ln√≠m 
+; adres√°≈ôi ji≈æ nen√≠ ≈æ√°dn√° MP3, kter√° nebyla p≈ôehr√°na. 
 ; 
-; m·me-li n·sledujÌcÌ adres·¯ovou strukruru:
+; m√°me-li n√°sleduj√≠c√≠ adres√°≈ôovou strukruru:
 ; ROOT
 ;  | skladba_01.mp3
 ;  | skladba_02.mp3
@@ -17,7 +17,7 @@
 ;  +- DIRECTORY_2
 ;     | skladba_06.mp3
 ;
-; Tak sou mp3 p¯ehr·vany v po¯adÌ, jak je zobrazeno. Nejd¯Ìve vöechny mp3 v ROOT (skladba_01,02) potÈ DIRECTORY_1...
+; Tak sou mp3 p≈ôehr√°vany v po≈ôad√≠, jak je zobrazeno. Nejd≈ô√≠ve v≈°echny mp3 v ROOT (skladba_01,02) pot√© DIRECTORY_1...
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 ; function  HLEDEJ_ADRESAR(){

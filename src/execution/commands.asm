@@ -52,7 +52,7 @@ PRIKAZ_02h__ODESILANI_ODDILU
 	clrf PRIJATYCH_DAT
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_04h						; 04h – vrat velikost clusteru
+PRIKAZ_04h						; 04h â€“ vrat velikost clusteru
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'04'					
 	btfss STATUS,Z
@@ -67,7 +67,7 @@ PRIKAZ_04h						; 04h – vrat velikost clusteru
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_05h						; 05h – vrat zaznam v adresari
+PRIKAZ_05h						; 05h â€“ vrat zaznam v adresari
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'05'
 	btfss STATUS,Z
@@ -132,7 +132,7 @@ PRIKAZ_05h_KONEC
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_06h						; 06h – vrat cislo dalsiho clusteru v alokacnim retezu
+PRIKAZ_06h						; 06h â€“ vrat cislo dalsiho clusteru v alokacnim retezu
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'06'					
 	btfss STATUS,Z
@@ -170,7 +170,7 @@ PRIKAZ_06h						; 06h – vrat cislo dalsiho clusteru v alokacnim retezu
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_07h						; 07h – cti cluster
+PRIKAZ_07h						; 07h â€“ cti cluster
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'07'					
 	btfss STATUS,Z
@@ -213,7 +213,7 @@ PRIKAZ_07h__ODESLI_SECTOR
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_08h						; 08h – zjisti velikost souboru
+PRIKAZ_08h						; 08h â€“ zjisti velikost souboru
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'08'
 	btfss STATUS,Z
@@ -275,7 +275,7 @@ PRIKAZ_08h_KONEC
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_09h						; 09h – hledej zaznam
+PRIKAZ_09h						; 09h â€“ hledej zaznam
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'09'
 	btfss STATUS,Z
@@ -336,7 +336,7 @@ PRIKAZ_09h_KONEC
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_0Ah						; 0Ah – precti dlouhe jmeno
+PRIKAZ_0Ah						; 0Ah â€“ precti dlouhe jmeno
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'0A'
 	btfss STATUS,Z
@@ -392,7 +392,7 @@ PRIKAZ_0Ah_KONEC
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_80h						; 80h – hraj mp3 soubor
+PRIKAZ_80h						; 80h â€“ hraj mp3 soubor
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'80'
 	btfss STATUS,Z
@@ -533,7 +533,7 @@ PRIKAZ_80h_KONEC
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_81h						; 81h – vrat stav prehravaneho souboru
+PRIKAZ_81h						; 81h â€“ vrat stav prehravaneho souboru
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'81'
 	btfss STATUS,Z
@@ -566,7 +566,7 @@ PRIKAZ_81h						; 81h – vrat stav prehravaneho souboru
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_82h						; 82h – nastav hlasitost
+PRIKAZ_82h						; 82h â€“ nastav hlasitost
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'82'
 	btfss STATUS,Z
@@ -591,7 +591,7 @@ PRIKAZ_82h						; 82h – nastav hlasitost
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_83h						; 83h – vrat informace o prehravanem souboru
+PRIKAZ_83h						; 83h â€“ vrat informace o prehravanem souboru
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'83'
 	btfss STATUS,Z
@@ -649,7 +649,7 @@ PRIKAZ_83h						; 83h – vrat informace o prehravanem souboru
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_84h						; 84h – nastav stav prehravani
+PRIKAZ_84h						; 84h â€“ nastav stav prehravani
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'84'
 	btfss STATUS,Z

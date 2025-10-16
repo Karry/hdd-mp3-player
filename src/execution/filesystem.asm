@@ -713,12 +713,12 @@ VYHOVUJE_ZAZNAM
 	btfsc STATUS,Z
 	return				; pokud je zaznam prazdny, tak jej proste neberem
 ;HL_PARAMETRY	equ 0x059
-;		0. bit = 0 > pokud hled·me soubory, tak pouze MP3
-;				 1 > pokud hled·me soubory, vracÌ vöechny soubory
-;		1. bit = 0 > hled·me klasicky (nejd¯Ìve adres·¯e, potÈ soubory
-;				 1 > hled·me pouze adres·¯e, nebo soubory
-;		2. bit = 0 > je-li nastaven 1. bit, hled·me pouze adres·¯e
-;				 1 > je-li nastaven 1. bit, hled·me pouze soubory
+;		0. bit = 0 > pokud hled√°me soubory, tak pouze MP3
+;				 1 > pokud hled√°me soubory, vrac√≠ v≈°echny soubory
+;		1. bit = 0 > hled√°me klasicky (nejd≈ô√≠ve adres√°≈ôe, pot√© soubory
+;				 1 > hled√°me pouze adres√°≈ôe, nebo soubory
+;		2. bit = 0 > je-li nastaven 1. bit, hled√°me pouze adres√°≈ôe
+;				 1 > je-li nastaven 1. bit, hled√°me pouze soubory
 	btfss HL_PARAMETRY,1
 	goto VYHOV_ZAZ_SOUBiADR
 	btfss HL_PARAMETRY,2

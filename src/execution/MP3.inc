@@ -316,18 +316,18 @@ KONST_NECINNOSTI2	equ 0x058
 ;**********************************************************
 ; registry pro ukladani nastaveni hledani
 HL_PARAMETRY		equ 0x059
-;		0. bit = 0 > pokud hledáme soubory, tak pouze MP3
-;				 1 > pokud hledáme soubory, vrací všechny soubory
-;		1. bit = 0 > hledáme klasicky (nejdríve adresáre, poté soubory
-;				 1 > hledáme pouze adresáre, nebo soubory
-;		2. bit = 0 > je-li nastaven 1. bit, hledáme pouze adresáøe
-;				 1 > je-li nastaven 1. bit, hledáme pouze soubory
-;		3. bit = 0 > hledáme podle cisla zaznamu bud následující ci predchozi zaznam
-;				 1 > hledáme první záznam v adresáøi
-;		4. bit = 0 > hledáme NÁSLEDUJÍCÍ záznam
-;				 1 > hledáme PØEDCHOZÍ záznam
-;		5. bit = 0 > pokud hledáme pouze soubory, tak vrací jako první záznam adresáø '..'
-;				 1 > pokud hledáme soubory, tak nevrací adresáø '..'
+;		0. bit = 0 > pokud hledÃ¡me soubory, tak pouze MP3
+;				 1 > pokud hledÃ¡me soubory, vracÃ­ vÅ¡echny soubory
+;		1. bit = 0 > hledÃ¡me klasicky (nejdrÃ­ve adresÃ¡re, potÃ© soubory
+;				 1 > hledÃ¡me pouze adresÃ¡re, nebo soubory
+;		2. bit = 0 > je-li nastaven 1. bit, hledÃ¡me pouze adresÃ¡Å™e
+;				 1 > je-li nastaven 1. bit, hledÃ¡me pouze soubory
+;		3. bit = 0 > hledÃ¡me podle cisla zaznamu bud nÃ¡sledujÃ­cÃ­ ci predchozi zaznam
+;				 1 > hledÃ¡me prvnÃ­ zÃ¡znam v adresÃ¡Å™i
+;		4. bit = 0 > hledÃ¡me NÃSLEDUJÃCÃ zÃ¡znam
+;				 1 > hledÃ¡me PÅ˜EDCHOZÃ zÃ¡znam
+;		5. bit = 0 > pokud hledÃ¡me pouze soubory, tak vracÃ­ jako prvnÃ­ zÃ¡znam adresÃ¡Å™ '..'
+;				 1 > pokud hledÃ¡me soubory, tak nevracÃ­ adresÃ¡Å™ '..'
 ;		7. bit - tento bit nelze nastavit uzivatelem
 ;				= 0 > adresar je ROOT
 ;				= 1 > adresar neni ROOT
@@ -357,7 +357,7 @@ PREH_ZAZNAM1		equ 0x066
 PREH_ZAZNAM2		equ 0x067	; poradi zaznamu v adresari ktery se zrovna prehrava (soubor mp3)
 
 PREH_CITAC_PREV		equ 0x068	; pokud je mp3 previjena pomalu, sem se zapisuje kolik sektoru se jiz previnulo. 
-								; (Pøi pomalém pøevíjení je pomìr pøehraných sektorù ku pøeskoèeným 5:20.)
+								; (PÅ™i pomalÃ©m pÅ™evÃ­jenÃ­ je pomÄ›r pÅ™ehranÃ½ch sektorÅ¯ ku pÅ™eskoÄenÃ½m 5:20.)
 
 PREH_DATA_CL1		equ 0x069
 PREH_DATA_CL2		equ 0x06A
@@ -379,10 +379,10 @@ PREH_STAV0			equ 0x06E	; registr obsahuje informace o stavu aktualniho prehravan
 				;			1 => repeat souboru (po skonceni prehravani souboru se ten samy soubor zacne prehravat znova)
 				; 6. bit =	0 => pri dosazeni posledni skladby v adresari se prestane prehravat
 				;			1 => ---------------- // -------------------- se zacnou prohledavat podadresare, ci nasledujici adresar
-				; 7. bit =  0 => po naètení oddílu se nezaène pøehrávat
-				;			1 => po naètení oddílu se zaène pøehrávat mp3, kterou se pøi posledním pøehráváni skonèilo 
-				;				(musí ale na disku stále být a nesmí se mezitím pøehrávat z jiného oddílu)
-				;				Pokud poslední pøehraná skladba nebyla na disku nalezena, naène se pøehrávat první mp3 v ROOT adresáøi.
+				; 7. bit =  0 => po naÄtenÃ­ oddÃ­lu se nezaÄne pÅ™ehrÃ¡vat
+				;			1 => po naÄtenÃ­ oddÃ­lu se zaÄne pÅ™ehrÃ¡vat mp3, kterou se pÅ™i poslednÃ­m pÅ™ehrÃ¡vÃ¡ni skonÄilo 
+				;				(musÃ­ ale na disku stÃ¡le bÃ½t a nesmÃ­ se mezitÃ­m pÅ™ehrÃ¡vat z jinÃ©ho oddÃ­lu)
+				;				Pokud poslednÃ­ pÅ™ehranÃ¡ skladba nebyla na disku nalezena, naÄne se pÅ™ehrÃ¡vat prvnÃ­ mp3 v ROOT adresÃ¡Å™i.
 PREH_STAV1			equ 0x06F
 				; 0. bit =  0 => normalni prehravani
 				;			1 => previjeni mp3 dopredu

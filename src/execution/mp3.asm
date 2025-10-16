@@ -653,7 +653,7 @@ INIT_CONFIG 	; nakonfiguruje preruseni, WDT, USART, pull ups....
 	movwf PREH_STAV1
 	return
 ;**********************************************************
-WR_EEPROM				; zapÌöe data z EEDATA na mÌsto EEADR
+WR_EEPROM				; zap√≠≈°e data z EEDATA na m√≠sto EEADR
 	BANK_2
 	movfw EEDATA
 	BANK_0
@@ -669,22 +669,22 @@ WR_EEPROM				; zapÌöe data z EEDATA na mÌsto EEADR
 	BANK_2
 	movwf EEDATA
 	BANK_3	
-	bcf INTCON,GIE		; Z·kaz p¯eruöenÌ
-	bsf EECON1,WREN		; PovolenÌ z·pisu
-	movlw h'55'			; zapiö hodnotu
+	bcf INTCON,GIE		; Z√°kaz p≈ôeru≈°en√≠
+	bsf EECON1,WREN		; Povolen√≠ z√°pisu
+	movlw h'55'			; zapi≈° hodnotu
 	movwf EECON2 		; do EECON2
-	movlw h'AA'			; zapiö dalöÌ
+	movlw h'AA'			; zapi≈° dal≈°√≠
 	movwf EECON2 		; do EECON2
-	bsf EECON1,WR 		; Zah·jenÌ z·pisu
-	bsf INTCON,GIE 		; Povol p¯eruöenÌ		
-	btfsc EECON1,WR		; Ëek·me, neû se dokonËÌ z·pis
+	bsf EECON1,WR 		; Zah√°jen√≠ z√°pisu
+	bsf INTCON,GIE 		; Povol p≈ôeru≈°en√≠		
+	btfsc EECON1,WR		; ƒçek√°me, ne≈æ se dokonƒç√≠ z√°pis
 	goto $-1	
 	bcf EECON1,EEIF
 	BANK_0
 	return
 ;**********************************************************
 ULOZ_KONFIGUTACI
-	; uloûÌ do EEPROMy natavenÌ
+	; ulo≈æ√≠ do EEPROMy nataven√≠
 	BANK_2	
 	movlw .0
 	movwf EEADR
@@ -885,7 +885,7 @@ INTERRUPT_TIMER1
 	goto END_OF_INTERRUPT
 
 INTERRUPT_USART
-	movfw RCREG				; !!! vynulovat p¯Ìznak !!!	
+	movfw RCREG				; !!! vynulovat p≈ô√≠znak !!!	
 	movwf PRIJATE_DATO
 
 ;	movlw '['

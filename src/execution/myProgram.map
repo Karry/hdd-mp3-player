@@ -1,0 +1,328 @@
+gplink-0.13.4 alpha
+Map File - Created 6-20-2008  09:01:13
+ 
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   00000000    program   0x000002
+                   .org_4       code   0x000004    program   0x000018
+                  .org_10       code   0x000010    program   0x000e82
+                 .org_800       code   0x000800    program   0x000ed4
+                .org_1000       code   0x001000    program   0x00097a
+                .org_1800       code   0x001800    program   0x000c3a
+                  .config       code   0x002007    program   0x000002
+                .org_2100       code   0x002100    program   0x000026
+ 
+                              Program Memory Usage
+                               Start         End
+                           ---------   ---------
+                            0x002007    0x002007
+                            00000000    00000000
+                            0x000004    0x00000f
+                            0x000010    0x000750
+                            0x000800    0x000f69
+                            0x001000    0x0014bc
+                            0x001800    0x001e1c
+                            0x002100    0x002112
+ 
+                            6566 program addresses used
+ 
+                              Symbols
+                     Name    Address   Location    Storage File
+                ---------  ---------  ---------  --------- ---------
+                    START   0x000010    program     static mp3.asm
+                _$_00001f   0x00001f    program     static mp3.asm
+           CEK_PRIKAZ_01h   0x000022    program     static mp3.asm
+       CEK_PRIKAZ_02h_03h   0x000034    program     static mp3.asm
+                 BIG_LOOP   0x000042    program     static mp3.asm
+    BIG_LOOP__NENI_PRIKAZ   0x00006b    program     static mp3.asm
+     BIG_LOOP__NO_STANDBY   0x000074    program     static mp3.asm
+  BIG_LOOP_DALSI_FRAGMENT   0x000092    program     static mp3.asm
+    BIG_LOOP_DEC_FRAGMENT   0x0000a0    program     static mp3.asm
+BIG_LOOP_DEC_FRAGMENT_NO_PLUG   0x0000ba    program     static mp3.asm
+                _$_0000bd   0x0000bd    program     static mp3.asm
+                _$_0000c1   0x0000c1    program     static mp3.asm
+                _$_0000c4   0x0000c4    program     static mp3.asm
+                _$_0000c7   0x0000c7    program     static mp3.asm
+            SEND_MP3_DATA   0x0000ca    program     static mp3.asm
+       MP3_REWIND_FORWARD   0x0000d9    program     static mp3.asm
+   NOT_MP3_REWIND_FORWARD   0x0000e5    program     static mp3.asm
+            SEND_MP3_WORD   0x0000f6    program     static mp3.asm
+             MP3_NOT_PLAY   0x000107    program     static mp3.asm
+    HLEDEJ_ADRESAR_RETURN   0x000114    program     static mp3.asm
+            DALSI_SKLADBA   0x000117    program     static mp3.asm
+DALSI_SKLADBA_REPAT_SOUBORU   0x000121    program     static mp3.asm
+     DALSI_SKLADBA_NO_R_S   0x000151    program     static mp3.asm
+DALSI_SKLADBA_MAME_SOUBOR   0x000180    program     static mp3.asm
+       DALSI_SKLADBA_PLAY   0x00019d    program     static mp3.asm
+                INIT_PORT   0x0001af    program     static mp3.asm
+              INIT_CONFIG   0x0001c2    program     static mp3.asm
+                WR_EEPROM   0x000228    program     static mp3.asm
+                _$_000247   0x000247    program     static mp3.asm
+         ULOZ_KONFIGUTACI   0x00024c    program     static mp3.asm
+   ULOZ_KONFIGUTACI_LOOP1   0x00027d    program     static mp3.asm
+   ULOZ_KONFIGUTACI_LOOP2   0x00028c    program     static mp3.asm
+                 WR_USART   0x00029a    program     static mp3.asm
+              ODESLI_DATA   0x0002a2    program     static mp3.asm
+      ODESLI_MODEL_NUMBER   0x0002aa    program     static mp3.asm
+ODESLI_MODEL_NUMBER_ODESILANI   0x0002af    program     static mp3.asm
+        ODESLI_BUFF2_HIGH   0x0002bb    program     static mp3.asm
+ODESLI_BUFF2_HIGH_ODESILANI   0x0002be    program     static mp3.asm
+           ODESLI_BUFFER2   0x0002c5    program     static mp3.asm
+ ODESLI_BUFFER2_ODESILANI   0x0002c8    program     static mp3.asm
+                INTERRUPT   0x0002cf    program     static mp3.asm
+         INTERRUPT_TIMER1   0x0002d4    program     static mp3.asm
+          INTERRUPT_USART   0x0002e2    program     static mp3.asm
+         END_OF_INTERRUPT   0x0002ee    program     static mp3.asm
+                DELAY_2ms   0x0002f6    program     static mp3.asm
+                _$_0002fb   0x0002fb    program     static mp3.asm
+                _$_0002fd   0x0002fd    program     static mp3.asm
+              DELAY_200ms   0x0002ff    program     static mp3.asm
+                _$_000306   0x000306    program     static mp3.asm
+                _$_000308   0x000308    program     static mp3.asm
+                _$_00030a   0x00030a    program     static mp3.asm
+                RD_STATUS   0x00030c    program     static ata.asm
+                RD_DEVICE   0x000312    program     static ata.asm
+                    WR_DC   0x000318    program     static ata.asm
+               WR_COMMAND   0x00031f    program     static ata.asm
+                    WR_SC   0x000326    program     static ata.asm
+                  WR_LBA1   0x00032d    program     static ata.asm
+                  WR_LBA2   0x000334    program     static ata.asm
+                  WR_LBA3   0x00033b    program     static ata.asm
+                WR_DEVICE   0x000342    program     static ata.asm
+              WR_FEATURES   0x000349    program     static ata.asm
+                 WR_BLOCK   0x000350    program     static ata.asm
+                _$_000352   0x000352    program     static ata.asm
+                _$_000354   0x000354    program     static ata.asm
+                _$_000356   0x000356    program     static ata.asm
+                     RUTR   0x00035f    program     static ata.asm
+                     RUTW   0x00036c    program     static ata.asm
+                READ_DATA   0x000382    program     static ata.asm
+          READ_DATA_CTEME   0x00038d    program     static ata.asm
+                  PRESKOC   0x0003a4    program     static ata.asm
+            SELECT_DEVICE   0x0003a8    program     static ata.asm
+       ZAPIS_DO_BUFFERU_1   0x0003ac    program     static ata.asm
+ZAPIS_DO_BUFFERU_1__ZAPIS   0x0003af    program     static ata.asm
+            CLEAR_BUFFER2   0x0003ba    program     static ata.asm
+     CLEAR_BEFFER2__CLEAR   0x0003c0    program     static ata.asm
+                ATA_RESET   0x0003c6    program     static ata.asm
+              READ_SECTOR   0x0003e1    program     static ata.asm
+                _$_0003e3   0x0003e3    program     static ata.asm
+                _$_0003e5   0x0003e5    program     static ata.asm
+                _$_0003eb   0x0003eb    program     static ata.asm
+                _$_0003ed   0x0003ed    program     static ata.asm
+                _$_0003ef   0x0003ef    program     static ata.asm
+        READ_SECTOR_LBA27   0x0003f2    program     static ata.asm
+        READ_SECTOR_LBA48   0x000401    program     static ata.asm
+              ATA_STANDBY   0x000419    program     static ata.asm
+                _$_000424   0x000424    program     static ata.asm
+                _$_000426   0x000426    program     static ata.asm
+                _$_000428   0x000428    program     static ata.asm
+          IDENTIFY_DEVICE   0x000432    program     static ata.asm
+INIT_ATA__NOT_SUPPORT_LBA48   0x000466    program     static ata.asm
+          INIT_ATA__DALSI   0x000469    program     static ata.asm
+         INIT_ATA__DALSI2   0x000473    program     static ata.asm
+               DELAY_25us   0x00047d    program     static ata.asm
+                _$_000480   0x000480    program     static ata.asm
+           WAIT_FOR_READY   0x000482    program     static ata.asm
+           CLUSTER_TO_LBA   0x000488    program     static fat32.asm
+   CLUSTER_TO_LBA_NO_ROOT   0x0004ac    program     static fat32.asm
+             NEXT_CLUSTER   0x0004eb    program     static fat32.asm
+     NEXT_CLUSTER_NO_ROOT   0x00050f    program     static fat32.asm
+   NEXT_CLUSTER_NEPRAZDNY   0x000559    program     static fat32.asm
+       NEXT_CLUSTER_KONEC   0x000570    program     static fat32.asm
+          ZJISTI_FRAGMENT   0x000573    program     static fat32.asm
+ZJISTI_FRAGMENT_CTI_SECTOR   0x0005b4    program     static fat32.asm
+  ZJISTI_FRAGMENT_CLUSTER   0x0005b8    program     static fat32.asm
+ZJISTI_FRAGMENT_NEPRAZDNY   0x0005d0    program     static fat32.asm
+ZJISTI_FRAGMENT_INC_KONEC   0x000623    program     static fat32.asm
+    ZJISTI_FRAGMENT_KONEC   0x000626    program     static fat32.asm
+                   SOUCET   0x000629    program     static aritmetic.asm
+                   ROZDIL   0x000655    program     static aritmetic.asm
+              DEKREMENTUJ   0x000681    program     static aritmetic.asm
+        DEKREMENTUJ_KONEC   0x00068e    program     static aritmetic.asm
+              POSUNDOLEVA   0x000691    program     static aritmetic.asm
+            POSUNDOLEVA_1   0x000697    program     static aritmetic.asm
+            POSUNDOLEVA_2   0x00069f    program     static aritmetic.asm
+            POSUNDOLEVA_3   0x0006a8    program     static aritmetic.asm
+            POSUNDOLEVA_4   0x0006b2    program     static aritmetic.asm
+            POSUNDOLEVA_5   0x0006bd    program     static aritmetic.asm
+            POSUNDOLEVA_6   0x0006c9    program     static aritmetic.asm
+            POSUNDOLEVA_7   0x0006d6    program     static aritmetic.asm
+             POSUNDOPRAVA   0x0006e4    program     static aritmetic.asm
+           POSUNDOPRAVA_1   0x0006ea    program     static aritmetic.asm
+           POSUNDOPRAVA_2   0x0006f3    program     static aritmetic.asm
+           POSUNDOPRAVA_3   0x0006fd    program     static aritmetic.asm
+           POSUNDOPRAVA_4   0x000708    program     static aritmetic.asm
+           POSUNDOPRAVA_5   0x000714    program     static aritmetic.asm
+           POSUNDOPRAVA_6   0x000721    program     static aritmetic.asm
+           POSUNDOPRAVA_7   0x00072f    program     static aritmetic.asm
+                     NULA   0x00073e    program     static aritmetic.asm
+               VS_WR_BYTE   0x000800    program     static vs1001.asm
+                _$_00080a   0x00080a    program     static vs1001.asm
+               VS_RD_BYTE   0x00080d    program     static vs1001.asm
+                _$_000818   0x000818    program     static vs1001.asm
+                VS_WR_REG   0x00081c    program     static vs1001.asm
+                _$_00081d   0x00081d    program     static vs1001.asm
+                VS_RD_REG   0x00082a    program     static vs1001.asm
+                _$_00082b   0x00082b    program     static vs1001.asm
+    VS_SOFT_RESET_NO_PLUG   0x000838    program     static vs1001.asm
+            VS_SOFT_RESET   0x00084d    program     static vs1001.asm
+          VS_SEND_32_NULL   0x000880    program     static vs1001.asm
+                _$_000886   0x000886    program     static vs1001.asm
+        VS_SEND_1024_NULL   0x000888    program     static vs1001.asm
+                _$_00088d   0x00088d    program     static vs1001.asm
+            VS_SET_VOLUME   0x00088f    program     static vs1001.asm
+          WAIT_FOR_VSDREQ   0x000897    program     static vs1001.asm
+              VS_END_BEEP   0x00089a    program     static vs1001.asm
+                  VS_BEEP   0x0008ac    program     static vs1001.asm
+                  VS_INIT   0x0008be    program     static vs1001.asm
+                _$_0008c5   0x0008c5    program     static vs1001.asm
+             VS_INIT_BEEP   0x0008c8    program     static vs1001.asm
+                DELAY_5us   0x0008d8    program     static vs1001.asm
+                _$_0008db   0x0008db    program     static vs1001.asm
+             CEKEJ_PRIKAZ   0x0008dd    program     static commands.asm
+               PRIKAZ_02h   0x0008e2    program     static commands.asm
+PRIKAZ_02h__ODESILANI_ODDILU   0x0008fd    program     static commands.asm
+               PRIKAZ_04h   0x000908    program     static commands.asm
+               PRIKAZ_05h   0x000915    program     static commands.asm
+   PRIKAZ_05h_PAR1_NOT_OK   0x000929    program     static commands.asm
+       PRIKAZ_05h_PAR1_OK   0x00092f    program     static commands.asm
+   PRIKAZ_05h_PAR2_NOT_OK   0x000936    program     static commands.asm
+       PRIKAZ_05h_PAR2_OK   0x00093c    program     static commands.asm
+         PRIKAZ_05h_KONEC   0x00093d    program     static commands.asm
+               PRIKAZ_06h   0x000946    program     static commands.asm
+               PRIKAZ_07h   0x000968    program     static commands.asm
+PRIKAZ_07h__ODESLI_SECTOR   0x000984    program     static commands.asm
+               PRIKAZ_08h   0x00098f    program     static commands.asm
+   PRIKAZ_08h_PAR1_NOT_OK   0x0009a3    program     static commands.asm
+       PRIKAZ_08h_PAR1_OK   0x0009a6    program     static commands.asm
+   PRIKAZ_08h_PAR2_NOT_OK   0x0009ad    program     static commands.asm
+       PRIKAZ_08h_PAR2_OK   0x0009b0    program     static commands.asm
+         PRIKAZ_08h_KONEC   0x0009b2    program     static commands.asm
+               PRIKAZ_09h   0x0009bd    program     static commands.asm
+    PRIKAZ_09h_SPATNY_PAR   0x0009e1    program     static commands.asm
+         PRIKAZ_09h_KONEC   0x0009e7    program     static commands.asm
+               PRIKAZ_0Ah   0x0009f0    program     static commands.asm
+   PRIKAZ_0Ah_PAR1_NOT_OK   0x000a08    program     static commands.asm
+       PRIKAZ_0Ah_PAR1_OK   0x000a0e    program     static commands.asm
+         PRIKAZ_0Ah_KONEC   0x000a13    program     static commands.asm
+               PRIKAZ_80h   0x000a1e    program     static commands.asm
+   PRIKAZ_80h_PAR1_NOT_OK   0x000a32    program     static commands.asm
+       PRIKAZ_80h_PAR1_OK   0x000a38    program     static commands.asm
+   PRIKAZ_80h_PAR2_NOT_OK   0x000a3f    program     static commands.asm
+       PRIKAZ_80h_PAR2_OK   0x000a45    program     static commands.asm
+         PRIKAZ_80h_KONEC   0x000a7f    program     static commands.asm
+               PRIKAZ_81h   0x000a8a    program     static commands.asm
+               PRIKAZ_82h   0x000aa9    program     static commands.asm
+               PRIKAZ_83h   0x000abf    program     static commands.asm
+               PRIKAZ_84h   0x000af3    program     static commands.asm
+        PRVNI_CL_ADRESARE   0x000b27    program     static filesystem.asm
+ PRVNI_CL_ADRESARE_MEZERY   0x000b47    program     static filesystem.asm
+  PRVNI_CL_ADRESARE_KONEC   0x000b60    program     static filesystem.asm
+           SKOC_NA_ZAZNAM   0x000b61    program     static filesystem.asm
+SKOC_NA_ZAZNAM_PRESKOC_CL   0x000b91    program     static filesystem.asm
+   SKOC_NA_ZAZNAM_MAME_CL   0x000bbf    program     static filesystem.asm
+SKOC_NA_ZAZNAM_MAME_ZAZNAM   0x000bdb    program     static filesystem.asm
+SKOC_NA_ZAZNAM_MIMO_ROZSAH   0x000bde    program     static filesystem.asm
+     SKOC_NA_ZAZNAM_KONEC   0x000be0    program     static filesystem.asm
+                FILE_INFO   0x000be1    program     static filesystem.asm
+     FILE_INFO__READ_NAME   0x000be9    program     static filesystem.asm
+           FILE_INFO__DIR   0x000c25    program     static filesystem.asm
+          FILE_INFO__FILE   0x000c27    program     static filesystem.asm
+   FILE_INFO__CTI20_KONEC   0x000c54    program     static filesystem.asm
+                FILE_SIZE   0x000c5c    program     static filesystem.asm
+                   HLEDEJ   0x000c79    program     static filesystem.asm
+           HLEDEJ_ELSEIF1   0x000c9b    program     static filesystem.asm
+             HLEDEJ_ELSE1   0x000ca2    program     static filesystem.asm
+   HLEDEJ_NEHLEDAME_PRVNI   0x000caa    program     static filesystem.asm
+                      IF2   0x000cb7    program     static filesystem.asm
+         HLEDEJ_IF2_ENDIF   0x000cba    program     static filesystem.asm
+           HLEDEJ_HLEDANI   0x000cc0    program     static filesystem.asm
+            HLEDEJ_REPEAT   0x000cc5    program     static filesystem.asm
+               HLEDEJ_IF4   0x000ced    program     static filesystem.asm
+             HLEDEJ_ELSE3   0x000cef    program     static filesystem.asm
+            HLEDEJ_ENDIF3   0x000cf5    program     static filesystem.asm
+        HLEDEJ_END_REPEAT   0x000cf6    program     static filesystem.asm
+             HLEDEJ_KONEC   0x000d13    program     static filesystem.asm
+          ZAPIS_C_ZAZNAMU   0x000d14    program     static filesystem.asm
+          VYHOVUJE_ZAZNAM   0x000d21    program     static filesystem.asm
+      VYHOV_ZAZ_ALL_FILES   0x000d31    program     static filesystem.asm
+       VYHOV_ZAZ_ONLY_MP3   0x000d34    program     static filesystem.asm
+       VYHOV_ZAZ_ONLY_ADR   0x000d37    program     static filesystem.asm
+       VYHOV_ZAZ_SOUBiADR   0x000d3a    program     static filesystem.asm
+   VYHOV_ZAZ_SOUBiADR_MP3   0x000d3e    program     static filesystem.asm
+        COMPARE_BUFF2_L_H   0x000d43    program     static filesystem.asm
+      COMPARE_BUFF1_BUFF2   0x000d56    program     static filesystem.asm
+       COMPARE_B1_B2_BYT2   0x000d69    program     static filesystem.asm
+       COMPARE_B1_B2_BYT3   0x000d73    program     static filesystem.asm
+       COMPARE_B1_B2_BYT4   0x000d7d    program     static filesystem.asm
+       COMPARE_B1_B2_BYT5   0x000d87    program     static filesystem.asm
+       COMPARE_B1_B2_BYT6   0x000d91    program     static filesystem.asm
+       COMPARE_B1_B2_BYT7   0x000d9b    program     static filesystem.asm
+       COMPARE_B1_B2_BYT8   0x000da5    program     static filesystem.asm
+       COMPARE_B1_B2_BYT9   0x000daf    program     static filesystem.asm
+      COMPARE_B1_B2_BYT10   0x000db9    program     static filesystem.asm
+      COMPARE_B1_B2_BYT11   0x000dc3    program     static filesystem.asm
+      COMPARE_B1_B2_BYT12   0x000dcd    program     static filesystem.asm
+     COMPARE_B1_B2_SHODNE   0x000dd7    program     static filesystem.asm
+      COMPARE_B1_B2_BUFF1   0x000ddc    program     static filesystem.asm
+      COMPARE_B1_B2_BUFF2   0x000de1    program     static filesystem.asm
+            CLEAR_BUFFER1   0x000de6    program     static filesystem.asm
+     CLEAR_BEFFER1__CLEAR   0x000dec    program     static filesystem.asm
+             BUF2_TO_BUF1   0x000df2    program     static filesystem.asm
+         BUF2_LOW_TO_HIGH   0x000e30    program     static filesystem.asm
+                LONG_NAME   0x000e59    program     static filesystem.asm
+          LONG_NAME_ELSE1   0x000e6c    program     static filesystem.asm
+         LONG_NAME_ENDIF1   0x000e72    program     static filesystem.asm
+          LONG_NAME_WHILE   0x000e72    program     static filesystem.asm
+            LONG_NAME_IF2   0x000e98    program     static filesystem.asm
+       LONG_NAME_NASOBENI   0x000e9d    program     static filesystem.asm
+          LONG_NAME_ELSE2   0x000ed0    program     static filesystem.asm
+         LONG_NAME_ENDIF2   0x000ed7    program     static filesystem.asm
+       LONG_NAME_ENDWHILE   0x000edd    program     static filesystem.asm
+    LONG_NAME_MIMO_ROZSAH   0x000ee0    program     static filesystem.asm
+      HLEDEJ_V_NADRAZENEM   0x000ee3    program     static filesystem.asm
+       HLEDEJVNAD_CLUSTER   0x000f15    program     static filesystem.asm
+        HLEDEJVNAD_SECTOR   0x000f16    program     static filesystem.asm
+        HLEDEJVNAD_ZAZNAM   0x000f20    program     static filesystem.asm
+         HLEDEJVNAD_KONEC   0x000f69    program     static filesystem.asm
+                 SCAN_MBR   0x001000    program     static particions.asm
+                  SCAN_BR   0x00100a    program     static particions.asm
+SCAN_MBR__HLEDEJ_ROZSIRENY_ODDIL   0x00105b    program     static particions.asm
+          SCAN_MBR__KONEC   0x001089    program     static particions.asm
+   ZKONTROLUJ_ODDIL_FAT32   0x00108a    program     static particions.asm
+ZKONTROLUJ_ODDIL_FAT32__JMENOVKA   0x0010b1    program     static particions.asm
+ZKONTROLUJ_ODDIL_FAT32__KONEC   0x0010e6    program     static particions.asm
+              NACTI_FAT32   0x0010e7    program     static particions.asm
+       NACTI_FAT32__KONEC   0x0011d2    program     static particions.asm
+               PRIKAZ_03h   0x0011d3    program     static commands2.asm
+       PRIKAZ_03h_NACTENO   0x001217    program     static commands2.asm
+         PRIKAZ_03h_LOOP1   0x00121e    program     static commands2.asm
+     PRIKAZ_03h_NENACTENO   0x00128f    program     static commands2.asm
+         PRIKAZ_03h_KONEC   0x0012b8    program     static commands2.asm
+PRIKAZ_03h_PROHLEDEJ_ROOT   0x0012b9    program     static commands2.asm
+  PRIKAZ_03h_KONEC_NEHRAJ   0x001308    program     static commands2.asm
+               PRIKAZ_0Bh   0x001312    program     static commands2.asm
+               PRIKAZ_0Ch   0x001334    program     static commands2.asm
+PRIKAZ_0Ch_NENI_ZACATEK_ADR   0x00135b    program     static commands2.asm
+        PRIKAZ_0Ch_JEROOT   0x00135d    program     static commands2.asm
+        PRIKAZ_0Ch_ODESLI   0x00135e    program     static commands2.asm
+               PRIKAZ_0Dh   0x001378    program     static commands2.asm
+      PRIKAZ_0Dh_OKAMZITE   0x00138c    program     static commands2.asm
+         PRIKAZ_0Dh_KONEC   0x00138e    program     static commands2.asm
+               PRIKAZ_85h   0x001396    program     static commands2.asm
+PRIKAZ_85h_SPATNY_PARAMETR   0x0013d1    program     static commands2.asm
+         PRIKAZ_85h_VYPNI   0x0013d8    program     static commands2.asm
+         PRIKAZ_85h_KONEC   0x0013f1    program     static commands2.asm
+               PRIKAZ_86h   0x0013f3    program     static commands2.asm
+               PRIKAZ_87h   0x001402    program     static commands2.asm
+           HLEDEJ_ADRESAR   0x001410    program     static subdirectory.asm
+      HLEDEJ_ADR_OADR_VIS   0x001430    program     static subdirectory.asm
+HLEDEJ_ADR_OADR_VIS_NOROOT   0x001438    program     static subdirectory.asm
+       HLEDEJ_ADR_NALEZEN   0x001466    program     static subdirectory.asm
+     HLEDEJ_ADRESAR_KONEC   0x0014ba    program     static subdirectory.asm
+              CTI_TABULKU   0x001dec    program     static loudness.asm
+           VS_LOAD_PLUGIN   0x001df0    program     static loudness.asm
+      VS_LOAD_PLUGIN_LOAD   0x001dff    program     static loudness.asm
+ 

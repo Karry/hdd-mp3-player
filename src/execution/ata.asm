@@ -483,7 +483,7 @@ IDENTIFY_DEVICE
 	; [27-46] model mumber (ASCI retezec s nazvem disku)
 	; tady precteme 20 slov a rovnou je odesleme do pric
 		; pokud nekde od disku dostavame ASCII retezec jsou data nasledujici: 
-		; pr. disk nam posila string ìCopyrightî
+		; pr. disk nam posila string ‚ÄúCopyright‚Äù
 		;		1. DATA_H = 'C' 
 		; 		1. DATA_l = 'o'
 		;		2. DATA_H = 'P' 

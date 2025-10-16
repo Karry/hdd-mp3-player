@@ -6,7 +6,7 @@
 ; Pokud procedura najde svuj prikaz a jsou prijate vsechny parametry, musi odeslat nejakou odpoved po USARTu a smazat reg. PRIJATYCH_DAT!!!
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ; CAST 2 
-PRIKAZ_03h						; 03h ñ nastav oddil
+PRIKAZ_03h						; 03h ‚Äì nastav oddil
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'03'					
 	btfss STATUS,Z
@@ -18,7 +18,7 @@ PRIKAZ_03h						; 03h ñ nastav oddil
 	return						; jeste nemame vsechny parametry
 	; Prisel prikaz 03h s 4bytovym parametrem (nacti oddily se systemem FAT32)
 
-	; z·lohujeme si d˘leûitÈ hodnoty do bufferu 1
+	; z√°lohujeme si d≈Øle≈æit√© hodnoty do bufferu 1
 	INDF_BANK_3
 	movlw 0x90
 	movwf FSR
@@ -85,7 +85,7 @@ PRIKAZ_03h						; 03h ñ nastav oddil
 	goto PRIKAZ_03h_NENACTENO
 PRIKAZ_03h_NACTENO
 	; ted se podivame, zda pri predchozim spusteni byl take nacten tento oddil, a zda mame po nacteni zacit prehravat
-	btfss PREH_STAV0,7				; 7. bit = 1 => po naËtenÌ oddÌlu se zaËne p¯ehr·vat mp3, kterou se p¯i poslednÌm p¯ehr·v·ni skonËilo 
+	btfss PREH_STAV0,7				; 7. bit = 1 => po naƒçten√≠ odd√≠lu se zaƒçne p≈ôehr√°vat mp3, kterou se p≈ôi posledn√≠m p≈ôehr√°v√°ni skonƒçilo 
 	goto PRIKAZ_03h_KONEC_NEHRAJ
 	
 	; precteme informace o posledni prehrane skladbe a umistime je do buferru 1
@@ -221,7 +221,7 @@ PRIKAZ_03h_LOOP1
 	goto PRIKAZ_03h_KONEC
 
 PRIKAZ_03h_NENACTENO
-	; pokud nebyla FATka ˙spÏönÏ naËtena, vr·tÌme zpÏt z·lohovanÈ hodnoty...
+	; pokud nebyla FATka √∫spƒõ≈°nƒõ naƒçtena, vr√°t√≠me zpƒõt z√°lohovan√© hodnoty...
 	INDF_BANK_3
 	movlw 0x90
 	movwf FSR
@@ -373,7 +373,7 @@ PRIKAZ_03h_KONEC_NEHRAJ
 ;	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_0Bh						; 0Bh ñ zjisti velikost fragmentu
+PRIKAZ_0Bh						; 0Bh ‚Äì zjisti velikost fragmentu
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'0b'					
 	btfss STATUS,Z
@@ -419,7 +419,7 @@ PRIKAZ_0Bh						; 0Bh ñ zjisti velikost fragmentu
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_0Ch						; 0Ch ñ najdi z·znam o tomto adres·¯i v nad¯azenÈm adres·¯i
+PRIKAZ_0Ch						; 0Ch ‚Äì najdi z√°znam o tomto adres√°≈ôi v nad≈ôazen√©m adres√°≈ôi
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'0C'					
 	btfss STATUS,Z
@@ -497,7 +497,7 @@ PRIKAZ_0Ch_ODESLI
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_0Dh						; 0Dh ñ nastav dobu, po ktere se disk prepne do STANDBY
+PRIKAZ_0Dh						; 0Dh ‚Äì nastav dobu, po ktere se disk prepne do STANDBY
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'0D'					
 	btfss STATUS,Z
@@ -536,7 +536,7 @@ PRIKAZ_0Dh_KONEC
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_85h						; 85h ñ nastav p¯edvolen˝ ÑekvalizÈrì
+PRIKAZ_85h						; 85h ‚Äì nastav p≈ôedvolen√Ω ‚Äûekvaliz√©r‚Äú
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'85'					
 	btfss STATUS,Z
@@ -632,7 +632,7 @@ PRIKAZ_85h_KONEC
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_86h						; 86h ñ vraù nastavenou hlasitost
+PRIKAZ_86h						; 86h ‚Äì vra≈• nastavenou hlasitost
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'86'
 	btfss STATUS,Z
@@ -649,7 +649,7 @@ PRIKAZ_86h						; 86h ñ vraù nastavenou hlasitost
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_87h						; 87h ñ uloû nastavenÌ p¯ehr·v·nÌ do EEPROM
+PRIKAZ_87h						; 87h ‚Äì ulo≈æ nastaven√≠ p≈ôehr√°v√°n√≠ do EEPROM
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'87'
 	btfss STATUS,Z
