@@ -127,7 +127,7 @@ void InterruptHandlerHigh (){
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 void NastartujOdpocet (void){
-//unsigned char ZtlumitPodsvetleni=5;	// po jakÃ© dobÄ› bez stisku klÃ¡vesy ztlumit podsvÄ›tlenÃ­ 
+//unsigned char ZtlumitPodsvetleni=5;	// po jaké dobì bez stisku klávesy ztlumit podsvìtlení 
 // (5s,10s,30s,1M,5M,nikdy)
 // Odpocet
 		//if (ZtlumitPodsvetleni==0){
@@ -203,10 +203,10 @@ void Init(void){
 	// konfigurace portu A
 	PORTA=0x00;
 	LATA=0x00;
-	ADCON1=0x0F;		// jako digitÃ¡lnÃ­ (A/D)
-	CMCON=0x07;			// jako digitÃ¡lnÃ­ (komparÃ¡tory)
+	ADCON1=0x0F;		// jako digitální (A/D)
+	CMCON=0x07;			// jako digitální (komparátory)
 	CVRCON=0x00;
-	TRISA=0x00;			// nastavit vÅ¡echno jako vÃ½stupy
+	TRISA=0x00;			// nastavit všechno jako výstupy
 
 	// konfigurace portu D
 	PORTD=0;
@@ -350,7 +350,7 @@ void main (void)
 		SetDCPWM2(AktualniPodsvetleniLCD);
 		SetDCPWM1(AktualniPodsvetleniTlacitek);
 
-		// osetÅ™enÃ­ nastavenÃ­ hlasitosti
+		// osetøení nastavení hlasitosti
 		if (Flags.Bit.NactenOddil){
 			CtiStavPrehravani();
 		if (ATlVolUp && ATlVolDown){

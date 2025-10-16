@@ -33,7 +33,7 @@ void CekejNaDisk(void){
 	
 	radek=5;
 	sloupec=0;
-	str2ram (StringBuffer, "Ëek·m na disk...");
+	str2ram (StringBuffer, "ƒçek√°m na disk...");
 	PisMale(StringBuffer,0,0);				
 
 	Delay10KTCYx(250);
@@ -61,16 +61,16 @@ void CekejNaDisk(void){
 	str2ram (StringBuffer2, " ");
 	if ((VlastnostiDisku & 0x80) == 0x80){
 		if ((VlastnostiDisku & 0x04) == 0x04){ 
-			str2ram (StringBuffer2, "OK, adresov·nÌ LBA 48");
+			str2ram (StringBuffer2, "OK, adresov√°n√≠ LBA 48");
 		}else{
-			str2ram (StringBuffer2, "OK, adresov·nÌ LBA 28");
+			str2ram (StringBuffer2, "OK, adresov√°n√≠ LBA 28");
 		}
 	}else{
 		if ((VlastnostiDisku & 0x02) == 0x00){ 
 			str2ram (StringBuffer2, "disk nepodporuje LBA");
 		}		
 		if ((VlastnostiDisku & 0x08) == 0x08){ 
-			str2ram (StringBuffer2, "sektory vÏtöÌ 512B");
+			str2ram (StringBuffer2, "sektory vƒõt≈°√≠ 512B");
 		}		
 	}
 	radek=6;

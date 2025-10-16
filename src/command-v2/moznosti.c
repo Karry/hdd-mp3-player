@@ -28,7 +28,7 @@ void moznosti (void){
 
 		radek=0;
 		sloupec=8;
-		str2ram (StringBuffer, "MOéNOSTI Pÿ.:");
+		str2ram (StringBuffer, "MO≈ΩNOSTI P≈ò.:");
 		PisVelke(StringBuffer,0,0,0);
 	}
 
@@ -102,9 +102,9 @@ void moznosti (void){
 
 	if (ZmenaPolozky==1){
 		if (PolozkaMenu==1 || PolozkaMenu==2){
-			str2ram(StringBuffer, "\x11zpÏt\x12  \x12  \x12  \x12zmÏnit\x13");
+			str2ram(StringBuffer, "\x11zpƒõt\x12  \x12  \x12  \x12zmƒõnit\x13");
 		}else{
-			str2ram(StringBuffer, "\x11zpÏt\x12   \x12   \x12 < \x12 > \x13");
+			str2ram(StringBuffer, "\x11zpƒõt\x12   \x12   \x12 < \x12 > \x13");
 		}
 		radek=7;
 		sloupec=0;
@@ -112,7 +112,7 @@ void moznosti (void){
 
 		radek=2;
 		sloupec=2;		
-		str2ram (StringBuffer, " ekvalizÈr: ");
+		str2ram (StringBuffer, " ekvaliz√©r: ");
 		str2ram (StringBuffer2, "         ");
 		StringBuffer2[6]=desitky(Ekvalizer,' ');
 		StringBuffer2[7]=jednotky(Ekvalizer);
@@ -129,7 +129,7 @@ void moznosti (void){
 
 		radek=3;
 		sloupec=2;		
-		str2ram (StringBuffer, " zv˝raznÏnÌ bas˘   \x15 ");
+		str2ram (StringBuffer, " zv√Ωraznƒõn√≠ bas≈Ø   \x15 ");
 		if (PREHSTAV1.Bit.ZvyraznitBasy){StringBuffer[19]=0x16;}
 		if (PolozkaMenu==1){
 				StringBuffer[0]=0x06;
@@ -141,7 +141,7 @@ void moznosti (void){
 
 		radek=4;
 		sloupec=2;		
-		str2ram (StringBuffer, " p¯ehr·vat po zap. \x15 ");
+		str2ram (StringBuffer, " p≈ôehr√°vat po zap. \x15 ");
 		if (PREHSTAV0.Bit.PrehravatPoSpusteni){StringBuffer[19]=0x16;}
 		if (PolozkaMenu==2){
 				StringBuffer[0]=0x06;
@@ -153,9 +153,9 @@ void moznosti (void){
 
 		radek=5;
 		sloupec=2;		
-		str2ram (StringBuffer, " reûim p¯ehr·v·nÌ    ");
+		str2ram (StringBuffer, " re≈æim p≈ôehr√°v√°n√≠    ");
 		// unsigned char RezimPrehravani=0;		
-		// 0=prohled·v·nÌ, hr·t por·d d·l; 1=p¯ehr·t sloûku; 2=repeat sloûky; 3=p¯ehr·t jednu; 4=repeat souboru		
+		// 0=prohled√°v√°n√≠, hr√°t por√°d d√°l; 1=p≈ôehr√°t slo≈æku; 2=repeat slo≈æky; 3=p≈ôehr√°t jednu; 4=repeat souboru		
 		StringBuffer[18]=0x19;
 		StringBuffer[19]=0x18;
 		if (RezimPrehravani==0){
@@ -187,7 +187,7 @@ void moznosti (void){
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 char desitky(unsigned char Hodnota,unsigned char nula){
-	// vratÌ ËÌslici jako ASCII znak, kter· na pozici desÌtek... Pokud je nula, tak vr·tÌ znak definovan˝ v nula
+	// vrat√≠ ƒç√≠slici jako ASCII znak, kter√° na pozici des√≠tek... Pokud je nula, tak vr√°t√≠ znak definovan√Ω v nula
 	unsigned char pomocna;
 	pomocna=Hodnota / 10;
 	if (pomocna>9){pomocna=pomocna-10;}
@@ -198,7 +198,7 @@ char desitky(unsigned char Hodnota,unsigned char nula){
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 char stovky(unsigned int Hodnota,unsigned char nula){
-	// vratÌ ËÌslici jako ASCII znak, kter· na pozici desÌtek... Pokud je nula, tak vr·tÌ znak definovan˝ v nula
+	// vrat√≠ ƒç√≠slici jako ASCII znak, kter√° na pozici des√≠tek... Pokud je nula, tak vr√°t√≠ znak definovan√Ω v nula
 	unsigned int pomocna;
 	pomocna=Hodnota / 100;
 	if (pomocna==0){return nula;}
@@ -219,26 +219,26 @@ void NastavEkvalizer(void){
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 void NastavRezimPrehravani(void){
- 	// RezimPrehravani - 0=prohled·v·nÌ, hr·t por·d d·l; 1=p¯ehr·t sloûku; 2=repeat sloûky; 3=p¯ehr·t jednu; 4=repeat souboru	
- 	if (RezimPrehravani==0){							// 0=prohled·v·nÌ, hr·t por·d d·l
+ 	// RezimPrehravani - 0=prohled√°v√°n√≠, hr√°t por√°d d√°l; 1=p≈ôehr√°t slo≈æku; 2=repeat slo≈æky; 3=p≈ôehr√°t jednu; 4=repeat souboru	
+ 	if (RezimPrehravani==0){							// 0=prohled√°v√°n√≠, hr√°t por√°d d√°l
 		PREHSTAV0.Bit.NeprehravatDal=0;
 		PREHSTAV0.Bit.Repeat=0;
 		//PREHSTAV0.Bit.RepeatSouboru=0;
 		PREHSTAV0.Bit.ProhledavatAdresare=1;
 	}
- 	if (RezimPrehravani==1){							//  1=p¯ehr·t sloûku
+ 	if (RezimPrehravani==1){							//  1=p≈ôehr√°t slo≈æku
 		PREHSTAV0.Bit.NeprehravatDal=0;
 		PREHSTAV0.Bit.Repeat=0;
 		//PREHSTAV0.Bit.RepeatSouboru=0;
 		PREHSTAV0.Bit.ProhledavatAdresare=0;
 	}
- 	if (RezimPrehravani==2){							//  2=repeat sloûky
+ 	if (RezimPrehravani==2){							//  2=repeat slo≈æky
 		PREHSTAV0.Bit.NeprehravatDal=0;
 		PREHSTAV0.Bit.Repeat=1;
 		PREHSTAV0.Bit.RepeatSouboru=0;
 		//PREHSTAV0.Bit.ProhledavatAdresare=0;
 	}
- 	if (RezimPrehravani==3){							// 3=p¯ehr·t jednu
+ 	if (RezimPrehravani==3){							// 3=p≈ôehr√°t jednu
 		PREHSTAV0.Bit.NeprehravatDal=1;
 		//PREHSTAV0.Bit.Repeat=0;
 		//PREHSTAV0.Bit.RepeatSouboru=0;

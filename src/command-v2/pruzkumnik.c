@@ -1,7 +1,7 @@
 unsigned char NactiZaznam(unsigned char Kam, unsigned char Prvni, unsigned char Nasledujici){
-	// pokusí se naèíst údaje o záznamu (nasledujiciho/predchazejiciho za/pred nejakym zaznamem v bufferu)
+	// pokusÃ­ se naÄÃ­st Ãºdaje o zÃ¡znamu (nasledujiciho/predchazejiciho za/pred nejakym zaznamem v bufferu)
 	// do BufferSouboru a AdresySouboru na pozici "Kam"
-	// pokud takovı záznam exisuje, vrátí 1, pokud ne, vrátí 0
+	// pokud takovÃ½ zÃ¡znam exisuje, vrÃ¡tÃ­ 1, pokud ne, vrÃ¡tÃ­ 0
 	unsigned char Referencni,dato,i;
 	
 	WrUsart(0x09);
@@ -84,8 +84,8 @@ unsigned char NactiZaznam(unsigned char Kam, unsigned char Prvni, unsigned char 
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 unsigned char NactiDanyZaznam(unsigned char Kam,unsigned char Zaznam0,unsigned char Zaznam1){
-	// pokusí se naèíst údaje o konkrétním záznamu do BufferSouboru a AdresySouboru na pozici "Kam"
-	// pokud takovı záznam exisuje, vrátí 1, pokud ne, vrátí 0
+	// pokusÃ­ se naÄÃ­st Ãºdaje o konkrÃ©tnÃ­m zÃ¡znamu do BufferSouboru a AdresySouboru na pozici "Kam"
+	// pokud takovÃ½ zÃ¡znam exisuje, vrÃ¡tÃ­ 1, pokud ne, vrÃ¡tÃ­ 0
 	unsigned char dato,i;
 
 	WrUsart(0x05);
@@ -249,7 +249,7 @@ void Pruzkumnik(void){
 		SmazLcd();
 		radek=3;
 		sloupec=12;
-		PisMaleConst("naèítám adresáø...",0,0);		
+		PisMaleConst("naÄÃ­tÃ¡m adresÃ¡Å™...",0,0);		
 		
 		Flags2.Bit.PlayPredStandBy=PREHSTAV0.Bit.Play;
 		PREHSTAV0.Bit.Play=0;
@@ -314,7 +314,7 @@ void Pruzkumnik(void){
 		// ted napisy nad tlacitky
 		radek=7;
 		sloupec=0;
-		str2ram(StringBuffer, "\x11zpìt\x12..\x12oddíl\x12\x12vyber\x13");
+		str2ram(StringBuffer, "\x11zpÄ›t\x12..\x12oddÃ­l\x12\x12vyber\x13");
 		PisMale(StringBuffer,1,0);				
 		
 		// ted nactu do bufferu informace o zaznamech v adresari

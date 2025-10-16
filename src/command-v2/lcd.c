@@ -95,15 +95,15 @@ void NastavPozici(void){
 	_asm
 	iorlw 0x40	
 	_endasm
- 	ZapisI(WREG);	// nastaví pozici X 
+ 	ZapisI(WREG);	// nastavÃ­ pozici X 
 }
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 void SmazPulLcd(void){
 	unsigned char Stranka=0;
 	unsigned char i=0;
-	ZapisI(0x40);	// nastaví pozici v X na 0
-	ZapisI(0xC0);	// nastaví vertikální pozici horního øádku (stranky)
+	ZapisI(0x40);	// nastavÃ­ pozici v X na 0
+	ZapisI(0xC0);	// nastavÃ­ vertikÃ¡lnÃ­ pozici hornÃ­ho Å™Ã¡dku (stranky)
 	for (Stranka=0;Stranka<8;Stranka++){
 		WREG=Stranka;
 		_asm

@@ -25,15 +25,15 @@ void standby(void){
 
 		radek=5;
 		sloupec=3;
-		str2ram (StringBuffer, "     pro návrat     "); 
+		str2ram (StringBuffer, "     pro nÃ¡vrat     "); 
 		PisMale(StringBuffer,0,0);		
 
 		radek=6;
 		sloupec=3;
-		str2ram (StringBuffer, "    do pøehrávání.   "); 
+		str2ram (StringBuffer, "    do pÅ™ehrÃ¡vÃ¡nÃ­.   "); 
 		PisMale(StringBuffer,0,0);		
 
-		// tady se øeší nastavení pauzy a vypnutí disku
+		// tady se Å™eÅ¡Ã­ nastavenÃ­ pauzy a vypnutÃ­ disku
 		Flags2.Bit.PlayPredStandBy=PREHSTAV0.Bit.Play;
 		PREHSTAV0.Bit.Play=0;
 		NastavStavPrehravani();

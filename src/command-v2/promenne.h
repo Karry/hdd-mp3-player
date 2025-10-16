@@ -1,10 +1,10 @@
 // signaly k LCD
-#define	LCDReset	PORTAbits.RA0		// reset modulu (RST=0 - reset, RST=1 - normalní funkce)
-#define	LCDCS2		PORTAbits.RA1		// vıbìr øadièe pro pravou èást LCD (CS2=1 - vybráno)
-#define	LCDCS1		PORTAbits.RA2		// vıbìr øadièe pro levou èást LCD (CS1=1 - vybráno)
-#define	LCDE			PORTAbits.RA3		// hodinovı signál
-#define	LCDRW			PORTAbits.RA4		// volba mezi: RW=0 - zápisem, RW=1 - ètením
-#define	LCDRS			PORTAbits.RA5		// volba mezi: RS=0 - instrukcí, RS=1 - daty
+#define	LCDReset	PORTAbits.RA0		// reset modulu (RST=0 - reset, RST=1 - normalnÃ­ funkce)
+#define	LCDCS2		PORTAbits.RA1		// vÃ½bÄ›r Å™adiÄe pro pravou ÄÃ¡st LCD (CS2=1 - vybrÃ¡no)
+#define	LCDCS1		PORTAbits.RA2		// vÃ½bÄ›r Å™adiÄe pro levou ÄÃ¡st LCD (CS1=1 - vybrÃ¡no)
+#define	LCDE			PORTAbits.RA3		// hodinovÃ½ signÃ¡l
+#define	LCDRW			PORTAbits.RA4		// volba mezi: RW=0 - zÃ¡pisem, RW=1 - ÄtenÃ­m
+#define	LCDRS			PORTAbits.RA5		// volba mezi: RS=0 - instrukcÃ­, RS=1 - daty
 
 #define	LCDData		PORTD
 
@@ -26,17 +26,17 @@
 #pragma udata cast1
 // nastaveni
 unsigned char Ekvalizer=0;
-unsigned char RezimPrehravani=0;		// 0=prohledávání, hrát porád dál; 1=pøehrát sloku; 2=repeat sloky; 3=pøehrát jednu; 4=repeat souboru
+unsigned char RezimPrehravani=0;		// 0=prohledÃ¡vÃ¡nÃ­, hrÃ¡t porÃ¡d dÃ¡l; 1=pÅ™ehrÃ¡t sloÅ¾ku; 2=repeat sloÅ¾ky; 3=pÅ™ehrÃ¡t jednu; 4=repeat souboru
 unsigned int PodsvetleniLCD=64;								// 0..1023
 unsigned int AktualniPodsvetleniLCD=0;				// 0..1023
 unsigned int PodsvetleniTlacitek=512;					// 0..1023
 unsigned int AktualniPodsvetleniTlacitek=512;	// 0..1023
-unsigned char VypinatDisk=1;	// po jaké dobì neèinosti (minuty) se má vypínat disk        (5, 10, 15, 30,60,nikdy)
-unsigned char ZtlumitPodsvetleni=5;	// po jaké dobì bez stisku klávesy ztlumit podsvìtlení (5s,10s,30s,1M,5M,nikdy)
+unsigned char VypinatDisk=1;	// po jakÃ© dobÄ› neÄinosti (minuty) se mÃ¡ vypÃ­nat disk        (5, 10, 15, 30,60,nikdy)
+unsigned char ZtlumitPodsvetleni=5;	// po jakÃ© dobÄ› bez stisku klÃ¡vesy ztlumit podsvÄ›tlenÃ­ (5s,10s,30s,1M,5M,nikdy)
 
-unsigned int Odpocet=0xFFFF;	// do této promìnné se pøi stisku klávesy umístí konstanta v závislosti na ZtlumitPodsvetleni
-															// kadıch 5ms (pøerušení) se od této promìnné jednotka odeète (pokud není ZtlumitPodsvetleni==5)
-															// pokud se rovná nule, tak se odeèítá od AktualniPodsvetleniXXX ne dosáhne min. hodnoty...
+unsigned int Odpocet=0xFFFF;	// do tÃ©to promÄ›nnÃ© se pÅ™i stisku klÃ¡vesy umÃ­stÃ­ konstanta v zÃ¡vislosti na ZtlumitPodsvetleni
+															// kaÅ¾dÃ½ch 5ms (pÅ™eruÅ¡enÃ­) se od tÃ©to promÄ›nnÃ© jednotka odeÄte (pokud nenÃ­ ZtlumitPodsvetleni==5)
+															// pokud se rovnÃ¡ nule, tak se odeÄÃ­tÃ¡ od AktualniPodsvetleniXXX neÅ¾ dosÃ¡hne min. hodnoty...
 unsigned char PocetOddilu;
 unsigned char Hlasitost;
 union{
@@ -50,7 +50,7 @@ unsigned int ZobrazenyCas;
 unsigned char TrvaniPomalehoPrevijeni;
 
 // behove prommene
-unsigned char radek, sloupec;	// aktuální pomyslnı kurzor. radek mùe bıt 0..7, sloupec 0..127
+unsigned char radek, sloupec;	// aktuÃ¡lnÃ­ pomyslnÃ½ kurzor. radek mÅ¯Å¾e bÃ½t 0..7, sloupec 0..127
 
 unsigned char Obrazovka;			// horni bity urcuji na ktere borazovce se nachazime, dolni podobrazovku 
 unsigned char PolozkaMenu=0;	// urcuje, ktera polozka nejakeho menu je aktivni
@@ -61,7 +61,7 @@ char ram StringBuffer[21],StringBuffer2[21];
 signed char i,k;
 
 
-// stav pøehrávaèe
+// stav pÅ™ehrÃ¡vaÄe
 union
 {
   struct
@@ -106,7 +106,7 @@ unsigned char LbaAktualnihoAdresare[4];
 char ram AktualniAdresar[16];
 unsigned char OznacitZaznam[2]; // pokud se zmenil adresar, tak dame tento zaznm jako oznaceny...
 
-// stav pøehrávaèe
+// stav pÅ™ehrÃ¡vaÄe
 union
 {
   struct

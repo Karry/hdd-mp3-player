@@ -1,0 +1,28 @@
+Clean: Deleting intermediary and output files.
+Clean Warning: File "D:\pic\mp3 preprcavac\ridici2 program\main.o" doesn't exist.
+Clean: Deleted file "ridici 2.cof".
+Clean Warning: File "ridici 2.cod" doesn't exist.
+Clean: Deleted file "ridici 2.hex".
+Clean Warning: File "ridici 2.lst" doesn't exist.
+Clean: Deleted file "ridici 2.map".
+Clean: Deleted file "O:\pic\mp3 preprcavac\ridici2 program\ridici 2.mcs".
+Clean: Done.
+Executing: "C:\Program Files\MCC18\bin\mcc18.exe" -p=18F4620  /i"C:\Program Files\MCC18\h" "main.c" -fo="main.o" -mL -Ou- -Ot- -Ob- -Op- -Or- -Od- -Opa-
+MPLAB C18 v3.02 (feature limited)
+Copyright 1999-2005 Microchip Technology Inc.
+This version of MPLAB C18 does not support the extended mode
+and will not perform all optimizations.  To purchase a full
+copy of MPLAB C18, please contact your local distributor or
+visit buy.microchip.com.
+
+Executing: "C:\Program Files\MCC18\bin\mplink.exe" /l"C:\Program Files\MCC18\lib" "O:\pic\mp3 preprcavac\ridici2 program\18f4620.lkr" "O:\pic\mp3 preprcavac\ridici2 program\main.o" /m"ridici 2.map" /w /o"ridici 2.cof"
+MPLINK 4.02, Linker
+Copyright (c) 2006 Microchip Technology Inc.
+Errors    : 0
+
+MP2HEX 4.02, COFF to HEX File Converter
+Copyright (c) 2006 Microchip Technology Inc.
+Errors    : 0
+
+Loaded O:\pic\mp3 preprcavac\ridici2 program\ridici 2.cof.
+BUILD SUCCEEDED: Tue Oct 09 17:23:33 2007

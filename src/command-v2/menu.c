@@ -44,7 +44,7 @@ void Menu(void){
 		// ted napisy nad tlacitky
 		radek=7;
 		sloupec=0;
-		str2ram(StringBuffer, "\x11zpìt\x12  \x12   \x12  \x12vyber\x13");
+		str2ram(StringBuffer, "\x11zpÄ›t\x12  \x12   \x12  \x12vyber\x13");
 		PisMale(StringBuffer,1,0);		
 	}
 
@@ -92,28 +92,28 @@ void Menu(void){
 		radek=2;
 		sloupec=10;		
 		if (PolozkaMenu==0){
-				str2ram (StringBuffer, "\x06vıbìr souboru   \x07");		
+				str2ram (StringBuffer, "\x06vÃ½bÄ›r souboru   \x07");		
 				PisMale(StringBuffer,1,1);
 		}else{
-				str2ram (StringBuffer, " vıbìr souboru    ");		
+				str2ram (StringBuffer, " vÃ½bÄ›r souboru    ");		
 				PisMale(StringBuffer,0,0);
 		}
 		radek=3;
 		sloupec=10;		
 		if (PolozkaMenu==1){
-				str2ram (StringBuffer, "\x06mon. pøehrávání\x07");		
+				str2ram (StringBuffer, "\x06moÅ¾n. pÅ™ehrÃ¡vÃ¡nÃ­\x07");		
 				PisMale(StringBuffer,1,1);
 		}else{
-				str2ram (StringBuffer, " mon. pøehrávání ");		
+				str2ram (StringBuffer, " moÅ¾n. pÅ™ehrÃ¡vÃ¡nÃ­ ");		
 				PisMale(StringBuffer,0,0);
 		}
 		radek=4;
 		sloupec=10;		
 		if (PolozkaMenu==2){
-				str2ram (StringBuffer, "\x06nastavení       \x07");
+				str2ram (StringBuffer, "\x06nastavenÃ­       \x07");
 				PisMale(StringBuffer,1,1);
 		}else{
-				str2ram (StringBuffer, " nastavení        ");
+				str2ram (StringBuffer, " nastavenÃ­        ");
 				PisMale(StringBuffer,0,0);
 		}
 		radek=5;

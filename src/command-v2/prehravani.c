@@ -45,8 +45,8 @@ void Prehravani(void){
 	ZazPrehrSouboru[1]=RdUsart();	
 
 	if (Flags.Bit.ZmenaObrazovky || PREHSTAV0.Bit.ZmenenSoubor ){
-		// pokud se zmìnila obrazovka, nebo pokud se právì automaticky zmìnil pøehrávanı soubor, 
-		// naèteme si jméno pøehrávaného souboru a adresáøe pro zobrazování na lcd...
+		// pokud se zmÄ›nila obrazovka, nebo pokud se prÃ¡vÄ› automaticky zmÄ›nil pÅ™ehrÃ¡vanÃ½ soubor, 
+		// naÄteme si jmÃ©no pÅ™ehrÃ¡vanÃ©ho souboru a adresÃ¡Å™e pro zobrazovÃ¡nÃ­ na lcd...
 		Flags.Bit.ZmenaObrazovky=0;
 		
 		PrehravanySoubor[65]=0;
@@ -375,7 +375,7 @@ void Prehravani(void){
 		}
 		///////////////////////////////////////////////////////////////////////////
 		// zobrazeni rezimu prehravani
-		// 0=prohledávání, hrát porád dál; 1=pøehrát sloku; 2=repeat sloky; 3=pøehrát jednu; 4=repeat souboru		
+		// 0=prohledÃ¡vÃ¡nÃ­, hrÃ¡t porÃ¡d dÃ¡l; 1=pÅ™ehrÃ¡t sloÅ¾ku; 2=repeat sloÅ¾ky; 3=pÅ™ehrÃ¡t jednu; 4=repeat souboru		
 		StringBuffer[0]=0x10;
 		StringBuffer[1]=0x0F;
 		StringBuffer[2]=0x00;		

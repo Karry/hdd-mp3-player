@@ -25,11 +25,11 @@ void nastaveni(void){
 
 		radek=0;
 		sloupec=8;
-		str2ram (StringBuffer, "NASTAVENÍ:");
+		str2ram (StringBuffer, "NASTAVENÃ:");
 		PisVelke(StringBuffer,0,0,0);		
 
 		// ted napissi nad tlacitky
-		str2ram(StringBuffer, "\x11zpìt\x12   \x12   \x12 - \x12 + \x13");
+		str2ram(StringBuffer, "\x11zpÄ›t\x12   \x12   \x12 - \x12 + \x13");
 		radek=7;
 		sloupec=0;
 		PisMale(StringBuffer,1,0);		
@@ -108,8 +108,8 @@ void nastaveni(void){
 	///////////////////////////////////////////////////
 
 	if (ZmenaPolozky==1){
-		str2ram (StringBuffer, " vypínat HDD: ");
-		// VypinatDisk => po jaké dobì neèinosti (minuty) se má vypínat disk
+		str2ram (StringBuffer, " vypÃ­nat HDD: ");
+		// VypinatDisk => po jakÃ© dobÄ› neÄinosti (minuty) se mÃ¡ vypÃ­nat disk
 		// (5,10,15,30,60,nikdy)
 
 		str2ram (StringBuffer2, "po 10M ");
@@ -143,7 +143,7 @@ void nastaveni(void){
 
 		radek=3;
 		sloupec=2;		
-		str2ram (StringBuffer, " podsvícení LCD      ");
+		str2ram (StringBuffer, " podsvÃ­cenÃ­ LCD      ");
 		if (PolozkaMenu==1){
 				StringBuffer[0]=0x06;
 				StringBuffer[20]=0x07;
@@ -157,7 +157,7 @@ void nastaveni(void){
 
 		radek=4;
 		sloupec=2;		
-		str2ram (StringBuffer, " podsvícení TL.      ");
+		str2ram (StringBuffer, " podsvÃ­cenÃ­ TL.      ");
 		if (PolozkaMenu==2){
 				StringBuffer[0]=0x06;
 				StringBuffer[20]=0x07;
@@ -168,7 +168,7 @@ void nastaveni(void){
 				ZobrazPosuvnik(PodsvetleniTlacitek,0,0);
 		}
 
-		// unsigned int ZtlumitPodsvetleni=5;	// po jaké dobì bez stisku klávesy ztlumit podsvìtlení 
+		// unsigned int ZtlumitPodsvetleni=5;	// po jakÃ© dobÄ› bez stisku klÃ¡vesy ztlumit podsvÄ›tlenÃ­ 
 		// (5s,10s,30s,1M,5M,nikdy)
 		str2ram (StringBuffer, " zlumit pod.: ");
 
@@ -254,7 +254,7 @@ void ZobrazPosuvnik(unsigned int Hodnota,unsigned char Pozadi,unsigned char Nadt
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 void NastavDobuDoStandBy(void){
-	// VypinatDisk - po jaké dobì neèinosti (minuty) se má vypínat disk (5,10,15,30,60,nikdy)
+	// VypinatDisk - po jakÃ© dobÄ› neÄinosti (minuty) se mÃ¡ vypÃ­nat disk (5,10,15,30,60,nikdy)
 	unsigned char a,b;
 	WrUsart(0x0D);
 	

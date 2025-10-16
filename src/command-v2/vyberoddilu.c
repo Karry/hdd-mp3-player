@@ -43,7 +43,7 @@ void VyberOddilu(void){
 		if (PocetOddilu==0){
 			radek=0;
 			sloupec=0;
-			PisMaleConst("nenalezen û·dn˝ oddÌl",0,0);
+			PisMaleConst("nenalezen ≈æ√°dn√Ω odd√≠l",0,0);
 			radek=1;
 			sloupec=0;
 			PisMaleConst("typu FAT32",0,0);
@@ -66,7 +66,7 @@ void VyberOddilu(void){
 					Flags.Bit.ZmenaObrazovky=1;
 					Flags.Bit.NactenOddil=1;					
 					if (Flags2.Bit.BylNactenyOddil){
-						PisMaleConst("pouze jeden oddÌl...",0,0);						
+						PisMaleConst("pouze jeden odd√≠l...",0,0);						
 						Obrazovka=0x20;
 						Delay10KTCYx(255);
 						Delay10KTCYx(255);
@@ -76,18 +76,18 @@ void VyberOddilu(void){
 						Obrazovka=0x10;
 					}
 				}else{
-					PisMaleConst("nepoda¯ilo se",0,0);
+					PisMaleConst("nepoda≈ôilo se",0,0);
 					radek=1;
 					sloupec=0;
-					PisMaleConst("nastavit oddÌl",0,0);
+					PisMaleConst("nastavit odd√≠l",0,0);
 					while(1);
 				}
 			}else{
-				PisVelkeConst(" VYBER ODDÕL:",0,0,0);
+				PisVelkeConst(" VYBER ODD√çL:",0,0,0);
 				radek=7;
 				sloupec=0;
 				if (Flags2.Bit.BylNactenyOddil){
-					PisMaleConst("\x11zpÏt\x12  \x12   \x12  \x12vyber\x13",1,0);
+					PisMaleConst("\x11zpƒõt\x12  \x12   \x12  \x12vyber\x13",1,0);
 				}else{
 					PisMaleConst("\x11   \x12   \x12   \x12  \x12vyber\x13",1,0);
 				}
@@ -140,10 +140,10 @@ void VyberOddilu(void){
 					SmazLcd();
 					radek=1;
 					sloupec=0;
-					PisMaleConst("nepoda¯ilo se",0,0);
+					PisMaleConst("nepoda≈ôilo se",0,0);
 					radek=1;
 					sloupec=0;
-					PisMaleConst("nastavit oddÌl",0,0);
+					PisMaleConst("nastavit odd√≠l",0,0);
 					Delay10KTCYx(255);
 					Delay10KTCYx(255);
 				}		
