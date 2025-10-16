@@ -28,14 +28,15 @@ c;********************************************************************
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	org 0
  	goto START
-	org 4
+	org	4
 	goto INTERRUPT
 ;**********************************************************
 
 	include "ata.asm" 		; podprogramy na ovladani ATA disku
+	include "fat32.asm" 	; podprogramy na nacteni a praci s FAT32
 	include "vs1001.asm"	; podprogramy na ovladani mp3 decoderu
-	include "aritmetic.asm"	; podprogramy na ovladani mp3 decoderu
-	include "pokusne.asm"
+	include "aritmetic.asm"	; podprogramy vykonavajici zakladni aritmetologicke operace
+	;include "pokusne.asm"
 
 ;**********************************************************
 START
@@ -49,29 +50,38 @@ START
 	call POZDRAV
 
 	;call MP3_SOFT_RESET
-	call ATA_RESET		; resetujeme disk, koukneme zda tu nejakej mame
+	call ATA_RESET				; resetujeme disk, koukneme zda tu nejakej mame
 	btfss ATA_ATTRIBUTES,ATA_OK
-	;goto $-2		;pokud neni pripojen disk, tak se jej pokousime neustale najit...
+	;goto $-2					;pokud neni pripojen disk, tak se jej pokousime neustale najit...
 	nop
-	call IDENTIFY_DEVICE	; koukneme co disk umi
-
-;	movfw ATA_ATTRIBUTES	; ted odesleme vlastnosti disku
-;	call WR_USART
-;	movfw PARAM_MAX_LBA4	; a jeho velikost (pocet sektoru)
-;	call WR_USART
-;	movfw PARAM_MAX_LBA3
-;	call WR_USART
-;	movfw PARAM_MAX_LBA2
-;	call WR_USART
-;	movfw PARAM_MAX_LBA1
-;	call WR_USART
-	clrf LBA1
-	clrf LBA2
-	clrf LBA3
-	clrf LBA4
+	call DELAY_500ms
+	call IDENTIFY_DEVICE		; koukneme co disk umi
+	call ODESLI_MODEL_NUMBER	; odesleme si jmeno disku 
 
 	call DELAY_500ms
-	call ODESLI_MODEL_NUMBER
+	call SCAN_MBR				; najdeme oddily s FAT32 a jejich seznam dame do bufferu 2
+	call ODESLI_BUFFER2			; odesleme si seznam oddilu (FAT32) s adresami
+
+	clrf LBA4
+	clrf LBA3
+	clrf LBA2
+	movlw .63
+	movwf LBA1					; LBA adresa 1. oddilu
+
+	call DELAY_500ms
+	call NACTI_FAT32			; nacte parametry zvoleneho oddilu
+	clrf CLUSTER4
+	clrf CLUSTER3
+	clrf CLUSTER2
+	movlw .2
+	movwf CLUSTER1
+	call CLUSTER_TO_LBA			; zjistime skutecnou polohu dat na disku
+	movlw 1
+	movwf SECTOR_C
+	call READ_SECTOR			; dame prikaz je precist
+	movlw .255
+	movwf TEMP1
+	call ODESLI_DATA			; odesleme USARTem
 
 BIG_LOOP
 	bsf ERROR_LED
@@ -85,20 +95,6 @@ BIG_LOOP
 	movlw 'K'
 	call WR_USART
 
-	call READ_SECTOR
-	incf LBA1,f
-	movlw h'ff'			; dalsich XX slov odesleme na USART...
-	movwf TEMP5	
-ODESLI
-	call WAIT_FOR_DATA	; cekame na data
-	call READ_DATA
-	movfw DATA_L
-	call WR_USART
-	movfw DATA_H
-	call WR_USART
-	decfsz TEMP5,F
-	goto ODESLI
-	
 	goto BIG_LOOP
 ;**********************************************************
 INIT_PORT
@@ -117,7 +113,7 @@ INIT_PORT
 	
 	movlw b'00000111'	; signal reset-, diow- a dior- jsou aktivni v log. 0 !!!
 	movwf ATA_CONTROL
-	movlw b'00111111'	; CS1-, CS0- = 1 => datova sbernice disku je odpojena
+	movlw b'00110111'	; CS1-, CS0- = 1 => datova sbernice disku je odpojena
 	movwf ATA_ADDRESS
 	clrf MP3_PORT	
 	return
@@ -137,13 +133,13 @@ INIT_CONFIG 	; nakonfiguruje preruseni, WDT, USART, pull ups....
 	movwf PIE1	
 	movlw b'00000000'	; ostatni vnejsi preruseni vymaskujeme
 	movwf PIE2			
-	movlw b'11000000' 	; povolime preruseni, na vnejsi zarizeni (USART)
-	movwf INTCON				
+	movlw b'11000000' 	; povolime preruseni na vnejsi zarizeni (USART)				
+	movwf INTCON
 
 	movlw b'00100110'	;konfigurace USARTu (asynchronni, 8bit, bez parity, rychle - (BRGH = 1))
 	movwf TXSTA
 	BANK_0
-	movlw b'10000000'	;zapnu USART
+	movlw b'10010000'	;zapnu USART
 	movwf RCSTA
 	BANK_1
 	;movlw .129 		; Fosc = 20 MHz, BRGH=1 => rychlost = 9615 bps
@@ -164,6 +160,31 @@ WR_USART	; odesle slovo ve workingu po ICSP
 
 	BANK_0	
 	movwf TXREG
+	return
+;**********************************************************
+; tento podprogram bude pro budouci praci zbytecny, je zde jen proto, abych na PC videl ze program byl spusten...
+POZDRAV  ; odesle po seriove lince pozdrav
+	movlw 'A'	
+	call WR_USART
+	movlw 'h'
+	call WR_USART
+	movlw 'o'
+	call WR_USART
+	movlw 'j'
+	call WR_USART
+	movlw '!'
+	call WR_USART
+	return
+;**********************************************************
+; odesle data, ktera jdou z disku USARTEM. Pocet dat je v reg. TEMP1
+ODESLI_DATA
+	call READ_DATA	
+	movfw DATA_L
+	call WR_USART
+	movfw DATA_H
+	call WR_USART	
+	decfsz TEMP1,F
+	goto ODESLI_DATA
 	return
 ;**********************************************************
 ODESLI_MODEL_NUMBER	; Podprogram IDENTIFY_DEVICE nam do bufferu 1 hodil jmeno disku
@@ -190,18 +211,43 @@ ODESLI_MODEL_NUMBER_ODESILANI
 	INDF_BANK_0	
 	return
 ;**********************************************************
-INTERRUPT		; sem se skace po zavolani preruseni...
-;	movwf TEMP_WORKING
-;	movfw STATUS
-;	movwf TEMP_STATUS
-;	BANK_0
+ODESLI_BUFFER2
+	INDF_BANK_2	; BUFFER_2 je v bance 2
+	movlw 0x10	; na adrese 10
+	movwf FSR
+	movlw .64	; budeme odesilat 64 bytu
+	movwf TEMP1
+ODESLI_BUFFER2_ODESILANI
+	movfw INDF
+	call WR_USART
+	incf FSR,F	
+	decfsz TEMP1,F
+	goto ODESLI_BUFFER2_ODESILANI
 
-;	bcf PIR1,5		; schodim vlajku preruseni
-;	bsf ERROR_LED
+	INDF_BANK_0		
+	return
+;**********************************************************
+INTERRUPT					; sem se skace po zavolani preruseni...
+	movwf TEMP_WORKING
+	movfw STATUS
+	movwf TEMP_STATUS
+	BANK_0
 
-;	movfw TEMP_STATUS
-;	movwf STATUS
-;	movfw TEMP_WORKING
+	btfss PIR1,5			; Meli bychom mit povoleno sice jen jedno preruseni (od USARTU), jeden ale nikdy nevi, proto ten test
+	goto END_OF_INTERRUPT	; Pokud nejde o preruseni od USARTU, tak koncime...
+	movfw RCREG
+	btfsc RCSTA,1
+	goto END_OF_INTERRUPT
+	btfsc RCSTA,2
+	goto END_OF_INTERRUPT	; Pokud nastala nejaka chyba pri prijimani data, tak na to s*r*m...
+
+	; Sem bychom se podle me meli dostat pri obdrzeni nejakeho slova po USARTU, moc to ale nefunguje...
+	; Budu muset zjistit, jestli to je hardwarem, ci softwarem...
+
+END_OF_INTERRUPT			; sem skocime kdyz mame vsechny veci kolem preruseni vyrizeny
+	movfw TEMP_STATUS
+	movwf STATUS
+	movfw TEMP_WORKING
 	retfie
 ;**********************************************************
 DELAY_500ms

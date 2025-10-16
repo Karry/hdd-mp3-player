@@ -115,26 +115,28 @@ D_COMMAND     equ D_STATUS
 ; MAPA PAMETI: (368 bytu)
 ; 	BANK 0: 	0x000 - 0x01F = specialni registry,
 ;				0x020 - 0x07F = misto (96bytu) pro nase registry:
-;				0x020 - 0x034 -> 21bytu pro registry a parametry HDD
-;				0x035 - 0x03a -> 6bytu pro parametry podprogramu (musime zajistit, abychom nepouzivali registry, ktere pouzivaji i podprogramy!!!)
-;				0x03B - 0x07F -> 69bytu rezervovano pro parametry oddilu, pozici v mp3 a dalsi blbosti
+;					0x020 - 0x034 -> 21bytu pro registry a parametry HDD
+;					0x035 - 0x03a -> 6bytu pro parametry podprogramu (musime zajistit, abychom nepouzivali registry, ktere pouzivaji i podprogramy!!!)
+;					0x03B - 0x069 -> 50bytu rezervovano pro parametry oddilu, pozici v mp3 a dalsi blbosti
+;				0x070 - 0x07F -> registry pro potreby preruseni (dostupne z kterekoliv banky)
+;					0x070 - 0x071 -> 2registry slouzici k zalohovani W a STATUS
+;					0x072 - 0x077 -> vlajka prikazu, ....
+;					0x078 - 0x07F -> 8bytu obsahujici data prikazu prisla po USARTU
 ;
 ; 	BANK 1: 	0x080 - 0x09F = specialni registry,
 ;				0x0A0 - 0x0EF = volne misto (80bytu)
-;				0x0A0 - 0x0AC -> parametry a navratove hodnoty z aritmeto/logickych podprogramu
-;				0x0AD - 0x0EF -> 67bytu nepouzito
+;					0x0A0 - 0x0AC -> parametry a navratove hodnoty z aritmeto/logickych podprogramu
+;					0x0AD - 0x0EF -> 67bytu nepouzito
 ;
 ; 	BANK 2: 	0x100 - 0x10F = specialni registry,
 ;				0x110 - 0x16F = misto (96bytu) pro nase registry:
-;				0x110 - 0x14F -> 64bytu BUFFER_2 pro dlouhe nazvy souboru, tabulku oddilu, a treba pro cast fatky
-;				0x150 - 0x16F -> 32bytu nepouzito
+;					0x110 - 0x14F -> 64bytu BUFFER_2 pro dlouhe nazvy souboru, tabulku oddilu, a treba pro cast fatky
+;					0x150 - 0x16F -> 32bytu nepouzito
 ;
 ; 	BANK 3: 	0x180 - 0x18F = specialni registry,
 ;				0x190 - 0x1EF = misto (96bytu) pro nase registry:
-; 				0x190 - 0x1CF -> 64bytu BUFFER_1 pro ruzna data pri cteni...
-; 				0x1D0 - 0x1DF -> 16bytu bufferu pro data prikazu (smi zapisovat z preruseni)
-;				0x1E0		  -> vlajka prikazu if (vlajka > 0): buffer obsahuje prikaz dlouhy "vlajka" bytu
-;				0x1E1 - 0x1EF -> 15bytu nepouzito
+; 					0x190 - 0x1CF -> 64bytu BUFFER_1 pro ruzna data pri cteni...
+;					0x1D0 - 0x1EF -> 32 bytu nepouzito
 
 ; prectena ci zapisovana data
 DATA_L 			equ 0x020 ; res 1
@@ -172,13 +174,13 @@ ATA_OK			equ 0	; 0. bit = 1 -> disk je pritomen, zapnuty a funkcni :-)
 LBA_SUPPORT		equ 1	; 1. bit = 1 -> podpora LBA (pokud neni nastaven bit2, tak pouze LBA28 -> disk do 120GB)
 LBA48_SUPPORT	equ 2	; 2. bit = 1 -> podpora LBA 48 (disk je zrejme vetsi jak 120GB)
 BIG_SECTOR		equ 3	; 3. bit = 1 -> velikost sektoru je vetsi nez 256 !!! (s takovym diskem zatim tento program neumi)
-						; 4. bit  -> nepouzit
+FAT32_LOAD		equ 4	; 4. bit = 1 -> FATka byla uspesne analyzovana a udaje o ni jsou pravdive
 						; 5. bit  -> nepouzit
 						; 6. bit  -> nepouzit (tyto tri bity treba pouziju pro vlastnosti FATky)
 APPLICABLE		equ 7	; 7. bit = 1 -> disk je pro nas pouzitelny (LBA, sektor o 512B)
 
 
-PARAM_MAX_LBA1	equ 0x02f		; [4B] maximalni hodnota LBA (velikost disku)	
+PARAM_MAX_LBA1	equ 0x02F		; [4B] maximalni hodnota LBA (velikost disku)	
 PARAM_MAX_LBA2	equ 0x030		; tady pozor, disky mohou byt adresovany az LBA 48, MBR je ale omezen na LBA 32 (2TB)
 PARAM_MAX_LBA3	equ 0x031		; tak by nemelo smysl vsech 48b kdyz by se nevyuzily. (Navic jsem disk vetsi nez 2TB nevidel :)
 PARAM_MAX_LBA4	equ 0x032		; (registr s indexem 1 ma nejnizsi vahu)
@@ -195,13 +197,43 @@ TEMP1			equ 0x036
 TEMP2			equ 0x037
 TEMP3			equ 0x038
 TEMP4			equ 0x039
-TEMP5			equ 0x03a
+TEMP5			equ 0x03A
 
 ; !!! pomocne promenne pro spozdovaci smycky jsou na stejnych mistech
 ; pouzito pro synchronizaci s prog. picdelay
 TMP1			equ 0x036
 TMP2			equ 0x037
 TMP0			equ 0x038
+;**********************************************************
+; registry pro raci s FATkou
+POZICE			equ 0x03B		; na ukladani aktualni pozice v slusteru, pripadne jine kokotiny
+CLUSTER1		equ 0x03C
+CLUSTER2		equ 0x03D
+CLUSTER3		equ 0x03E
+CLUSTER4		equ 0x03F
+
+POCATEK_DAT1	equ 0x040
+POCATEK_DAT2	equ 0x041
+POCATEK_DAT3	equ 0x042
+POCATEK_DAT4	equ 0x043
+
+POCATEK_FAT1	equ 0x044
+POCATEK_FAT2	equ 0x045
+POCATEK_FAT3	equ 0x046
+POCATEK_FAT4	equ 0x047
+
+ROOT_DIR_CL1	equ 0x048
+ROOT_DIR_CL2	equ 0x049
+ROOT_DIR_CL3	equ 0x04A
+ROOT_DIR_CL4	equ 0x04B
+
+CLUSTER_SIZE	equ 0x03B		; velikost clusteru (pocet sektoru na claster)
+
+;**********************************************************
+; registry pro potreby preruseni (jsou totiz dostupne odkudkoliv)
+TEMP_WORKING	equ 0x070
+TEMP_STATUS		equ 0x071
+PRIJATE_DATO	equ 0x071
 ;**********************************************************
 ; BANK_1	s touto bankou pracuji procedury provadejici 32 bitove 
 ; 			aritmeto/logicke operace

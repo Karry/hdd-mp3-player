@@ -169,6 +169,21 @@ POSUNDOLEVA_4	; X := X * 16
 	BANK_0
 	return
 ;**********************************************************
+POSUNDOLEVA_5	; X := X * 32
+				; X > 0xFFFF FFFF => PRETECENI obsahuje bity navic
+	BANK_1
+	clrf PRETECENI
+	bcf STATUS,C
+	
+	call POSUNDOLEVA
+	call POSUNDOLEVA
+	call POSUNDOLEVA
+	call POSUNDOLEVA
+	call POSUNDOLEVA
+
+	BANK_0
+	return
+;**********************************************************
 POSUNDOPRAVA	; X := X div 2 , PRETECENI := X mod 2
 			; tento podprogram nepouzivat, primo v hlavnim programu
 			; musi se nastavit BANK_1 a vymazat PRETECENI!!!
@@ -182,7 +197,7 @@ POSUNDOPRAVA	; X := X div 2 , PRETECENI := X mod 2
 	return
 ;**********************************************************
 POSUNDOPRAVA_1	; X := X div 2
-				; X > 0xFFFF FFFF => PRETECENI obsahuje bity navic
+				; PRETECENI := X mod 2
 	BANK_1
 	clrf PRETECENI
 	bcf STATUS,C
@@ -193,7 +208,7 @@ POSUNDOPRAVA_1	; X := X div 2
 	return
 ;**********************************************************
 POSUNDOPRAVA_2	; X := X div 4
-				; X > 0xFFFF FFFF => PRETECENI obsahuje bity navic
+				; PRETECENI := X mod 4
 	BANK_1
 	clrf PRETECENI
 	bcf STATUS,C
@@ -205,7 +220,7 @@ POSUNDOPRAVA_2	; X := X div 4
 	return
 ;**********************************************************
 POSUNDOPRAVA_3	; X := X div 8
-				; X > 0xFFFF FFFF => PRETECENI obsahuje bity navic
+				; PRETECENI := X mod 8
 	BANK_1
 	clrf PRETECENI
 	bcf STATUS,C
@@ -218,11 +233,26 @@ POSUNDOPRAVA_3	; X := X div 8
 	return
 ;**********************************************************
 POSUNDOPRAVA_4	; X := X div 16
-				; X > 0xFFFF FFFF => PRETECENI obsahuje bity navic
+				; PRETECENI := X mod 16
 	BANK_1
 	clrf PRETECENI
 	bcf STATUS,C
 	
+	call POSUNDOLEVA
+	call POSUNDOLEVA
+	call POSUNDOLEVA
+	call POSUNDOLEVA
+
+	BANK_0
+	return
+;**********************************************************
+POSUNDOPRAVA_5	; X := X div 32
+				; PRETECENI := X mod 32
+	BANK_1
+	clrf PRETECENI
+	bcf STATUS,C
+	
+	call POSUNDOLEVA
 	call POSUNDOLEVA
 	call POSUNDOLEVA
 	call POSUNDOLEVA

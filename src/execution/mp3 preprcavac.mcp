@@ -30,7 +30,7 @@ file_002=P16F877.INC
 file_003=ATA.ASM
 file_004=VS1001.ASM
 file_005=aritmetic.asm
-file_006=pokusne.asm
+file_006=fat32.asm
 [SUITE_INFO]
 suite_guid={6B3DAA78-59C1-46DD-B6AA-DBDAE4E06484}
 suite_state=

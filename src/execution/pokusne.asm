@@ -13,45 +13,6 @@ POZDRAV  ; odesle po seriove lince pozdrav
 	call WR_USART
 	return
 ;**********************************************************
-POKUSNY_KOD	
-	call WAIT_FOR_READY
-	call SELECT_DEVICE
-
-	movlw b'11100000'	; adresy budou v LBA, budeme pracovat s masterem
-	movwf DEVICE
-	movlw .1
-	movwf SECTOR_C
-	movlw .63
-	movwf LBA1	
-	clrf LBA2
-	clrf LBA3
-	clrf FEATURES
-	movlw 0x21			; read sector
-	movwf COMMAND
-	call WR_BLOCK
-
-	call WAIT_FOR_READY	; cekame az disk nebude zaneprazdnen
-
-	movlw h'ff'
-	call WR_USART
-	call KONTROLA
-	movlw h'88'
-	call WR_USART
-	
-	movlw h'ff'			; dalsich XX slov odesleme na USART...
-	movwf TEMP5
-POK5_ODESLI
-	call WAIT_FOR_DATA	; cekame na data
-	call READ_DATA
-	movfw DATA_L
-	call WR_USART
-	movfw DATA_H
-	call WR_USART
-	decfsz TEMP5,F
-	goto POK5_ODESLI
-
-	return
-;**********************************************************
 KONTROLA
 	; jen tak pro kontrolu nam do PC posle hodnoty vsech ATA registru 
 	; (abych mel prehled)
@@ -90,25 +51,22 @@ KONTROLA
 	return	
 ;**********************************************************
 POKUSNY_KOD4  ; pocka nez prijde nejake dato 
-	movlw b'10000000'	;zapnu USART, povolim continuous receive
-	movwf RCSTA
-	movlw b'10010000'	;zapnu USART, povolim continuous receive
-	movwf RCSTA
+	call DELAY_500ms
+
+;	movlw b'10010000'	;zapnu USART, povolim continuous receive
+;	movwf RCSTA
+
+	movfw RCREG
+	call WR_USART
 
 	btfss PIR1,5	; vlajka preruseni 1 = The USART receive buffer is full
 	goto POKUSNY_KOD4
 
 	bcf PIR1,5
-
-	;movfw RCREG
-	;sublw h'8a'
-	;btfss STATUS,Z
-	;goto POKUSNY_KOD4
-
-	movlw b'10000000'	;zapnu USART, povolim continuous receive
-	movwf RCSTA
-	movlw b'10010000'	;zapnu USART, povolim continuous receive
-	movwf RCSTA
+	
+	sublw h'8A'
+	btfss STATUS,Z
+	goto POKUSNY_KOD4
 
 	bsf ERROR_LED
 	return

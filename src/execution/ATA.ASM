@@ -172,6 +172,8 @@ RUTW
 	return
 ;**********************************************************
 READ_DATA
+	call WAIT_FOR_DATA
+
     movlw D_DATA_R
 	movwf ATA_ADDRESS
 
@@ -195,7 +197,6 @@ READ_DATA
 ; stava se, ze obcas nas zajima jen cast vracenych dat, tak ty ktere nas nezajimaji, preskocime
 ; ocakava parametr v registru TEMP1 (kolik slov ma preskocit)
 PRESKOC
-	call WAIT_FOR_DATA	; cekame na data
 	call READ_DATA
 	decfsz TEMP1,F
 	goto PRESKOC
@@ -215,7 +216,6 @@ ZAPIS_DO_BUFFERU_1	; buffer1 ma 64B a je v bance 3 na adrese 0x190 - 0x1CF
 	movlw 0x90		; adresa ja 190, devaty byt urcuje banku (0,1 / 2,3) fsr je tedy 90
 	movwf FSR		
 ZAPIS_DO_BUFFERU_1__ZAPIS
-	call WAIT_FOR_DATA		; cekame na data
 	call READ_DATA
 	
 	movfw DATA_L
@@ -229,6 +229,24 @@ ZAPIS_DO_BUFFERU_1__ZAPIS
 	goto ZAPIS_DO_BUFFERU_1__ZAPIS
 
 	INDF_BANK_0	
+	return
+;**********************************************************
+CLEAR_BUFFER2		; BUFFER2 je 64bytu dat v bance 2 na adrese 0x110 - 0x14F
+					; pouziva TEMP1
+	movlw .64
+	movwf TEMP1
+	INDF_BANK_2		; neprime adresovani na banku 2
+	movlw 0x10
+	movwf FSR
+	movlw .0
+
+CLEAR_BEFFER2__CLEAR
+	movwf INDF
+	incf FSR,F
+	decfsz TEMP1,F
+	goto CLEAR_BEFFER2__CLEAR
+
+	INDF_BANK_0		; neprime adresovani na banku 0
 	return
 ;**********************************************************
 ATA_RESET
@@ -373,7 +391,6 @@ IDENTIFY_DEVICE
 	movwf TEMP1
 	call PRESKOC
 		
-	call WAIT_FOR_DATA
 	call READ_DATA	; slovo 49 - capabilities (schopnosti)
 			; 15:14 Reserved for the IDENTIFY PACKET DEVICE command.
 			;    13 1 = Standby timer values as specified in this standard are supported
@@ -393,14 +410,12 @@ IDENTIFY_DEVICE
 	movwf TEMP1
 	call PRESKOC
 	
-	call WAIT_FOR_DATA
 	call READ_DATA	; 60
 	movfw DATA_L
 	movwf PARAM_MAX_LBA1		; nejnizsi cast adresy
 	movfw DATA_H
 	movwf PARAM_MAX_LBA2	
 	
-	call WAIT_FOR_DATA
 	call READ_DATA	; 61
 	movfw DATA_L
 	movwf PARAM_MAX_LBA3
@@ -413,7 +428,6 @@ IDENTIFY_DEVICE
 	call PRESKOC
 
 	; 83 slov, na rade je slovo 83 (pripominam ze slova jsou cislovana od nuly)
-	call WAIT_FOR_DATA
 	call READ_DATA	; 83 - command supported. Tady nas zajima bit 10 - 1 = 48-bit Address feature set supported
 	btfsc DATA_H,2	; pokud disk umi LBA 48 pripiseme tuto skutecnost do ATA_ATTRIBUTES
 	bsf ATA_ATTRIBUTES,LBA48_SUPPORT
@@ -428,14 +442,12 @@ IDENTIFY_DEVICE
 			; pokud je podporovano LBA 48, nachazi se ve slovech [100-103] skutecny pocet sektoru 
 			; do slov 60-61 by se sice vesel pocet sektoru u disku do 2TB, podle standardu se tam ale zapisuje pouze hodnota max pro LBA 28 (cca 120 GB)
 			; mi precteme ale jen nejnizsi 2 slova, predpokladam totiz ze disk neni vetsi jak 2TB
-			call WAIT_FOR_DATA
 			call READ_DATA	; 100
 			movfw DATA_L
 			movwf PARAM_MAX_LBA1		; nejnizsi cast adresy
 			movfw DATA_H
 			movwf PARAM_MAX_LBA2	
 
-			call WAIT_FOR_DATA
 			call READ_DATA	; 101
 			movfw DATA_L
 			movwf PARAM_MAX_LBA3
@@ -452,7 +464,6 @@ INIT_ATA__DALSI
 	movwf TEMP1
 	call PRESKOC
 
-	call WAIT_FOR_DATA
 	call READ_DATA	; slovo 106 - pokud bit 15=0 a bit 14=1, tak obsahuje pravdive informace
 						; pro nas je podstatne, ze pokud je bit 12 = 1, tak sektor je vetsi nez 256 slov
 						; pokud je sektor vetsi nez 256 slov, je jeho velikost ve slovech [117-118]
@@ -480,6 +491,7 @@ INIT_ATA__DALSI2
 	bsf ATA_ATTRIBUTES,APPLICABLE ; disk umi to co potrebujeme...	
 
 	return
+;**************************************************************************
 ;**********************************************************
 ; CEKACI PROCEDURY
 ;**********************************************************
