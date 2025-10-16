@@ -1,0 +1,32 @@
+MPASM 03.90 Released                                  ATA.ASM   8-21-2005  11:49:00         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;**********************************************************
+                      00002 ;**********************************************************
+                      00003 ;**********************************************************
+                      00004 ; OBSLUZNE PODPROGRAMY PRO ATA
+                      00005 ;**********************************************************
+                      00006 ;**********************************************************
+                      00007 ;**********************************************************
+Error[150]  : Labels must be defined in a code or data section when making an object file
+0000                  00008 INIT_ATA
+Error[152]  : Executable code and data must be defined in an appropriate section
+0000                  00009         return
+Error[129]  : Expected (END)
+MPASM 03.90 Released                                  ATA.ASM   8-21-2005  11:49:00         PAGE  2
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+INIT_ATA                          00000000
+__16C77                           00000001
+
+Errors   :     3
+Warnings :     0 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

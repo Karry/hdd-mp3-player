@@ -1,0 +1,3 @@
+Error[150]   D:\LUKAS\PIC\MP3 PREPRCAVAC\MYPROGRAM\ATA.ASM 8 : Labels must be defined in a code or data section when making an object file
+Error[152]   D:\LUKAS\PIC\MP3 PREPRCAVAC\MYPROGRAM\ATA.ASM 9 : Executable code and data must be defined in an appropriate section
+Error[129]   D:\LUKAS\PIC\MP3 PREPRCAVAC\MYPROGRAM\ATA.ASM 10 : Expected (END)

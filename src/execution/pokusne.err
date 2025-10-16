@@ -1,0 +1,158 @@
+Error[150]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 3 : Labels must be defined in a code or data section when making an object file
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 4 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 5 : Symbol not previously defined (WR_USART)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 5 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 6 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 7 : Symbol not previously defined (WR_USART)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 7 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 8 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 9 : Symbol not previously defined (WR_USART)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 9 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 10 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 11 : Symbol not previously defined (WR_USART)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 11 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 12 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 13 : Symbol not previously defined (WR_USART)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 13 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 14 : Executable code and data must be defined in an appropriate section
+Error[150]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 15 : Labels must be defined in a code or data section when making an object file
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 20 : Symbol not previously defined (ATA_RESET_N)
+Error[128]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 20 : Missing argument(s)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 20 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 21 : Symbol not previously defined (DELAY_25us)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 21 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 22 : Symbol not previously defined (ATA_RESET_N)
+Error[128]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 22 : Missing argument(s)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 22 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 25 : Symbol not previously defined (ST1)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 25 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 26 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 27 : Symbol not previously defined (DEVICE)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 27 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 28 : Symbol not previously defined (WR_DEVICE)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 28 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 30 : Symbol not previously defined (ST1)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 30 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 31 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 32 : Symbol not previously defined (DEVICE_C)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 32 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 33 : Symbol not previously defined (WR_DC)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 33 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 36 : Symbol not previously defined (ST1)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 36 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 37 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 38 : Symbol not previously defined (DEVICE_C)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 38 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 39 : Symbol not previously defined (WR_DC)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 39 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 42 : Symbol not previously defined (ST1)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 42 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 43 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 44 : Symbol not previously defined (DEVICE)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 44 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 45 : Symbol not previously defined (FEATURES)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 45 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 46 : Symbol not previously defined (SECTOR_C)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 46 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 47 : Symbol not previously defined (LBA1)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 47 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 48 : Symbol not previously defined (LBA2)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 48 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 49 : Symbol not previously defined (LBA3)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 49 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 50 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 51 : Symbol not previously defined (COMMAND)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 51 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 52 : Symbol not previously defined (WR_BLOCK)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 52 : Executable code and data must be defined in an appropriate section
+Error[150]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 54 : Labels must be defined in a code or data section when making an object file
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 55 : Symbol not previously defined (RD_STATUS)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 55 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 56 : Symbol not previously defined (ATA_STATUS)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 56 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 57 : Symbol not previously defined (WR_USART)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 57 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 59 : Symbol not previously defined (ATA_STATUS)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 59 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 60 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 61 : Symbol not previously defined (STATUS)
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 61 : Symbol not previously defined (Z)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 61 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 62 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 62 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 66 : Executable code and data must be defined in an appropriate section
+Error[150]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 68 : Labels must be defined in a code or data section when making an object file
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 70 : Symbol not previously defined (RD_STATUS_A)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 70 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 71 : Symbol not previously defined (ATA_STATUS_A)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 71 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 72 : Symbol not previously defined (WR_USART)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 72 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 75 : Symbol not previously defined (RD_ERROR)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 75 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 76 : Symbol not previously defined (ATA_ERROR)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 76 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 77 : Symbol not previously defined (WR_USART)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 77 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 80 : Symbol not previously defined (RD_SC)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 80 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 81 : Symbol not previously defined (SECTOR_C)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 81 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 82 : Symbol not previously defined (WR_USART)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 82 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 85 : Symbol not previously defined (RD_LBA1)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 85 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 86 : Symbol not previously defined (LBA1)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 86 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 87 : Symbol not previously defined (WR_USART)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 87 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 90 : Symbol not previously defined (RD_LBA2)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 90 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 91 : Symbol not previously defined (LBA2)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 91 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 92 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 93 : Symbol not previously defined (WR_USART)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 93 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 96 : Symbol not previously defined (RD_LBA3)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 96 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 97 : Symbol not previously defined (LBA3)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 97 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 98 : Symbol not previously defined (WR_USART)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 98 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 101 : Symbol not previously defined (RD_DEVICE)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 101 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 102 : Symbol not previously defined (DEVICE)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 102 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 103 : Symbol not previously defined (WR_USART)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 103 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 106 : Symbol not previously defined (RD_STATUS)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 106 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 107 : Symbol not previously defined (ATA_STATUS)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 107 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 108 : Symbol not previously defined (WR_USART)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 108 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 110 : Executable code and data must be defined in an appropriate section
+Error[150]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 111 : Labels must be defined in a code or data section when making an object file
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 112 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 113 : Symbol not previously defined (RCSTA)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 113 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 114 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 115 : Symbol not previously defined (RCSTA)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 115 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 117 : Symbol not previously defined (PIR1)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 117 : Executable code and data must be defined in an appropriate section
+Error[151]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 118 : Operand contains unresolvable labels or is too complex
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 118 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 120 : Symbol not previously defined (PIR1)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 120 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 127 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 128 : Symbol not previously defined (RCSTA)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 128 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 129 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 130 : Symbol not previously defined (RCSTA)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 130 : Executable code and data must be defined in an appropriate section
+Error[113]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 132 : Symbol not previously defined (ERROR_LED)
+Error[128]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 132 : Missing argument(s)
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 132 : Executable code and data must be defined in an appropriate section
+Error[152]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 133 : Executable code and data must be defined in an appropriate section
+Error[129]   C:\PROJEKTY-PIC\ET4A\KARAS\MYPROGRAM\POKUSNE.ASM 134 : Expected (END)
