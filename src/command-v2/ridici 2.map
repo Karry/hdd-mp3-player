@@ -1,0 +1,1149 @@
+MPLINK 4.02, Linker
+Linker Map File - Created Fri Aug 25 13:35:50 2006
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+               _entry_scn       code   0x000000    program   0x000006
+      InterruptVectorHigh       code   0x000008    program   0x000006
+                   .cinit    romdata   0x00002a    program   0x00000e
+             .code_main.o       code   0x000038    program   0x005202
+          .romdata_main.o    romdata   0x00523a    program   0x001600
+             .stringtable    romdata   0x00683a    program   0x000407
+      .idata_fxd1616u.o_i    romdata   0x006c41    program   0x000000
+      .romdata_fxd1616u.o    romdata   0x006c41    program   0x000000
+       .idata_pw1open.o_i    romdata   0x006c41    program   0x000000
+       .romdata_pw1open.o    romdata   0x006c41    program   0x000000
+       .idata_pw2open.o_i    romdata   0x006c41    program   0x000000
+       .romdata_pw2open.o    romdata   0x006c41    program   0x000000
+        .idata_t0open.o_i    romdata   0x006c41    program   0x000000
+        .romdata_t0open.o    romdata   0x006c41    program   0x000000
+        .idata_t2open.o_i    romdata   0x006c41    program   0x000000
+        .romdata_t2open.o    romdata   0x006c41    program   0x000000
+         .idata_uopen.o_i    romdata   0x006c41    program   0x000000
+         .romdata_uopen.o    romdata   0x006c41    program   0x000000
+      .idata_pw1setdc.o_i    romdata   0x006c41    program   0x000000
+      .romdata_pw1setdc.o    romdata   0x006c41    program   0x000000
+      .idata_pw2setdc.o_i    romdata   0x006c41    program   0x000000
+      .romdata_pw2setdc.o    romdata   0x006c41    program   0x000000
+         .idata_c018i.o_i    romdata   0x006c41    program   0x000000
+      .romdata_fxd0808u.o    romdata   0x006c41    program   0x000000
+      .idata_fxd0808u.o_i    romdata   0x006c41    program   0x000000
+         .romdata_c018i.o    romdata   0x006c41    program   0x000000
+               _cinit_scn       code   0x006c42    program   0x00009e
+            .code_c018i.o       code   0x006c42    program   0x000000
+            .code_uopen.o       code   0x006ce0    program   0x00007a
+         .code_pw2setdc.o       code   0x006d5a    program   0x00005e
+         .code_pw1setdc.o       code   0x006db8    program   0x00005e
+                     PROG       code   0x006e16    program   0x00003c
+           .code_t0open.o       code   0x006e52    program   0x000038
+           .code_t2open.o       code   0x006e8a    program   0x000036
+             D10KTCYXCODE       code   0x006ec0    program   0x00002e
+          .code_pw2open.o       code   0x006eee    program   0x00002c
+          .code_pw1open.o       code   0x006f1a    program   0x00002c
+         .code_fxd1616u.o       code   0x006f46    program   0x00002c
+                   STRING       code   0x006f72    program   0x00001c
+         .code_fxd0808u.o       code   0x006f8e    program   0x00001c
+             _startup_scn       code   0x006faa    program   0x000018
+              D10TCYXCODE       code   0x006fc2    program   0x000016
+          .idata_main.o_i    romdata   0x006fd8    program   0x000016
+    .config_300001_main.o    romdata   0x300001    program   0x000001
+    .config_300002_main.o    romdata   0x300002    program   0x000001
+    .config_300003_main.o    romdata   0x300003    program   0x000001
+    .config_300005_main.o    romdata   0x300005    program   0x000001
+    .config_300006_main.o    romdata   0x300006    program   0x000001
+    .config_300009_main.o    romdata   0x300009    program   0x000001
+    .config_30000b_main.o    romdata   0x30000b    program   0x000001
+                MATH_DATA      udata   0x000000       data   0x000014
+                 .tmpdata      udata   0x000014       data   0x000006
+                DELAYDAT2      udata   0x00001a       data   0x000001
+                DELAYDAT1      udata   0x00001b       data   0x000001
+                    cast1      udata   0x000080       data   0x000060
+            .idata_main.o      idata   0x0000e0       data   0x000016
+           .udata_c018i.o      udata   0x0000f6       data   0x00000a
+                    cast2      udata   0x000100       data   0x0000f7
+        .idata_pw1setdc.o      idata   0x0001f7       data   0x000000
+        .udata_pw1setdc.o      udata   0x0001f7       data   0x000000
+        .udata_pw2setdc.o      udata   0x0001f7       data   0x000000
+        .idata_pw2setdc.o      idata   0x0001f7       data   0x000000
+           .idata_uopen.o      idata   0x0001f7       data   0x000000
+           .udata_uopen.o      udata   0x0001f7       data   0x000000
+          .idata_t2open.o      idata   0x0001f7       data   0x000000
+          .udata_t2open.o      udata   0x0001f7       data   0x000000
+          .idata_t0open.o      idata   0x0001f7       data   0x000000
+          .udata_t0open.o      udata   0x0001f7       data   0x000000
+         .idata_pw2open.o      idata   0x0001f7       data   0x000000
+         .udata_pw2open.o      udata   0x0001f7       data   0x000000
+         .idata_pw1open.o      idata   0x0001f7       data   0x000000
+         .udata_pw1open.o      udata   0x0001f7       data   0x000000
+        .idata_fxd1616u.o      idata   0x0001f7       data   0x000000
+        .udata_fxd1616u.o      udata   0x0001f7       data   0x000000
+        .idata_fxd0808u.o      idata   0x0001f7       data   0x000000
+        .udata_fxd0808u.o      udata   0x0001f7       data   0x000000
+            .udata_main.o      udata   0x0001f7       data   0x000000
+           .idata_c018i.o      idata   0x0001f7       data   0x000000
+                    cast4      udata   0x000200       data   0x0000b9
+                   .stack      udata   0x000e00       data   0x000100
+                    cast3      udata   0x000f00       data   0x00005b
+            SFR_UNBANKED0      udata   0x000f80       data   0x000080
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000005      
+                            0x000008    0x00000d      
+                            0x00002a    0x006c40      
+                            0x006c42    0x006fed      
+                            0x300001    0x300003      
+                            0x300005    0x300006      
+                            0x300009    0x300009      
+                            0x30000b    0x30000b      
+            28630 out of 66584 program addresses used, program memory utilization is 42%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+              CekejNaDisk   0x001d08    program     extern D:\pic\mp3 preprcavac\ridici2 program\uvod.c
+               CekejNaLCD   0x000038    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+        CtiStavPrehravani   0x004d4a    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+                   D10K_1   0x006ecc    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10ktcyx.asm
+                    D10Kl   0x006ed8    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10ktcyx.asm
+                    D10Kx   0x006eca    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10ktcyx.asm
+                    D10_1   0x006fd2    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10tcyx.asm
+                     D10x   0x006fca    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10tcyx.asm
+             Delay10KTCYx   0x006ec0    program     extern C:\MCC18\SRC\TRADIT~1\DELAYS\d10ktcyx.asm
+              Delay10TCYx   0x006fc2    program     extern C:\MCC18\SRC\TRADIT~1\DELAYS\d10tcyx.asm
+               EEPROMRead   0x004f64    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+              EEPROMWrite   0x004f86    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+                 FXD0808U   0x006f8e    program     extern C:\MCC18\src\TRADIT~1\math\fxd0808u.c
+                 FXD1616U   0x006f46    program     extern C:\MCC18\src\TRADIT~1\math\fxd1616u.c
+                 FXM1616U   0x006e16    program     extern C:\MCC18\SRC\TRADIT~1\MATH\fxm1616u.asm
+                 FontMaly   0x00523a    program     extern D:\pic\mp3 preprcavac\ridici2 program\font-maly.h
+                FontVelky   0x00583a    program     extern D:\pic\mp3 preprcavac\ridici2 program\font-velky.h
+                     Init   0x004d98    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+                  InitLCD   0x0001c6    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+     InterruptHandlerHigh   0x004a84    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+      InterruptVectorHigh   0x000008    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+                     Menu   0x00097c    program     extern D:\pic\mp3 preprcavac\ridici2 program\menu.c
+          NactiDanyZaznam   0x003a34    program     extern D:\pic\mp3 preprcavac\ridici2 program\pruzkumnik.c
+              NactiZaznam   0x0034c2    program     extern D:\pic\mp3 preprcavac\ridici2 program\pruzkumnik.c
+         NastartujOdpocet   0x004cb8    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+      NastavDobuDoStandBy   0x0015ce    program     extern D:\pic\mp3 preprcavac\ridici2 program\nastaveni.c
+          NastavEkvalizer   0x001b9e    program     extern D:\pic\mp3 preprcavac\ridici2 program\moznosti.c
+             NastavPozici   0x0000f4    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+          NastavPrehravac   0x00253e    program     extern D:\pic\mp3 preprcavac\ridici2 program\vyberoddilu.c
+    NastavRezimPrehravani   0x001bb6    program     extern D:\pic\mp3 preprcavac\ridici2 program\moznosti.c
+     NastavStavPrehravani   0x004d2e    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+              OAdresarVis   0x004100    program     extern D:\pic\mp3 preprcavac\ridici2 program\pruzkumnik.c
+                 OpenPWM1   0x006f1a    program     extern C:\MCC18\src\TRADIT~1\pmc\PWM\pw1open.c
+                 OpenPWM2   0x006eee    program     extern C:\MCC18\src\TRADIT~1\pmc\PWM\pw2open.c
+               OpenTimer0   0x006e52    program     extern C:\MCC18\src\TRADIT~1\pmc\Timers\t0open.c
+               OpenTimer2   0x006e8a    program     extern C:\MCC18\src\TRADIT~1\pmc\Timers\t2open.c
+                OpenUSART   0x006ce0    program     extern C:\MCC18\src\TRADIT~1\pmc\USART\uopen.c
+                  PisHexa   0x0007da    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+                  PisMale   0x000368    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+             PisMaleConst   0x0003ee    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+                 PisVelke   0x000666    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+            PisVelkeConst   0x0006f4    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+                PosunDolu   0x003ffa    program     extern D:\pic\mp3 preprcavac\ridici2 program\pruzkumnik.c
+              PosunNahoru   0x003ef6    program     extern D:\pic\mp3 preprcavac\ridici2 program\pruzkumnik.c
+               Prehravani   0x002566    program     extern D:\pic\mp3 preprcavac\ridici2 program\prehravani.c
+               Pruzkumnik   0x004194    program     extern D:\pic\mp3 preprcavac\ridici2 program\pruzkumnik.c
+                  RdUsart   0x004d24    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+                SetDCPWM1   0x006db8    program     extern C:\MCC18\src\TRADIT~1\pmc\PWM\pw1setdc.c
+                SetDCPWM2   0x006d5a    program     extern C:\MCC18\src\TRADIT~1\pmc\PWM\pw2setdc.c
+                  SmazLcd   0x0001b8    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+               SmazPulLcd   0x000144    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+                SmazRadek   0x00020c    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+          UlozKonfiguraci   0x004fbe    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+              VyberOddilu   0x001f46    program     extern D:\pic\mp3 preprcavac\ridici2 program\vyberoddilu.c
+   VyprazdniBufferSouboru   0x0024d2    program     extern D:\pic\mp3 preprcavac\ridici2 program\vyberoddilu.c
+                  WrUsart   0x004d0a    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+                   ZapisD   0x000064    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+                   ZapisI   0x0000ba    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+            ZapisMalyZnak   0x00027e    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+           ZapisVelkyZnak   0x0004cc    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+               ZobrazLogo   0x001bf0    program     extern D:\pic\mp3 preprcavac\ridici2 program\uvod.c
+           ZobrazPosuvnik   0x00150a    program     extern D:\pic\mp3 preprcavac\ridici2 program\nastaveni.c
+       _D10KTCYXCODE_0010   0x006ed0    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10ktcyx.asm
+       _D10KTCYXCODE_001C   0x006edc    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10ktcyx.asm
+        _D10TCYXCODE_000A   0x006fcc    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10tcyx.asm
+        _D10TCYXCODE_000C   0x006fce    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10tcyx.asm
+        _D10TCYXCODE_000E   0x006fd0    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10tcyx.asm
+           ___do_lbl00001   0x00005c    program     static                          
+           ___do_lbl00002   0x000060    program     static                          
+           ___do_lbl00003   0x00003a    program     static                          
+         ___else_lbl00009   0x000116    program     static                          
+         ___else_lbl00168   0x001586    program     static                          
+         ___else_lbl00170   0x001548    program     static                          
+          ___for_lbl00011   0x0001a0    program     static                          
+          ___for_lbl00012   0x0001a4    program     static                          
+          ___for_lbl00013   0x00019a    program     static                          
+          ___for_lbl00014   0x0001a0    program     static                          
+          ___for_lbl00015   0x000184    program     static                          
+          ___for_lbl00016   0x000168    program     static                          
+          ___for_lbl00027   0x00034e    program     static                          
+          ___for_lbl00028   0x000354    program     static                          
+          ___for_lbl00032   0x0002c8    program     static                          
+          ___for_lbl00044   0x0005a8    program     static                          
+          ___for_lbl00045   0x0005ae    program     static                          
+          ___for_lbl00049   0x000522    program     static                          
+          ___for_lbl00050   0x000644    program     static                          
+          ___for_lbl00051   0x00064a    program     static                          
+          ___for_lbl00055   0x0005be    program     static                          
+          ___for_lbl00164   0x0015b4    program     static                          
+          ___for_lbl00165   0x0015ba    program     static                          
+          ___for_lbl00173   0x001524    program     static                          
+           ___if_lbl00005   0x0000b2    program     static                          
+           ___if_lbl00008   0x00011e    program     static                          
+           ___if_lbl00029   0x0002e2    program     static                          
+           ___if_lbl00030   0x00032c    program     static                          
+           ___if_lbl00031   0x00033c    program     static                          
+           ___if_lbl00046   0x00053c    program     static                          
+           ___if_lbl00047   0x000586    program     static                          
+           ___if_lbl00048   0x000596    program     static                          
+           ___if_lbl00052   0x0005d8    program     static                          
+           ___if_lbl00053   0x000622    program     static                          
+           ___if_lbl00054   0x000632    program     static                          
+           ___if_lbl00167   0x00158a    program     static                          
+           ___if_lbl00169   0x00158a    program     static                          
+           ___if_lbl00171   0x00159a    program     static                          
+           ___if_lbl00172   0x0015aa    program     static                          
+       ___return_lbl00000   0x000062    program     static                          
+       ___return_lbl00000   0x000004    program     static                          
+       ___return_lbl00000   0x006f70    program     static                          
+       ___return_lbl00000   0x006fa8    program     static                          
+       ___return_lbl00001   0x006fc0    program     static                          
+       ___return_lbl00002   0x006cde    program     static                          
+       ___return_lbl00004   0x0000b2    program     static                          
+       ___return_lbl00006   0x0000ec    program     static                          
+       ___return_lbl00007   0x00013a    program     static                          
+       ___return_lbl00010   0x0001a4    program     static                          
+       ___return_lbl00018   0x00020a    program     static                          
+       ___return_lbl00026   0x000354    program     static                          
+       ___return_lbl00043   0x000652    program     static                          
+       ___return_lbl00163   0x0015ba    program     static                          
+       ___return_lbl00623   0x00000c    program     static                          
+       ___return_lbl00691   0x004fb6    program     static                          
+        ___while_lbl00692   0x004fb2    program     static                          
+        ___while_lbl00693   0x004fb6    program     static                          
+               __config_0   0x300001    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __config_1   0x300002    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __config_2   0x300003    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __config_3   0x300005    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __config_4   0x300006    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __config_5   0x300009    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __config_6   0x30000b    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_0   0x006c3c    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_1   0x006c27    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_10   0x006b7b    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_11   0x006b68    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_12   0x006b55    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_13   0x006b4c    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_14   0x006b3c    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_15   0x006b27    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_16   0x006b11    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_17   0x006b06    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_18   0x006aef    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_19   0x006ae0    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_2   0x006c12    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_20   0x006ad8    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_21   0x006ad0    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_22   0x006ac8    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_23   0x006ab2    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_24   0x006a9c    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_25   0x006a8d    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_26   0x006a85    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_27   0x006a7d    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_28   0x006a6f    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_29   0x006a58    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_3   0x006c04    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_30   0x006a41    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_31   0x006a34    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_32   0x006a2a    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_33   0x006a14    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_34   0x0069fe    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_35   0x0069e8    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_36   0x0069d7    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_37   0x0069d5    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_38   0x0069bf    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_39   0x0069a9    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_4   0x006bed    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_40   0x006994    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_41   0x006981    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_42   0x00696b    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_43   0x006960    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_44   0x00694b    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_45   0x00693d    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_46   0x00692e    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_47   0x006920    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_48   0x006909    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_49   0x006905    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_5   0x006bda    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_50   0x006900    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_51   0x0068e9    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_52   0x0068e4    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_53   0x0068e1    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_54   0x0068d7    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_55   0x0068cd    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_56   0x0068c3    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_57   0x0068b9    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_58   0x0068b5    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_59   0x0068b0    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_6   0x006bc7    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_60   0x0068ad    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_61   0x0068aa    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_62   0x0068a7    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_63   0x0068a4    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_64   0x0068a1    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_65   0x00689e    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_66   0x00689b    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_67   0x006899    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_68   0x006896    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_69   0x00688f    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_7   0x006bb4    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_70   0x006888    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_71   0x006875    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_72   0x006872    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_73   0x00685b    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_74   0x006848    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_75   0x006845    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_76   0x006842    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_77   0x006840    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_78   0x00683d    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_79   0x00683a    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_8   0x006ba1    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_9   0x006b8e    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __tmplbl_29   0x001542    program     static                          
+              __tmplbl_30   0x00153a    program     static                          
+                _do_cinit   0x006c42    program     extern C:\MCC18\src\traditional\startup\c018i.c
+                   _entry   0x000000    program     extern C:\MCC18\src\traditional\startup\c018i.c
+                 _startup   0x006faa    program     extern C:\MCC18\src\traditional\startup\c018i.c
+                copy_loop   0x006cb4    program     static                          
+            copy_one_byte   0x006cba    program     static                          
+                  desitky   0x001aa6    program     extern D:\pic\mp3 preprcavac\ridici2 program\moznosti.c
+                     done   0x006cde    program     static                          
+             done_copying   0x006cc8    program     static                          
+                  endloop   0x006fa4    program     static                          
+                  endloop   0x006f6c    program     static                          
+                     jEnd   0x006f8c    program     static C:\MCC18\SRC\TRADIT~1\STDCLIB\strlen.asm
+                    jLoop   0x006f82    program     static C:\MCC18\SRC\TRADIT~1\STDCLIB\strlen.asm
+                 jednotky   0x001b68    program     extern D:\pic\mp3 preprcavac\ridici2 program\moznosti.c
+                     loop   0x006f96    program     static                          
+                     loop   0x006fba    program     static                          
+                     loop   0x006f50    program     static                          
+                     main   0x0050b6    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+                 moznosti   0x00166c    program     extern D:\pic\mp3 preprcavac\ridici2 program\moznosti.c
+                nastaveni   0x000f7e    program     extern D:\pic\mp3 preprcavac\ridici2 program\nastaveni.c
+                  standby   0x000d60    program     extern D:\pic\mp3 preprcavac\ridici2 program\standby.c
+                   stovky   0x001afa    program     extern D:\pic\mp3 preprcavac\ridici2 program\moznosti.c
+                  str2ram   0x004f2e    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+                   strlen   0x006f72    program     extern C:\MCC18\SRC\TRADIT~1\STDCLIB\strlen.asm
+                     test   0x006c5c    program     static                          
+                   ADCON0   0x000fc2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               ADCON0bits   0x000fc2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   ADCON1   0x000fc1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               ADCON1bits   0x000fc1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   ADCON2   0x000fc0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               ADCON2bits   0x000fc0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    ADRES   0x000fc3       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   ADRESH   0x000fc4       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   ADRESL   0x000fc3       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   AUDATA   0x0000d0       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+            AdresySouboru   0x000f00       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+          AktualniAdresar   0x0000bc       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+   AktualniPodsvetleniLCD   0x0000e4       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+AktualniPodsvetleniTlacitek   0x0000e8       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                  BAUDCON   0x000fb8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              BAUDCONbits   0x000fb8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  BAUDCTL   0x000fb8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              BAUDCTLbits   0x000fb8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                      BSR   0x000fe0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+            BufferSouboru   0x000100       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                  CCP1CON   0x000fbd       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              CCP1CONbits   0x000fbd       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  CCP2CON   0x000fba       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              CCP2CONbits   0x000fba       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    CCPR1   0x000fbe       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   CCPR1H   0x000fbf       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   CCPR1L   0x000fbe       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    CCPR2   0x000fbb       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   CCPR2H   0x000fbc       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   CCPR2L   0x000fbb       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    CMCON   0x000fb4       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                CMCONbits   0x000fb4       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   CVRCON   0x000fb5       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               CVRCONbits   0x000fb5       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                      Cas   0x000082       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+            CitacRolovani   0x0000f4       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                     DDRA   0x000f92       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 DDRAbits   0x000f92       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     DDRB   0x000f93       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 DDRBbits   0x000f93       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     DDRC   0x000f94       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 DDRCbits   0x000f94       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     DDRD   0x000f95       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 DDRDbits   0x000f95       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     DDRE   0x000f96       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 DDREbits   0x000f96       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    DEBUG   0x000fd4       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+            DelayCounter1   0x00001b       data     extern C:\MCC18\SRC\TRADIT~1\DELAYS\delayd1.asm
+            DelayCounter2   0x00001a       data     extern C:\MCC18\SRC\TRADIT~1\DELAYS\delayd2.asm
+                  ECCP1AS   0x000fb6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              ECCP1ASbits   0x000fb6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    EEADR   0x000fa9       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   EEADRH   0x000faa       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   EECON1   0x000fa6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               EECON1bits   0x000fa6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   EECON2   0x000fa7       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   EEDATA   0x000fa8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                Ekvalizer   0x0000e0       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                     FSR0   0x000fe9       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    FSR0H   0x000fea       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    FSR0L   0x000fe9       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     FSR1   0x000fe1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    FSR1H   0x000fe2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    FSR1L   0x000fe1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     FSR2   0x000fd9       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    FSR2H   0x000fda       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    FSR2L   0x000fd9       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    Flags   0x0000ef       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                   Flags2   0x0000f1       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                    HDAT0   0x0000d4       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                    HDAT1   0x0000d6       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                  HLVDCON   0x000fd2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              HLVDCONbits   0x000fd2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                Hlasitost   0x000081       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                    INDF0   0x000fef       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    INDF1   0x000fe7       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    INDF2   0x000fdf       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   INTCON   0x000ff2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  INTCON2   0x000ff1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              INTCON2bits   0x000ff1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  INTCON3   0x000ff0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              INTCON3bits   0x000ff0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               INTCONbits   0x000ff2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     IPR1   0x000f9f       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 IPR1bits   0x000f9f       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     IPR2   0x000fa2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 IPR2bits   0x000fa2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     LATA   0x000f89       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 LATAbits   0x000f89       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     LATB   0x000f8a       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 LATBbits   0x000f8a       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     LATC   0x000f8b       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 LATCbits   0x000f8b       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     LATD   0x000f8c       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 LATDbits   0x000f8c       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     LATE   0x000f8d       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 LATEbits   0x000f8d       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   LVDCON   0x000fd2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               LVDCONbits   0x000fd2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+    LbaAktualnihoAdresare   0x0000b8       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+         LbaPrehrAdresare   0x0000d8       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                   OSCCON   0x000fd3       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               OSCCONbits   0x000fd3       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  OSCTUNE   0x000f9b       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              OSCTUNEbits   0x000f9b       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                Obrazovka   0x000089       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                  Odpocet   0x0000ec       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+            OznacitZaznam   0x0000cc       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                       PC   0x000ff9       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                      PCL   0x000ff9       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   PCLATH   0x000ffa       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   PCLATU   0x000ffb       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     PIE1   0x000f9d       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 PIE1bits   0x000f9d       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     PIE2   0x000fa0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 PIE2bits   0x000fa0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     PIR1   0x000f9e       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 PIR1bits   0x000f9e       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     PIR2   0x000fa1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 PIR2bits   0x000fa1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   PLUSW0   0x000feb       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   PLUSW1   0x000fe3       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   PLUSW2   0x000fdb       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    PORTA   0x000f80       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                PORTAbits   0x000f80       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    PORTB   0x000f81       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                PORTBbits   0x000f81       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    PORTC   0x000f82       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                PORTCbits   0x000f82       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    PORTD   0x000f83       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                PORTDbits   0x000f83       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    PORTE   0x000f84       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                PORTEbits   0x000f84       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 POSTDEC0   0x000fed       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 POSTDEC1   0x000fe5       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 POSTDEC2   0x000fdd       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 POSTINC0   0x000fee       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 POSTINC1   0x000fe6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 POSTINC2   0x000fde       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                      PR2   0x000fcb       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                PREHSTAV0   0x0000f2       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                PREHSTAV1   0x0000f3       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                  PREINC0   0x000fec       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  PREINC1   0x000fe4       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  PREINC2   0x000fdc       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     PROD   0x000ff3       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    PRODH   0x000ff4       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    PRODL   0x000ff3       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  PWM1CON   0x000fb7       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              PWM1CONbits   0x000fb7       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              PocetOddilu   0x000080       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+           PodsvetleniLCD   0x0000e2       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+      PodsvetleniTlacitek   0x0000e6       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+              PolozkaMenu   0x0000ee       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+           PoziceAdresare   0x0000df       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+            PoziceSouboru   0x0000de       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+        PrehravanyAdresar   0x000242       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+         PrehravanySoubor   0x000200       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+           PrvniZobrazeny   0x0000b6       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                     RCON   0x000fd0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 RCONbits   0x000fd0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    RCREG   0x000fae       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    RCSTA   0x000fab       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                RCSTAbits   0x000fab       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+          RezimPrehravani   0x0000e1       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+         RychlostRolovani   0x0000f5       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                     SIGN   0x000000       data     extern C:\MCC18\SRC\TRADIT~1\MATH\cmath18.asm
+                    SPBRG   0x000faf       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   SPBRGH   0x000fb0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   SSPADD   0x000fc8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   SSPBUF   0x000fc9       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  SSPCON1   0x000fc6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              SSPCON1bits   0x000fc6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  SSPCON2   0x000fc5       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              SSPCON2bits   0x000fc5       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  SSPSTAT   0x000fc7       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              SSPSTATbits   0x000fc7       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   STATUS   0x000fd8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               STATUSbits   0x000fd8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   STKPTR   0x000ffc       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               STKPTRbits   0x000ffc       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+             StringBuffer   0x00008a       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+            StringBuffer2   0x00009f       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                    T0CON   0x000fd5       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                T0CONbits   0x000fd5       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    T1CON   0x000fcd       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                T1CONbits   0x000fcd       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    T2CON   0x000fca       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                T2CONbits   0x000fca       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    T3CON   0x000fb1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                T3CONbits   0x000fb1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   TABLAT   0x000ff5       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   TBLPTR   0x000ff6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  TBLPTRH   0x000ff7       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  TBLPTRL   0x000ff6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  TBLPTRU   0x000ff8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   TLPred   0x0000ce       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                    TMR0H   0x000fd7       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TMR0L   0x000fd6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TMR1H   0x000fcf       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TMR1L   0x000fce       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     TMR2   0x000fcc       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TMR3H   0x000fb3       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TMR3L   0x000fb2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                      TOS   0x000ffd       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     TOSH   0x000ffe       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     TOSL   0x000ffd       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     TOSU   0x000fff       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TRISA   0x000f92       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                TRISAbits   0x000f92       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TRISB   0x000f93       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                TRISBbits   0x000f93       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TRISC   0x000f94       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                TRISCbits   0x000f94       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TRISD   0x000f95       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                TRISDbits   0x000f95       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TRISE   0x000f96       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                TRISEbits   0x000f96       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TXREG   0x000fad       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TXSTA   0x000fac       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                TXSTAbits   0x000fac       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+  TrvaniPomalehoPrevijeni   0x000086       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                  Vybrany   0x0000b7       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+              VypinatDisk   0x0000ea       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                        W   0x000fe8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   WDTCON   0x000fd1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               WDTCONbits   0x000fd1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     WREG   0x000fe8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+          ZazPrehrSouboru   0x0000dc       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+             ZobrazenyCas   0x000084       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+       ZtlumitPodsvetleni   0x0000eb       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                 __AARGB0   0x000009       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                 __AARGB1   0x000008       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                 __AARGB2   0x000007       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                 __AARGB3   0x000006       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                 __AARGB4   0x000005       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                 __AARGB5   0x000004       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                 __AARGB6   0x000003       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                 __AARGB7   0x000002       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                   __AEXP   0x00000a       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                 __BARGB0   0x00000e       data     extern C:\MCC18\SRC\TRADIT~1\MATH\barg.asm
+                 __BARGB1   0x00000d       data     extern C:\MCC18\SRC\TRADIT~1\MATH\barg.asm
+                 __BARGB2   0x00000c       data     extern C:\MCC18\SRC\TRADIT~1\MATH\barg.asm
+                 __BARGB3   0x00000b       data     extern C:\MCC18\SRC\TRADIT~1\MATH\barg.asm
+                   __BEXP   0x00000f       data     extern C:\MCC18\SRC\TRADIT~1\MATH\barg.asm
+                __FPFLAGS   0x000001       data     extern C:\MCC18\SRC\TRADIT~1\MATH\cmath18.asm
+            __FPFLAGSbits   0x000001       data     extern C:\MCC18\SRC\TRADIT~1\MATH\cmath18.asm
+         __PisMaleConst:0   0x000284       data     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+        __PisVelkeConst:0   0x00029c       data     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+                  __REMB0   0x000005       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                  __REMB1   0x000004       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                  __REMB2   0x000003       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                  __REMB3   0x000002       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                   __TEMP   0x000013       data     extern C:\MCC18\SRC\TRADIT~1\MATH\temparg.asm
+                 __TEMPB0   0x000013       data     extern C:\MCC18\SRC\TRADIT~1\MATH\temparg.asm
+                 __TEMPB1   0x000012       data     extern C:\MCC18\SRC\TRADIT~1\MATH\temparg.asm
+                 __TEMPB2   0x000011       data     extern C:\MCC18\SRC\TRADIT~1\MATH\temparg.asm
+                 __TEMPB3   0x000010       data     extern C:\MCC18\SRC\TRADIT~1\MATH\temparg.asm
+              __str2ram:0   0x0002b4       data     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __str2ram:1   0x0002b6       data     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+                  __tmp_0   0x000014       data     static C:\MCC18\src\TRADIT~1\pmc\PWM\pw2setdc.c
+                  __tmp_0   0x000014       data     static C:\MCC18\src\TRADIT~1\pmc\PWM\pw1setdc.c
+                  __tmp_0   0x000014       data     static C:\MCC18\src\TRADIT~1\pmc\USART\uopen.c
+                  __tmp_0   0x000014       data     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+                  bitrate   0x0000d2       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                curr_byte   0x0000f9       data     static C:\MCC18\src\traditional\startup\c018i.c
+               curr_entry   0x0000fb       data     static C:\MCC18\src\traditional\startup\c018i.c
+                 data_ptr   0x0000fd       data     static C:\MCC18\src\traditional\startup\c018i.c
+                     dest   0x000287       data     static D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+                     dest   0x00029f       data     static D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+                     dest   0x0002b4       data     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+                        i   0x0000b4       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                        k   0x0000b5       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                     prom   0x0000f6       data     static C:\MCC18\src\traditional\startup\c018i.c
+                    radek   0x000087       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                  sloupec   0x000088       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                      src   0x000284       data     static D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+                      src   0x00029c       data     static D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+                      src   0x0002b6       data     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                   _entry   0x000000    program     extern C:\MCC18\src\traditional\startup\c018i.c
+       ___return_lbl00000   0x000004    program     static                          
+      InterruptVectorHigh   0x000008    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+       ___return_lbl00623   0x00000c    program     static                          
+               CekejNaLCD   0x000038    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+           ___do_lbl00003   0x00003a    program     static                          
+           ___do_lbl00001   0x00005c    program     static                          
+           ___do_lbl00002   0x000060    program     static                          
+       ___return_lbl00000   0x000062    program     static                          
+                   ZapisD   0x000064    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+           ___if_lbl00005   0x0000b2    program     static                          
+       ___return_lbl00004   0x0000b2    program     static                          
+                   ZapisI   0x0000ba    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+       ___return_lbl00006   0x0000ec    program     static                          
+             NastavPozici   0x0000f4    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+         ___else_lbl00009   0x000116    program     static                          
+           ___if_lbl00008   0x00011e    program     static                          
+       ___return_lbl00007   0x00013a    program     static                          
+               SmazPulLcd   0x000144    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+          ___for_lbl00016   0x000168    program     static                          
+          ___for_lbl00015   0x000184    program     static                          
+          ___for_lbl00013   0x00019a    program     static                          
+          ___for_lbl00011   0x0001a0    program     static                          
+          ___for_lbl00014   0x0001a0    program     static                          
+       ___return_lbl00010   0x0001a4    program     static                          
+          ___for_lbl00012   0x0001a4    program     static                          
+                  SmazLcd   0x0001b8    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+                  InitLCD   0x0001c6    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+       ___return_lbl00018   0x00020a    program     static                          
+                SmazRadek   0x00020c    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+            ZapisMalyZnak   0x00027e    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+          ___for_lbl00032   0x0002c8    program     static                          
+           ___if_lbl00029   0x0002e2    program     static                          
+           ___if_lbl00030   0x00032c    program     static                          
+           ___if_lbl00031   0x00033c    program     static                          
+          ___for_lbl00027   0x00034e    program     static                          
+          ___for_lbl00028   0x000354    program     static                          
+       ___return_lbl00026   0x000354    program     static                          
+                  PisMale   0x000368    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+             PisMaleConst   0x0003ee    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+           ZapisVelkyZnak   0x0004cc    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+          ___for_lbl00049   0x000522    program     static                          
+           ___if_lbl00046   0x00053c    program     static                          
+           ___if_lbl00047   0x000586    program     static                          
+           ___if_lbl00048   0x000596    program     static                          
+          ___for_lbl00044   0x0005a8    program     static                          
+          ___for_lbl00045   0x0005ae    program     static                          
+          ___for_lbl00055   0x0005be    program     static                          
+           ___if_lbl00052   0x0005d8    program     static                          
+           ___if_lbl00053   0x000622    program     static                          
+           ___if_lbl00054   0x000632    program     static                          
+          ___for_lbl00050   0x000644    program     static                          
+          ___for_lbl00051   0x00064a    program     static                          
+       ___return_lbl00043   0x000652    program     static                          
+                 PisVelke   0x000666    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+            PisVelkeConst   0x0006f4    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+                  PisHexa   0x0007da    program     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+                     Menu   0x00097c    program     extern D:\pic\mp3 preprcavac\ridici2 program\menu.c
+                  standby   0x000d60    program     extern D:\pic\mp3 preprcavac\ridici2 program\standby.c
+                nastaveni   0x000f7e    program     extern D:\pic\mp3 preprcavac\ridici2 program\nastaveni.c
+           ZobrazPosuvnik   0x00150a    program     extern D:\pic\mp3 preprcavac\ridici2 program\nastaveni.c
+          ___for_lbl00173   0x001524    program     static                          
+              __tmplbl_30   0x00153a    program     static                          
+              __tmplbl_29   0x001542    program     static                          
+         ___else_lbl00170   0x001548    program     static                          
+         ___else_lbl00168   0x001586    program     static                          
+           ___if_lbl00169   0x00158a    program     static                          
+           ___if_lbl00167   0x00158a    program     static                          
+           ___if_lbl00171   0x00159a    program     static                          
+           ___if_lbl00172   0x0015aa    program     static                          
+          ___for_lbl00164   0x0015b4    program     static                          
+       ___return_lbl00163   0x0015ba    program     static                          
+          ___for_lbl00165   0x0015ba    program     static                          
+      NastavDobuDoStandBy   0x0015ce    program     extern D:\pic\mp3 preprcavac\ridici2 program\nastaveni.c
+                 moznosti   0x00166c    program     extern D:\pic\mp3 preprcavac\ridici2 program\moznosti.c
+                  desitky   0x001aa6    program     extern D:\pic\mp3 preprcavac\ridici2 program\moznosti.c
+                   stovky   0x001afa    program     extern D:\pic\mp3 preprcavac\ridici2 program\moznosti.c
+                 jednotky   0x001b68    program     extern D:\pic\mp3 preprcavac\ridici2 program\moznosti.c
+          NastavEkvalizer   0x001b9e    program     extern D:\pic\mp3 preprcavac\ridici2 program\moznosti.c
+    NastavRezimPrehravani   0x001bb6    program     extern D:\pic\mp3 preprcavac\ridici2 program\moznosti.c
+               ZobrazLogo   0x001bf0    program     extern D:\pic\mp3 preprcavac\ridici2 program\uvod.c
+              CekejNaDisk   0x001d08    program     extern D:\pic\mp3 preprcavac\ridici2 program\uvod.c
+              VyberOddilu   0x001f46    program     extern D:\pic\mp3 preprcavac\ridici2 program\vyberoddilu.c
+   VyprazdniBufferSouboru   0x0024d2    program     extern D:\pic\mp3 preprcavac\ridici2 program\vyberoddilu.c
+          NastavPrehravac   0x00253e    program     extern D:\pic\mp3 preprcavac\ridici2 program\vyberoddilu.c
+               Prehravani   0x002566    program     extern D:\pic\mp3 preprcavac\ridici2 program\prehravani.c
+              NactiZaznam   0x0034c2    program     extern D:\pic\mp3 preprcavac\ridici2 program\pruzkumnik.c
+          NactiDanyZaznam   0x003a34    program     extern D:\pic\mp3 preprcavac\ridici2 program\pruzkumnik.c
+              PosunNahoru   0x003ef6    program     extern D:\pic\mp3 preprcavac\ridici2 program\pruzkumnik.c
+                PosunDolu   0x003ffa    program     extern D:\pic\mp3 preprcavac\ridici2 program\pruzkumnik.c
+              OAdresarVis   0x004100    program     extern D:\pic\mp3 preprcavac\ridici2 program\pruzkumnik.c
+               Pruzkumnik   0x004194    program     extern D:\pic\mp3 preprcavac\ridici2 program\pruzkumnik.c
+     InterruptHandlerHigh   0x004a84    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+         NastartujOdpocet   0x004cb8    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+                  WrUsart   0x004d0a    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+                  RdUsart   0x004d24    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+     NastavStavPrehravani   0x004d2e    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+        CtiStavPrehravani   0x004d4a    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+                     Init   0x004d98    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+                  str2ram   0x004f2e    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+               EEPROMRead   0x004f64    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+              EEPROMWrite   0x004f86    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+        ___while_lbl00692   0x004fb2    program     static                          
+       ___return_lbl00691   0x004fb6    program     static                          
+        ___while_lbl00693   0x004fb6    program     static                          
+          UlozKonfiguraci   0x004fbe    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+                     main   0x0050b6    program     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+                 FontMaly   0x00523a    program     extern D:\pic\mp3 preprcavac\ridici2 program\font-maly.h
+                FontVelky   0x00583a    program     extern D:\pic\mp3 preprcavac\ridici2 program\font-velky.h
+              __string_79   0x00683a    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_78   0x00683d    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_77   0x006840    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_76   0x006842    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_75   0x006845    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_74   0x006848    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_73   0x00685b    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_72   0x006872    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_71   0x006875    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_70   0x006888    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_69   0x00688f    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_68   0x006896    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_67   0x006899    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_66   0x00689b    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_65   0x00689e    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_64   0x0068a1    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_63   0x0068a4    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_62   0x0068a7    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_61   0x0068aa    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_60   0x0068ad    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_59   0x0068b0    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_58   0x0068b5    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_57   0x0068b9    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_56   0x0068c3    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_55   0x0068cd    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_54   0x0068d7    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_53   0x0068e1    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_52   0x0068e4    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_51   0x0068e9    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_50   0x006900    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_49   0x006905    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_48   0x006909    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_47   0x006920    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_46   0x00692e    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_45   0x00693d    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_44   0x00694b    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_43   0x006960    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_42   0x00696b    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_41   0x006981    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_40   0x006994    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_39   0x0069a9    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_38   0x0069bf    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_37   0x0069d5    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_36   0x0069d7    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_35   0x0069e8    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_34   0x0069fe    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_33   0x006a14    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_32   0x006a2a    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_31   0x006a34    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_30   0x006a41    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_29   0x006a58    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_28   0x006a6f    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_27   0x006a7d    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_26   0x006a85    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_25   0x006a8d    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_24   0x006a9c    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_23   0x006ab2    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_22   0x006ac8    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_21   0x006ad0    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_20   0x006ad8    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_19   0x006ae0    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_18   0x006aef    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_17   0x006b06    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_16   0x006b11    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_15   0x006b27    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_14   0x006b3c    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_13   0x006b4c    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_12   0x006b55    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_11   0x006b68    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __string_10   0x006b7b    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_9   0x006b8e    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_8   0x006ba1    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_7   0x006bb4    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_6   0x006bc7    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_5   0x006bda    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_4   0x006bed    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_3   0x006c04    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_2   0x006c12    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_1   0x006c27    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __string_0   0x006c3c    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+                _do_cinit   0x006c42    program     extern C:\MCC18\src\traditional\startup\c018i.c
+                     test   0x006c5c    program     static                          
+                copy_loop   0x006cb4    program     static                          
+            copy_one_byte   0x006cba    program     static                          
+             done_copying   0x006cc8    program     static                          
+                     done   0x006cde    program     static                          
+       ___return_lbl00002   0x006cde    program     static                          
+                OpenUSART   0x006ce0    program     extern C:\MCC18\src\TRADIT~1\pmc\USART\uopen.c
+                SetDCPWM2   0x006d5a    program     extern C:\MCC18\src\TRADIT~1\pmc\PWM\pw2setdc.c
+                SetDCPWM1   0x006db8    program     extern C:\MCC18\src\TRADIT~1\pmc\PWM\pw1setdc.c
+                 FXM1616U   0x006e16    program     extern C:\MCC18\SRC\TRADIT~1\MATH\fxm1616u.asm
+               OpenTimer0   0x006e52    program     extern C:\MCC18\src\TRADIT~1\pmc\Timers\t0open.c
+               OpenTimer2   0x006e8a    program     extern C:\MCC18\src\TRADIT~1\pmc\Timers\t2open.c
+             Delay10KTCYx   0x006ec0    program     extern C:\MCC18\SRC\TRADIT~1\DELAYS\d10ktcyx.asm
+                    D10Kx   0x006eca    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10ktcyx.asm
+                   D10K_1   0x006ecc    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10ktcyx.asm
+       _D10KTCYXCODE_0010   0x006ed0    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10ktcyx.asm
+                    D10Kl   0x006ed8    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10ktcyx.asm
+       _D10KTCYXCODE_001C   0x006edc    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10ktcyx.asm
+                 OpenPWM2   0x006eee    program     extern C:\MCC18\src\TRADIT~1\pmc\PWM\pw2open.c
+                 OpenPWM1   0x006f1a    program     extern C:\MCC18\src\TRADIT~1\pmc\PWM\pw1open.c
+                 FXD1616U   0x006f46    program     extern C:\MCC18\src\TRADIT~1\math\fxd1616u.c
+                     loop   0x006f50    program     static                          
+                  endloop   0x006f6c    program     static                          
+       ___return_lbl00000   0x006f70    program     static                          
+                   strlen   0x006f72    program     extern C:\MCC18\SRC\TRADIT~1\STDCLIB\strlen.asm
+                    jLoop   0x006f82    program     static C:\MCC18\SRC\TRADIT~1\STDCLIB\strlen.asm
+                     jEnd   0x006f8c    program     static C:\MCC18\SRC\TRADIT~1\STDCLIB\strlen.asm
+                 FXD0808U   0x006f8e    program     extern C:\MCC18\src\TRADIT~1\math\fxd0808u.c
+                     loop   0x006f96    program     static                          
+                  endloop   0x006fa4    program     static                          
+       ___return_lbl00000   0x006fa8    program     static                          
+                 _startup   0x006faa    program     extern C:\MCC18\src\traditional\startup\c018i.c
+                     loop   0x006fba    program     static                          
+       ___return_lbl00001   0x006fc0    program     static                          
+              Delay10TCYx   0x006fc2    program     extern C:\MCC18\SRC\TRADIT~1\DELAYS\d10tcyx.asm
+                     D10x   0x006fca    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10tcyx.asm
+        _D10TCYXCODE_000A   0x006fcc    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10tcyx.asm
+        _D10TCYXCODE_000C   0x006fce    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10tcyx.asm
+        _D10TCYXCODE_000E   0x006fd0    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10tcyx.asm
+                    D10_1   0x006fd2    program     static C:\MCC18\SRC\TRADIT~1\DELAYS\d10tcyx.asm
+               __config_0   0x300001    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __config_1   0x300002    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __config_2   0x300003    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __config_3   0x300005    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __config_4   0x300006    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __config_5   0x300009    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+               __config_6   0x30000b    program     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+                     SIGN   0x000000       data     extern C:\MCC18\SRC\TRADIT~1\MATH\cmath18.asm
+            __FPFLAGSbits   0x000001       data     extern C:\MCC18\SRC\TRADIT~1\MATH\cmath18.asm
+                __FPFLAGS   0x000001       data     extern C:\MCC18\SRC\TRADIT~1\MATH\cmath18.asm
+                  __REMB3   0x000002       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                 __AARGB7   0x000002       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                  __REMB2   0x000003       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                 __AARGB6   0x000003       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                  __REMB1   0x000004       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                 __AARGB5   0x000004       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                 __AARGB4   0x000005       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                  __REMB0   0x000005       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                 __AARGB3   0x000006       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                 __AARGB2   0x000007       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                 __AARGB1   0x000008       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                 __AARGB0   0x000009       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                   __AEXP   0x00000a       data     extern C:\MCC18\SRC\TRADIT~1\MATH\aarg.asm
+                 __BARGB3   0x00000b       data     extern C:\MCC18\SRC\TRADIT~1\MATH\barg.asm
+                 __BARGB2   0x00000c       data     extern C:\MCC18\SRC\TRADIT~1\MATH\barg.asm
+                 __BARGB1   0x00000d       data     extern C:\MCC18\SRC\TRADIT~1\MATH\barg.asm
+                 __BARGB0   0x00000e       data     extern C:\MCC18\SRC\TRADIT~1\MATH\barg.asm
+                   __BEXP   0x00000f       data     extern C:\MCC18\SRC\TRADIT~1\MATH\barg.asm
+                 __TEMPB3   0x000010       data     extern C:\MCC18\SRC\TRADIT~1\MATH\temparg.asm
+                 __TEMPB2   0x000011       data     extern C:\MCC18\SRC\TRADIT~1\MATH\temparg.asm
+                 __TEMPB1   0x000012       data     extern C:\MCC18\SRC\TRADIT~1\MATH\temparg.asm
+                 __TEMPB0   0x000013       data     extern C:\MCC18\SRC\TRADIT~1\MATH\temparg.asm
+                   __TEMP   0x000013       data     extern C:\MCC18\SRC\TRADIT~1\MATH\temparg.asm
+                  __tmp_0   0x000014       data     static C:\MCC18\src\TRADIT~1\pmc\USART\uopen.c
+                  __tmp_0   0x000014       data     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+                  __tmp_0   0x000014       data     static C:\MCC18\src\TRADIT~1\pmc\PWM\pw1setdc.c
+                  __tmp_0   0x000014       data     static C:\MCC18\src\TRADIT~1\pmc\PWM\pw2setdc.c
+            DelayCounter2   0x00001a       data     extern C:\MCC18\SRC\TRADIT~1\DELAYS\delayd2.asm
+            DelayCounter1   0x00001b       data     extern C:\MCC18\SRC\TRADIT~1\DELAYS\delayd1.asm
+              PocetOddilu   0x000080       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                Hlasitost   0x000081       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                      Cas   0x000082       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+             ZobrazenyCas   0x000084       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+  TrvaniPomalehoPrevijeni   0x000086       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                    radek   0x000087       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                  sloupec   0x000088       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                Obrazovka   0x000089       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+             StringBuffer   0x00008a       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+            StringBuffer2   0x00009f       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                        i   0x0000b4       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                        k   0x0000b5       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+           PrvniZobrazeny   0x0000b6       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                  Vybrany   0x0000b7       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+    LbaAktualnihoAdresare   0x0000b8       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+          AktualniAdresar   0x0000bc       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+            OznacitZaznam   0x0000cc       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                   TLPred   0x0000ce       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                   AUDATA   0x0000d0       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                  bitrate   0x0000d2       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                    HDAT0   0x0000d4       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                    HDAT1   0x0000d6       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+         LbaPrehrAdresare   0x0000d8       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+          ZazPrehrSouboru   0x0000dc       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+            PoziceSouboru   0x0000de       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+           PoziceAdresare   0x0000df       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                Ekvalizer   0x0000e0       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+          RezimPrehravani   0x0000e1       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+           PodsvetleniLCD   0x0000e2       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+   AktualniPodsvetleniLCD   0x0000e4       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+      PodsvetleniTlacitek   0x0000e6       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+AktualniPodsvetleniTlacitek   0x0000e8       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+              VypinatDisk   0x0000ea       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+       ZtlumitPodsvetleni   0x0000eb       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                  Odpocet   0x0000ec       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+              PolozkaMenu   0x0000ee       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                    Flags   0x0000ef       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                   Flags2   0x0000f1       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                PREHSTAV0   0x0000f2       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                PREHSTAV1   0x0000f3       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+            CitacRolovani   0x0000f4       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+         RychlostRolovani   0x0000f5       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                     prom   0x0000f6       data     static C:\MCC18\src\traditional\startup\c018i.c
+                curr_byte   0x0000f9       data     static C:\MCC18\src\traditional\startup\c018i.c
+               curr_entry   0x0000fb       data     static C:\MCC18\src\traditional\startup\c018i.c
+                 data_ptr   0x0000fd       data     static C:\MCC18\src\traditional\startup\c018i.c
+            BufferSouboru   0x000100       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+         PrehravanySoubor   0x000200       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+        PrehravanyAdresar   0x000242       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+         __PisMaleConst:0   0x000284       data     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+                      src   0x000284       data     static D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+                     dest   0x000287       data     static D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+        __PisVelkeConst:0   0x00029c       data     extern D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+                      src   0x00029c       data     static D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+                     dest   0x00029f       data     static D:\pic\mp3 preprcavac\ridici2 program\lcd.c
+              __str2ram:0   0x0002b4       data     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+                     dest   0x0002b4       data     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+                      src   0x0002b6       data     static D:\pic\mp3 preprcavac\ridici2 program\main.c
+              __str2ram:1   0x0002b6       data     extern D:\pic\mp3 preprcavac\ridici2 program\main.c
+            AdresySouboru   0x000f00       data     extern D:\pic\mp3 preprcavac\ridici2 program\promenne.h
+                PORTAbits   0x000f80       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    PORTA   0x000f80       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                PORTBbits   0x000f81       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    PORTB   0x000f81       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    PORTC   0x000f82       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                PORTCbits   0x000f82       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    PORTD   0x000f83       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                PORTDbits   0x000f83       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    PORTE   0x000f84       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                PORTEbits   0x000f84       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     LATA   0x000f89       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 LATAbits   0x000f89       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 LATBbits   0x000f8a       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     LATB   0x000f8a       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 LATCbits   0x000f8b       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     LATC   0x000f8b       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 LATDbits   0x000f8c       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     LATD   0x000f8c       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 LATEbits   0x000f8d       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     LATE   0x000f8d       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                TRISAbits   0x000f92       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TRISA   0x000f92       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     DDRA   0x000f92       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 DDRAbits   0x000f92       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                TRISBbits   0x000f93       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TRISB   0x000f93       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     DDRB   0x000f93       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 DDRBbits   0x000f93       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 DDRCbits   0x000f94       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     DDRC   0x000f94       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                TRISCbits   0x000f94       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TRISC   0x000f94       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 DDRDbits   0x000f95       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     DDRD   0x000f95       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TRISD   0x000f95       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                TRISDbits   0x000f95       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     DDRE   0x000f96       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 DDREbits   0x000f96       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TRISE   0x000f96       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                TRISEbits   0x000f96       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  OSCTUNE   0x000f9b       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              OSCTUNEbits   0x000f9b       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     PIE1   0x000f9d       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 PIE1bits   0x000f9d       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     PIR1   0x000f9e       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 PIR1bits   0x000f9e       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     IPR1   0x000f9f       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 IPR1bits   0x000f9f       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     PIE2   0x000fa0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 PIE2bits   0x000fa0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     PIR2   0x000fa1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 PIR2bits   0x000fa1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 IPR2bits   0x000fa2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     IPR2   0x000fa2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               EECON1bits   0x000fa6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   EECON1   0x000fa6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   EECON2   0x000fa7       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   EEDATA   0x000fa8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    EEADR   0x000fa9       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   EEADRH   0x000faa       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                RCSTAbits   0x000fab       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    RCSTA   0x000fab       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TXSTA   0x000fac       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                TXSTAbits   0x000fac       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TXREG   0x000fad       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    RCREG   0x000fae       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    SPBRG   0x000faf       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   SPBRGH   0x000fb0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                T3CONbits   0x000fb1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    T3CON   0x000fb1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TMR3L   0x000fb2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TMR3H   0x000fb3       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                CMCONbits   0x000fb4       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    CMCON   0x000fb4       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               CVRCONbits   0x000fb5       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   CVRCON   0x000fb5       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              ECCP1ASbits   0x000fb6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  ECCP1AS   0x000fb6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  PWM1CON   0x000fb7       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              PWM1CONbits   0x000fb7       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              BAUDCTLbits   0x000fb8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  BAUDCTL   0x000fb8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              BAUDCONbits   0x000fb8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  BAUDCON   0x000fb8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              CCP2CONbits   0x000fba       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  CCP2CON   0x000fba       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    CCPR2   0x000fbb       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   CCPR2L   0x000fbb       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   CCPR2H   0x000fbc       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  CCP1CON   0x000fbd       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              CCP1CONbits   0x000fbd       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   CCPR1L   0x000fbe       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    CCPR1   0x000fbe       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   CCPR1H   0x000fbf       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   ADCON2   0x000fc0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               ADCON2bits   0x000fc0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               ADCON1bits   0x000fc1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   ADCON1   0x000fc1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   ADCON0   0x000fc2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               ADCON0bits   0x000fc2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    ADRES   0x000fc3       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   ADRESL   0x000fc3       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   ADRESH   0x000fc4       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  SSPCON2   0x000fc5       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              SSPCON2bits   0x000fc5       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  SSPCON1   0x000fc6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              SSPCON1bits   0x000fc6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  SSPSTAT   0x000fc7       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              SSPSTATbits   0x000fc7       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   SSPADD   0x000fc8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   SSPBUF   0x000fc9       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                T2CONbits   0x000fca       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    T2CON   0x000fca       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                      PR2   0x000fcb       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     TMR2   0x000fcc       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                T1CONbits   0x000fcd       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    T1CON   0x000fcd       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TMR1L   0x000fce       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TMR1H   0x000fcf       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     RCON   0x000fd0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 RCONbits   0x000fd0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               WDTCONbits   0x000fd1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   WDTCON   0x000fd1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  HLVDCON   0x000fd2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              HLVDCONbits   0x000fd2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   LVDCON   0x000fd2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               LVDCONbits   0x000fd2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   OSCCON   0x000fd3       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               OSCCONbits   0x000fd3       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    DEBUG   0x000fd4       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                T0CONbits   0x000fd5       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    T0CON   0x000fd5       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TMR0L   0x000fd6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    TMR0H   0x000fd7       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               STATUSbits   0x000fd8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   STATUS   0x000fd8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    FSR2L   0x000fd9       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     FSR2   0x000fd9       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    FSR2H   0x000fda       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   PLUSW2   0x000fdb       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  PREINC2   0x000fdc       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 POSTDEC2   0x000fdd       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 POSTINC2   0x000fde       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    INDF2   0x000fdf       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                      BSR   0x000fe0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    FSR1L   0x000fe1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     FSR1   0x000fe1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    FSR1H   0x000fe2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   PLUSW1   0x000fe3       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  PREINC1   0x000fe4       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 POSTDEC1   0x000fe5       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 POSTINC1   0x000fe6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    INDF1   0x000fe7       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                        W   0x000fe8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     WREG   0x000fe8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    FSR0L   0x000fe9       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     FSR0   0x000fe9       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    FSR0H   0x000fea       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   PLUSW0   0x000feb       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  PREINC0   0x000fec       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 POSTDEC0   0x000fed       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                 POSTINC0   0x000fee       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    INDF0   0x000fef       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              INTCON3bits   0x000ff0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  INTCON3   0x000ff0       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+              INTCON2bits   0x000ff1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  INTCON2   0x000ff1       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               INTCONbits   0x000ff2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   INTCON   0x000ff2       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    PRODL   0x000ff3       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     PROD   0x000ff3       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                    PRODH   0x000ff4       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   TABLAT   0x000ff5       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   TBLPTR   0x000ff6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  TBLPTRL   0x000ff6       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  TBLPTRH   0x000ff7       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                  TBLPTRU   0x000ff8       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                      PCL   0x000ff9       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                       PC   0x000ff9       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   PCLATH   0x000ffa       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   PCLATU   0x000ffb       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+               STKPTRbits   0x000ffc       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                   STKPTR   0x000ffc       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                      TOS   0x000ffd       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     TOSL   0x000ffd       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     TOSH   0x000ffe       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+                     TOSU   0x000fff       data     extern C:\MCC18\SRC\TRADIT~1\PROC\p18f4620.asm
+
+
