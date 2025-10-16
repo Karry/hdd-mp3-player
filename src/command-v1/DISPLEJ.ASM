@@ -7,10 +7,54 @@
 	; znak6 = 70h	z s hackem
 	; znak7 = 78h	ý
 START
-	CALL INIT_CONFIG	; nakonfiguruje preruseni, WDT, USART, pull ups...
-	call INIT_PORT
-	call INIT_LCD
+	CALL INIT_CONFIG	; nakonfiguruje preruseni, USART, pull ups...
+	call INIT_PORT		; konfigurace vstupu a vystupu (trisy)
+	call INIT_LCD		; init LCD displeje (vcetne definovani 8 ceskych znaku)
+
+	call HLASKA_PREPRCAVAC
+	call HLASKA_AUTORI
+	call ZPOZ_1S
+	call ZPOZ_1S
+	call SMAZ_LCD
+	call HLASKA_PREPRCAVAC
+	call HLASKA_DISK
+	call JMENODISKU
+	call ZPOZ_1S
+
+	call NACTIODDILY
+	call SMAZ_LCD
+	movfw TMP4
+	sublw .1
+	btfsc STATUS,Z
+	goto $+3
+	call VYBER_ODDILU
+	goto $+4
+	CALL NASTAVODDIL			; pokud je na disku pouze jeden oddil, nastavime ten prvni
+	BTFSS STAV,7
+	CALL HLASKA_CHYBAODDILU
+
+	call ZAKLADNI_NASTAVENI	 
+	goto PRUZKUMNIK
+
+	nop
+	goto $-1
 ;;;;;;;;;;;;;;;;;;;;;;;;;
+	movlw h'80'		; prikaz pro prime hrani mp3
+	CALL WR_USART
+	movlw h'02'
+    CALL WR_USART
+	movlw h'00'
+	CALL WR_USART
+	movlw h'00'
+    CALL WR_USART
+	movlw h'00'
+    CALL WR_USART
+	movlw h'48'
+    CALL WR_USART
+	movlw h'00'
+    CALL WR_USART
+	CALL RD_USART
+
 	; nastaveni jmena zakladniho adresare
 	INDF_BANK_3
 	movlw 0x91
@@ -30,45 +74,12 @@ START
 	movlw 'T'
 	movwf INDF
 	incf FSR,f
+
+	movlw h'FF'
+	movwf INDF
 ;;;;;;;;;;;;;;;;;;;;;;;;;
-	bsf LCD_PODSVICENI           
-	call HLASKA_PREPRCAVAC				
-	call HLASKA_AUTORI
-	call ZPOZ_1S
-	call SMAZ_LCD
-	call HLASKA_PREPRCAVAC
-	call HLASKA_DISK
-	call JMENODISKU
-	call ZPOZ_1S
 
-	call NACTIODDILY
-	call SMAZ_LCD
-	movfw TMP4
-	sublw .1
-	btfss STATUS,Z
-	call HLASKA_VICODDILU
-	CALL NASTAVODDIL
-	BTFSS STAV,7
-	CALL HLASKA_CHYBAODDILU
-
-
-	movlw h'80'		;prikayz pro prime hrani mp3
-	CALL WR_USART
-	movlw h'02'
-    CALL WR_USART
-	movlw h'00'
-	CALL WR_USART
-	movlw h'00'
-    CALL WR_USART
-	movlw h'00'
-    CALL WR_USART
-	movlw h'48'
-    CALL WR_USART
-	movlw h'00'
-    CALL WR_USART
-	CALL RD_USART
-
-	 
+	call ZAKLADNI_NASTAVENI	 
     goto PREHRAVANI
 ;********************************************************************************************************************
 ; CEKACI SMYCKY
@@ -93,6 +104,20 @@ INIT_PORT
 	RETURN
 ;**********************************************************
 INIT_CONFIG 	; nakonfiguruje preruseni, WDT, USART, pull ups....
+	MOVLW b'00001001'	; Configure for external clock,
+	MOVWF T1CON			; Asynchronous operation, external oscillator
+
+	movlw h'FF'
+	movwf TMR1H
+	clrf TMR1L
+
+	BANK_1
+	BSF PIE1, TMR1IE	; Enable Timer1 interrupt
+	BSF INTCON,GIE
+	BSF INTCON,PEIE
+	BANK_0
+
+
 	BANK_1
 	MOVLW b'11000111'	; ...pull up a podobny koniny
 		; PORTB Pull-up Enable bit		1 = pull up enabled
@@ -127,12 +152,112 @@ INIT_CONFIG 	; nakonfiguruje preruseni, WDT, USART, pull ups....
 	BANK_0	
 	CLRF ADCON0			; pro jistotu (vypneme A/D prevodniky)
 
+	movlw h'BE'
+	movwf AKTUAL_HLAS
+	bsf STAV,4
+	bcf STAV,5			; zapneme podsviceni
 	RETURN
 ;**********************************************************
 ;**********************************************************
 INTERRUPT					; sem se skace po zavolani preruseni (uz jsou vyreseny ulohy dulezitych registru)
-	btfss PIR1,RCIF			; Meli bychom mit povoleno sice jen jedno preruseni (od USARTU), jeden ale nikdy nevi, proto ten test
-	goto END_OF_INTERRUPT	; Pokud nejde o preruseni od USARTU, tak koncime...
+;	movlw 0xC1
+;	movwf TMR1L
+;	MOVLW 0x3C
+;	MOVWF TMR1H		; 10ms
+	movlw 0x69
+	movwf TMR1L
+	MOVLW 0x9e
+	MOVWF TMR1H		; 5ms
+	BCF PIR1, TMR1IF 	; Clear interrupt flag	
+	; timto zapisem dosahnu preruseni presne kazdych 5ms (pri Fosc = 20MHz)
+
+	movfw CASOVAC
+	andlw h'FF'
+	btfss STATUS,Z
+	decf CASOVAC,f
+
+	bsf STAV,6
+
+
+;----------------------------------------------------------
+; testy tlacitek
+	btfss TL_PLAY
+	goto $+4
+	btfsc TLACITKA_PRED,7
+	goto $+2
+	bsf TLACITKA,7
+
+	btfss TL_STOP
+	goto $+4
+	btfsc TLACITKA_PRED,6
+	goto $+2
+	bsf TLACITKA,6
+
+	btfss TL_DOPREDU
+	goto $+4
+	btfsc TLACITKA_PRED,5
+	goto $+2
+	bsf TLACITKA,5
+
+	btfss TL_DOZADU
+	goto $+4
+	btfsc TLACITKA_PRED,4
+	goto $+2
+	bsf TLACITKA,4
+
+	btfss TL_MENU
+	goto $+4
+	btfsc TLACITKA_PRED,2
+	goto $+2
+	bsf TLACITKA,2
+
+	btfss TL_MENU_UP
+	goto $+4
+	btfsc TLACITKA_PRED,1
+	goto $+2
+	bsf TLACITKA,1
+
+	btfss TL_MENU_DOWN
+	goto $+4
+	btfsc TLACITKA_PRED,0
+	goto $+2
+	bsf TLACITKA,0
+
+	clrf TLACITKA_PRED
+	btfsc TL_PLAY
+	bsf TLACITKA_PRED,7
+	btfsc TL_STOP
+	bsf TLACITKA_PRED,6
+	btfsc TL_DOPREDU
+	bsf TLACITKA_PRED,5
+	btfsc TL_DOZADU
+	bsf TLACITKA_PRED,4
+	btfsc TL_MENU
+	bsf TLACITKA_PRED,2
+	btfsc TL_MENU_UP
+	bsf TLACITKA_PRED,1
+	btfsc TL_MENU_DOWN
+	bsf TLACITKA_PRED,0
+;----------------------------------------------------------
+
+	btfss STAV,4
+	goto INTERRUPT_PODSV_OFF
+INTERRUPT_PODSV_ON
+	btfsc STAV,5
+	goto INTERRUPT_PODSV_BLIK
+	bsf LCD_PODSVICENI
+	goto END_OF_INTERRUPT
+INTERRUPT_PODSV_OFF
+	bcf LCD_PODSVICENI
+	goto END_OF_INTERRUPT
+INTERRUPT_PODSV_BLIK
+	btfss LCD_PODSVICENI
+	goto $+3
+	bcf LCD_PODSVICENI
+	goto $+2
+	bsf LCD_PODSVICENI	
+	
+	goto END_OF_INTERRUPT	; koncime...
 END_OF_INTERRUPT			; sem skocime kdyz mame vsechny veci kolem preruseni vyrizeny
 	movfw TEMP_PCLATH
 	MOVWF PCLATH
@@ -158,42 +283,6 @@ ZPOZ_1S ;Delay 4999999 cycles
         GOTO $-5
 		RETURN
 ;**********************************************************
-ZPOZ_500MS
-;Variables: TMP2, TMP1, TMP0
-;Delay 110000 cycles
-        MOVLW 0x01  ;1 DEC
-        MOVWF TMP2
-        MOVLW 0x8F  ;143 DEC
-        MOVWF TMP1
-        MOVLW 0x0D9  ;217 DEC
-        MOVWF TMP0
-		CALL TEST_TLAC
-        DECFSZ TMP0,F
-        GOTO $-2
-        DECFSZ TMP1,F
-        GOTO $-4
-        DECFSZ TMP2,F
-        GOTO $-6
-;End of Delay
-		RETURN
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;**********************************************************
-
 ZPOZ_2MS
 ;Variables: TMP1, TMP0
 ;Delay 10001 cycles
@@ -351,3 +440,19 @@ NASTAVODDIL
 	BTFSC TMP5,4
 	BSF	STAV,7
  	RETURN
+;**********************************************************¨
+PREVED_ZNAK
+; prevede znaky pred vypsanim na LCD (snaky s diakritikou a pod.)
+; prevodni tabulka je pro jednoduchost umistena v EEPROMe
+
+	BANK_2
+	MOVWF EEADR 		; Address to read
+	BANK_3
+	BCF EECON1,EEPGD	; Point to Data memory
+	BSF EECON1,RD 		; EE Read
+	BANK_2
+	MOVFW EEDATA 		; W = EEDATA
+	BANK_0
+
+	return
+;**********************************************************¨

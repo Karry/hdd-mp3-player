@@ -2,7 +2,7 @@
 ; RUTINY PRO PRACI S LCD
 ;********************************************************************************************************************
 INIT_LCD
-	call ZPOZ_20MS			; nez se ustali napeti
+	call ZPOZ_20MS
 	call INIT8B
 	call ZPOZ_20MS
 	call INIT8B
@@ -31,7 +31,8 @@ SMAZ_LCD
 INIT8B: 
 	movlw   b'00111000'     ; 8 - bit
 	call    ZAPISI
-	movlw   b'00001111'     ; LCD on, kurzor on,no blik 
+	movlw   b'00001111'     ; LCD on, kurzor on, blik 
+	movlw   b'00001100'     ; LCD on, kurzor off,no blik 
 	call    ZAPISI
 	return
 ;********************************************************************************************************************
