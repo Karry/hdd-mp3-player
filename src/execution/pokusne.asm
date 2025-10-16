@@ -14,37 +14,38 @@ POZDRAV  ; odesle po seriove lince pozdrav
 	return
 ;**********************************************************
 POKUSNY_KOD	
+	call WAIT_FOR_READY
+	call SELECT_DEVICE
+
 	movlw b'11100000'	; adresy budou v LBA, budeme pracovat s masterem
 	movwf DEVICE
-	movlw .0
+	movlw .1
 	movwf SECTOR_C
+	movlw .63
 	movwf LBA1	
 	clrf LBA2
 	clrf LBA3
 	clrf FEATURES
-	movlw 0x21		; read sector
-	movlw 0xEC		; identify device
+	movlw 0x21			; read sector
 	movwf COMMAND
 	call WR_BLOCK
 
-	call WAIT_FOR_READY			; cekame az disk nebude zaneprazdnen
-	movfw ATA_STATUS
-	call WR_USART
+	call WAIT_FOR_READY	; cekame az disk nebude zaneprazdnen
+
 	movlw h'ff'
 	call WR_USART
-
-	;call KONTROLA
-	;movlw h'88'
-	;call WR_USART
+	call KONTROLA
+	movlw h'88'
+	call WR_USART
 	
 	movlw h'ff'			; dalsich XX slov odesleme na USART...
 	movwf TEMP5
 POK5_ODESLI
-	call WAIT_FOR_DATA		; cekame na data
+	call WAIT_FOR_DATA	; cekame na data
 	call READ_DATA
-	movfw DATA_H
-	call WR_USART
 	movfw DATA_L
+	call WR_USART
+	movfw DATA_H
 	call WR_USART
 	decfsz TEMP5,F
 	goto POK5_ODESLI

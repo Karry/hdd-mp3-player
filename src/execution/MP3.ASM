@@ -49,15 +49,29 @@ START
 	call POZDRAV
 
 	;call MP3_SOFT_RESET
-	call ATA_RESET
+	call ATA_RESET		; resetujeme disk, koukneme zda tu nejakej mame
 	btfss ATA_ATTRIBUTES,ATA_OK
-	;goto $-2			;pokud neni pripojen disk, tak se jej pokousime neustale najit...
+	;goto $-2		;pokud neni pripojen disk, tak se jej pokousime neustale najit...
 	nop
+	call IDENTIFY_DEVICE	; koukneme co disk umi
 
-	movfw ATA_ATTRIBUTES
-	call WR_USART	
-	
-	call POKUSNY_KOD
+;	movfw ATA_ATTRIBUTES	; ted odesleme vlastnosti disku
+;	call WR_USART
+;	movfw PARAM_MAX_LBA4	; a jeho velikost (pocet sektoru)
+;	call WR_USART
+;	movfw PARAM_MAX_LBA3
+;	call WR_USART
+;	movfw PARAM_MAX_LBA2
+;	call WR_USART
+;	movfw PARAM_MAX_LBA1
+;	call WR_USART
+	clrf LBA1
+	clrf LBA2
+	clrf LBA3
+	clrf LBA4
+
+	call DELAY_500ms
+	call ODESLI_MODEL_NUMBER
 
 BIG_LOOP
 	bsf ERROR_LED
@@ -70,6 +84,20 @@ BIG_LOOP
 	call WR_USART
 	movlw 'K'
 	call WR_USART
+
+	call READ_SECTOR
+	incf LBA1,f
+	movlw h'ff'			; dalsich XX slov odesleme na USART...
+	movwf TEMP5	
+ODESLI
+	call WAIT_FOR_DATA	; cekame na data
+	call READ_DATA
+	movfw DATA_L
+	call WR_USART
+	movfw DATA_H
+	call WR_USART
+	decfsz TEMP5,F
+	goto ODESLI
 	
 	goto BIG_LOOP
 ;**********************************************************
@@ -138,7 +166,42 @@ WR_USART	; odesle slovo ve workingu po ICSP
 	movwf TXREG
 	return
 ;**********************************************************
+ODESLI_MODEL_NUMBER	; Podprogram IDENTIFY_DEVICE nam do bufferu 1 hodil jmeno disku
+			; mi jej ted odesleme USARTem, aby mohl byt zobrazen na displeji
+	INDF_BANK_3	; BUFFER_1 je v bance 3
+	movlw 0x90	; na adrese 90
+	movwf FSR
+	movlw .20	; budeme odesilat 20 slov (40 znaku)
+	movwf TEMP1
+ODESLI_MODEL_NUMBER_ODESILANI
+	movfw INDF
+	movwf TEMP2	; data do bufferu byla vkladana stylem DATA_L, DATA_H, DATA_L, DATA_H...
+	incf FSR,F	; ASCII hodnoty jsou ale razeny stylem DATA_H, DATA_L, DATA_H, DATA_L...
+	movfw INDF	; proto to pisu tak slozite...
+	incf FSR,F
+	
+	call WR_USART
+	movfw TEMP2
+	call WR_USART	
+
+	decfsz TEMP1,F
+	goto ODESLI_MODEL_NUMBER_ODESILANI
+
+	INDF_BANK_0	
+	return
+;**********************************************************
 INTERRUPT		; sem se skace po zavolani preruseni...
+;	movwf TEMP_WORKING
+;	movfw STATUS
+;	movwf TEMP_STATUS
+;	BANK_0
+
+;	bcf PIR1,5		; schodim vlajku preruseni
+;	bsf ERROR_LED
+
+;	movfw TEMP_STATUS
+;	movwf STATUS
+;	movfw TEMP_WORKING
 	retfie
 ;**********************************************************
 DELAY_500ms

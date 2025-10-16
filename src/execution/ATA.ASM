@@ -116,7 +116,7 @@ WR_FEATURES
 ;*****************************************
 ; zapise vsechny registry potrebne k vykonani prikazu (adresove registry a prikaz)
 WR_BLOCK
-	call WAIT_FOR_READY
+	call WAIT_FOR_READY_FOR_COMMAND
 	call WR_FEATURES
 	call WR_SC
 	call WR_LBA1
@@ -254,7 +254,7 @@ ATA_RESET
 	clrf LBA2
 	clrf LBA3
 	clrf FEATURES
-	movlw h'00'			; code prikazu  nop
+	movlw h'00'			; code prikazu nop
 	movwf COMMAND
 	call WR_BLOCK		; ted provedeme prvni prikaz (nop) a podivame se co nam disk vrati
 
@@ -267,12 +267,70 @@ ATA_RESET
 
 	return		
 ;**********************************************************
+READ_SECTOR
+	; Tento podprogram prevezme parametry SECTOR_C (kolik sec. mame precist)
+	; a LBA1 - LBA4, kde je ulozena LBA adresa sectoru od ktereho mame cist
+	; Postara se o spravne zadani adresy do disku (LBA28 / LBA48) a zavolani prikazu ke cteni...
+	; Samotne cteni se musi obslouzit v jine casti programu (podle toho co cteme...)
+	call WAIT_FOR_READY
+	call SELECT_DEVICE
+	call WAIT_FOR_READY_FOR_COMMAND
+	btfsc ATA_ATTRIBUTES,LBA48_SUPPORT
+	goto READ_SECTOR_LBA48
+
+READ_SECTOR_LBA27		; zadavani adresy v LBA28 je celkem jednoduche, LBA bity 24-27 jsou obsazene v dolnich 4 bitech DEVICE reg.
+	clrf FEATURES
+	call WR_FEATURES
+	call WR_SC
+	call WR_LBA1
+	call WR_LBA2
+	call WR_LBA3
+	movfw LBA4			; Z nejvyssi casti adresy...
+	andlw b'00001111'	; ...pouzijeme pouze dolni 4bity...
+	iorlw b'11100000'	; ...horni 3bity nastavime (LBA adresovani, master)...
+	movwf DEVICE		; ...a zapiseme do DEVICE.
+	call WR_DEVICE
+	movlw 0x20			; Read sector. OPCODE - 20h (with retries) or 21h (without retries)
+	movwf COMMAND		; ...podle me to znamena ze prikaz 20h se bude pri neuspechu pokouset znova o cteni....
+	call WR_COMMAND		; ...protoze se v novejsich spicifacich jiz prikaz 21h nevyskytuje, pouzivam ke cteni 20h.
+	return
+
+READ_SECTOR_LBA48
+	; !!! Pripominam ze to co zde pisu (o LBA48) vim ze specifikace ATA8, v praxi jsem LBA48 na zadnem disku jeste nezkousel !!!
+	; Zadavani adresy pri LBA48 se o neco lisi nez LBA28. Do registru LBA 1,2,3 se data zadavaji 2x. 
+	; Prvi zadavani znamena horni cast adresy, druhe zadavani dolni cast adresy.
+	; Znova sem pisu ze v tomto programu vyuzijeme jen LBA o 32bitech (2TB) a ne celych LBA48
+	movlw .0
+	movwf TEMPW
+	movlw D_SECTOR_C    ; vyssi cast parametru SECTOR_C = 0
+	call RUTW	
+	call WR_SC			; nizci cast parametru SECTOR_C
+
+	movlw .0
+	movwf TEMPW
+	movlw D_LBA3		; LBA bity 47:40
+	call RUTW
+	movlw .0
+	movwf TEMPW
+	movlw D_LBA2		; LBA bity 39:32
+	call RUTW
+	movfw LBA4
+	movwf TEMPW
+	movlw D_LBA1		; LBA bity 31:24
+	call RUTW
+
+	call WR_LBA3		; LBA bity 23:16
+	call WR_LBA2		; LBA bity 15:8
+	call WR_LBA1		; LBA bity  7:0
+	movlw h'24'			; pri LBA48 se musi pouzit tohoto prikazu ke cteni (READ SECTOR(S) EXT - 24h, PIO data-in)
+	movwf COMMAND
+	call WR_COMMAND
+	return
+;**********************************************************
 IDENTIFY_DEVICE
 	; ted uz vime, ze mame pripojen nejaky disk, tento podprogram provede prikaz 
 	; identify device a zjisti co je disk zac. Nektere dulezite informace ulozi 
 	; (nastavi byty v ATA_ATTRIBUTES) a jmenovku disku hodi do bufferu
-
-	; !!!! tato procedura neni hotova a odzkousena
 
 	; rekneme disku, ze s nim chcem pracovat (s masterem)
 	call WAIT_FOR_READY
@@ -298,7 +356,6 @@ IDENTIFY_DEVICE
 	movwf TEMP1
 	call PRESKOC
 	
-	;////////////////////////////////////////////////////////////////////////////////
 	; [27-46] model mumber (ASCI retezec s nazvem disku)
 	; tady precteme 20 slov a rovnou je odesleme do pric
 		; pokud nekde od disku dostavame ASCII retezec jsou data nasledujici: 
@@ -309,23 +366,9 @@ IDENTIFY_DEVICE
 		; 		2. DATA_l = 'y'
 	movlw .20		; dalsich 20 slov obsahuje 40 s ASCII znaku s nazvem disku
 	movwf TEMP1
-INIT_ATA__ODESLI_ZNAK
-		call WAIT_FOR_DATA	; cekame na data
-		call READ_DATA
-		movfw DATA_H
-		call WR_USART
-		movfw DATA_L
-		call WR_USART
-		decfsz TEMP1,F
-		goto INIT_ATA__ODESLI_ZNAK
-
-	; movlw .20		; dalsich 20 slov obsahuje 40 s ASCII znaku s nazvem disku
-	; movwf TEMP1
-	; call ZAPIS_DO_BUFFERU_1
-	;////////////////////////////////////////////////////////////////////////////////
-
+	call ZAPIS_DO_BUFFERU_1
 		
-	; ted jsme uz precetli 31 slov z 256 :-)
+	; ted jsme uz precetli 47 slov z 256 :-)
 	movlw .2		; dalsi 2 slova jsou nam k nicemu
 	movwf TEMP1
 	call PRESKOC
@@ -341,10 +384,9 @@ INIT_ATA__ODESLI_ZNAK
 			;    10 1 = IORDY may be disabled
 			;     9 1 = LBA supported
 			;     8 1 = DMA supported.
-			;   7:0 Retired
-	movfw DATA_H
-	andlw b'00000010'	; z toho nas zajima pouze bit 9
-	movwf ATA_ATTRIBUTES
+			;   7:0 Retired	
+	btfsc DATA_H,1	;bit 9 = 1 -> LBA supported
+	bsf ATA_ATTRIBUTES,LBA_SUPPORT
 
 	;precetli jsme 50 slov
 	movlw .10
@@ -374,14 +416,14 @@ INIT_ATA__ODESLI_ZNAK
 	call WAIT_FOR_DATA
 	call READ_DATA	; 83 - command supported. Tady nas zajima bit 10 - 1 = 48-bit Address feature set supported
 	btfsc DATA_H,2	; pokud disk umi LBA 48 pripiseme tuto skutecnost do ATA_ATTRIBUTES
-		bsf ATA_ATTRIBUTES,0
+	bsf ATA_ATTRIBUTES,LBA48_SUPPORT
 
 	;precetli jsme 84 slov
 	movlw .16
 	movwf TEMP1
 	call PRESKOC
 		
-	btfss ATA_ATTRIBUTES,0
+	btfss ATA_ATTRIBUTES,LBA48_SUPPORT
 	goto INIT_ATA__NOT_SUPPORT_LBA48
 			; pokud je podporovano LBA 48, nachazi se ve slovech [100-103] skutecny pocet sektoru 
 			; do slov 60-61 by se sice vesel pocet sektoru u disku do 2TB, podle standardu se tam ale zapisuje pouze hodnota max pro LBA 28 (cca 120 GB)
@@ -419,7 +461,7 @@ INIT_ATA__DALSI
 	btfss DATA_H,6
 	goto INIT_ATA__DALSI2
 	btfsc DATA_H,4
-	bsf ATA_ATTRIBUTES,2
+	bsf ATA_ATTRIBUTES,BIG_SECTOR
 INIT_ATA__DALSI2
 	; precteno 107, zbyva 149
 	movlw .149	; 107 - 256
@@ -428,14 +470,14 @@ INIT_ATA__DALSI2
 		
 	; ted vime co mame za disk, tak se na to jdem podivat...
 	; pokud disk splnuje vsechny nase pozadavky, tak nastavime 7 bit v ATA_ATTRIBUTES
-	bcf ATA_ATTRIBUTES,7	
-	btfss ATA_ATTRIBUTES,1
+	bcf ATA_ATTRIBUTES,APPLICABLE	
+	btfss ATA_ATTRIBUTES,LBA_SUPPORT
 	return
 	; pokud jsme tady, disk podporuje LBA (dneska se jich uz moc nevidi, co by LBA neumeli)
-	btfsc ATA_ATTRIBUTES,2
+	btfsc ATA_ATTRIBUTES,BIG_SECTOR
 	return
 	; mazec, disk ma velikost sektoru 256 slov, vetsi naroky na disk nemam :-)
-	bsf ATA_ATTRIBUTES,7 ; disk umi to co potrebujeme...	
+	bsf ATA_ATTRIBUTES,APPLICABLE ; disk umi to co potrebujeme...	
 
 	return
 ;**********************************************************
@@ -479,4 +521,10 @@ WAIT_FOR_READY
 	btfsc STATUS,Z
 	return
 	goto WAIT_FOR_READY
+;**************************************************************************
+WAIT_FOR_READY_FOR_COMMAND
+	call WAIT_FOR_READY
+	btfss ATA_STATUS,DRDY
+	goto WAIT_FOR_READY_FOR_COMMAND
+	return
 ;**************************************************************************

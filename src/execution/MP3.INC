@@ -169,7 +169,7 @@ HOB				equ 7	; tento bit DEVICE CONTROL se nastavuje pouze pokud disk podporuje 
 ATA_ATTRIBUTES 	equ 0x02e 	; Parametry hardisku. 
 ;Bity maji nasledujici vyznam:
 ATA_OK			equ 0	; 0. bit = 1 -> disk je pritomen, zapnuty a funkcni :-)
-LBA_SUPPORT		equ 1	; 1. bit = 1 -> podpora LBA (pokud neni nastaven bit2, tak pouze LBA27 -> disk do 120GB)
+LBA_SUPPORT		equ 1	; 1. bit = 1 -> podpora LBA (pokud neni nastaven bit2, tak pouze LBA28 -> disk do 120GB)
 LBA48_SUPPORT	equ 2	; 2. bit = 1 -> podpora LBA 48 (disk je zrejme vetsi jak 120GB)
 BIG_SECTOR		equ 3	; 3. bit = 1 -> velikost sektoru je vetsi nez 256 !!! (s takovym diskem zatim tento program neumi)
 						; 4. bit  -> nepouzit
