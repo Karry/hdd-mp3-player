@@ -269,8 +269,8 @@ VSADDR_AICTRL1	equ .14			; Registr pro ovladani uzivatelskeho programu
 ; dekoder VS1001 ma vsechny registry 16bitove, proto za jmeno pisu _L /_H (u nekterych registru potrebuji pouze jednu cast)
 VSREG_MODE_L	equ 0x04D
 VSREG_STATUS_L	equ 0x04E
-VSREG_VOL_L		equ 0x04F		; pravy kanal
-VSREG_VOL_H		equ 0x050		; levy kanal
+VSREG_VOL_L		equ 0x04F		; levy kanal
+VSREG_VOL_H		equ 0x050		; pravy kanal
 ;**********************************************************
 ; informace potrebne pro prehravani
 PREH_ADDR_CL1		equ 0x060
@@ -290,6 +290,7 @@ PREH_STAV			equ 0x06B
 				; registr obsahuje informace o stavu aktualniho prehravani
 				; 0. bit = 1 => prehrava se soubor / 0 => neprehrava se soubor (muze byt ale pouze pauza)
 				; 1. bit = 1 => je soubor pripraven k prehravani (muze byt pauza) / 0=> neni zadny soubor k prehravani (prikaz play nema zadny ucinek)
+				; 2. bit = 1 => je nastaven, kdyz se automaticky zneni prehravany soubor (predchozi skonci) do doby, nez prijde prikaz na dotaz STAVU...
 
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

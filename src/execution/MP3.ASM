@@ -6,12 +6,12 @@
 ; 
 ; Program mp3 prehravace pouzivajici jako zdroj dat ATA disk.
 ; 
-; Umi identifikovat disk, precist libovolny sektor, v MBR  najit oddily se systemem souboru FAT32, nacist spousteci zaznam FAT32, 
-; prevadet cislo clusteru na LBA adresu, najit dalsi cluster v alokacnim retezci.
+; Umi identifikovat disk, precist libovolny sektor, v MBR  najit oddily se systemem souboru FAT32, 
+; nacist spousteci zaznam FAT32, praci s FAT32, prehravani mp3 pres vs1001 a komunikaci s vs1001.
+;
 ;
 ; dodelat:
-;	- Rozchodit komunikaci s mp3 dekoderem (az jej koupime)
-;	- Prehravat mp3 (po skonceni mp3 nacist dalsi mp3)
+;	- po skonceni mp3 nacist dalsi mp3
 ;	- Nejak udelat aby soubory byly prehravany podle abecedy
 ;	- pak uz jen vychytavky...	(napr. do vs1001 naprogramovat ekvalizer a nejak ho ovladat...)
 ;
@@ -52,7 +52,6 @@
 	include "fat32.asm" 	; podprogramy na nacteni a praci s FAT32
 	include "vs1001.asm"	; podprogramy na ovladani mp3 decoderu
 	include "aritmetic.asm"	; podprogramy vykonavajici zakladni aritmetologicke operace
-	;include "pokusne.asm"
 
 ;**********************************************************
 START
@@ -98,6 +97,10 @@ CEK_PRIKAZ_02h_03h
 	goto CEK_PRIKAZ_02h_03h		; pokud byl oddil vporadku nacten, pokracujeme...
 
 	clrf PREH_STAV
+;********************************************************************************************************************
+;********************************************************************************************************************
+;********************************************************************************************************************
+;********************************************************************************************************************
 BIG_LOOP
 	; Tady ta smycka beha po nacteni disku a nejake FATky porad dokola.
 	; Pri kazdem prubehu smyckou vyresime prikazy, ktere prisly, a pokud prehravame 
@@ -108,6 +111,7 @@ BIG_LOOP
 	btfsc STATUS,Z
 	goto BIG_LOOP__NENI_PRIKAZ
 	
+	clrf STAV_PRIKAZU			; smazeme registr signalizujici platnost prikazu
 	; Pokud jsme tady, tak prisel nejaky prikaz, jdem predat prikaz jednotlivym proceduram
 	call PRIKAZ_04h				; testujeme zda prisel prikaz 04h, pokud ano tak jej provedeme a nastavime platnost prikazu
 	call PRIKAZ_05h				; --- // ---
@@ -116,14 +120,90 @@ BIG_LOOP
 	call PRIKAZ_08h				; --- // ---
 
 	call PRIKAZ_80h				; --- // ---
+	call PRIKAZ_81h				; --- // ---
+	call PRIKAZ_82h				; --- // ---
 	
 	btfss STAV_PRIKAZU,0		; Pokud si zadna z procedur prikaz neprevzala, ...
 	clrf PRIJATYCH_DAT			; ...vymazeme zasobnik prikazu. (prikaz neni pro tuto chvili platny)
 
 BIG_LOOP__NENI_PRIKAZ
 
+#IF VS1001==1					; pokud mame pripojen dekoder...
+	btfss PREH_STAV,0			; ...a pokud se prehrava mp3...
+	goto MP3_NOT_PLAY
+	
+	movfw PREH_DATA_POZICE
+	subwf CLUSTER_SIZE,W
+	btfss STATUS,Z				; ...podivame se zda jiz nejsme na konci clusteru...
+	goto SEND_MP3_DATA
+
+	movfw PREH_DATA_CL1			; ...pokud jo, tak si najdeme dalsi cluster v retezci.
+	movwf CLUSTER1
+	movfw PREH_DATA_CL2
+	movwf CLUSTER2
+	movfw PREH_DATA_CL3
+	movwf CLUSTER3
+	movfw PREH_DATA_CL4
+	movwf CLUSTER4
+
+	clrf PREH_DATA_POZICE
+	call NEXT_CLUSTER
+	movfw CLUSTER1
+	movwf PREH_DATA_CL1
+	movfw CLUSTER2
+	movwf PREH_DATA_CL2
+	movfw CLUSTER3
+	movwf PREH_DATA_CL3
+	movfw CLUSTER4
+	movwf PREH_DATA_CL4
+	
+	btfss POZICE,0				; Pokud byl cluster posledni v retezci, skoncime s prehravanim...
+	goto SEND_MP3_DATA
+	
+	bcf PREH_STAV,0
+	bcf PREH_STAV,1
+	bcf PREH_STAV,2
+	goto MP3_NOT_PLAY
+
+SEND_MP3_DATA
+	movfw PREH_DATA_CL1			; Mame zjisteny cluster a jeho cast, kterou mame prehravat...
+	movwf CLUSTER1
+	movfw PREH_DATA_CL2
+	movwf CLUSTER2
+	movfw PREH_DATA_CL3
+	movwf CLUSTER3
+	movfw PREH_DATA_CL4
+	movwf CLUSTER4
+	movfw PREH_DATA_POZICE
+	movwf POZICE
+
+	call CLUSTER_TO_LBA			; zjistime si skutecnou polohu dat na disku...
+	movlw .1
+	movwf SECTOR_C
+	call READ_SECTOR			; dame prikaz precist data...
+
+	bsf MP3_CS					; po SI posilam data
+	movlw .0					; posilame celkem 256 slov
+	movwf TEMP1		
+SEND_MP3_WORD
+	call WAIT_FOR_VSDREQ
+	call READ_DATA
+	movfw DATA_L
+	call VS_WR_BYTE
+	movfw DATA_H
+	call VS_WR_BYTE
+	decfsz TEMP1,f	
+	goto SEND_MP3_WORD
+
+	incf PREH_DATA_POZICE,f
+MP3_NOT_PLAY
+#ENDIF
+
 	goto BIG_LOOP
-;**********************************************************
+;********************************************************************************************************************
+;********************************************************************************************************************
+;********************************************************************************************************************
+;********************************************************************************************************************
 INIT_PORT
 	BANK_1
 
@@ -722,7 +802,7 @@ PRIKAZ_80h__MAME_SOUBOR
 	goto PRIKAZ_80h__KONEC
 			
 	; ...nastavime jej jako prehravany soubor.
-	movlw 0x12					; 13. byte bufferu 2
+	movlw 0x1C					; 13. byte bufferu 2
 	movwf FSR
 	movfw INDF
 	movwf PREH_DATA_CL1
@@ -748,6 +828,42 @@ PRIKAZ_80h__KONEC
 	call WR_USART	
 	
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
+	return
+; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+PRIKAZ_81h						; 81h – vrat stav prehravaneho souboru
+	movfw 0x078					; prvni byte zasobniku prikazu
+	sublw h'81'
+	btfss STATUS,Z
+	return						; nebyl prijat prikaz 04h
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 04h, nastavime byt STAV_REGISTRU
+	; pro prikaz 04h nejsou definovany zadne parametry, proto jiz nic jineho netestujeme
+
+	movfw PREH_STAV
+	call WR_USART
+	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
+	return
+; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+PRIKAZ_82h						; 82h – nastav hlasitost
+	movfw 0x078					; prvni byte zasobniku prikazu
+	sublw h'82'
+	btfss STATUS,Z
+	return						; nebyl prijat prikaz 82h
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 82h, nastavime byt STAV_REGISTRU
+	movfw PRIJATYCH_DAT
+	sublw .2					; pro prikaz 82h museji prijit 3 byty (prikaz + 2byty parametr)
+	btfsc STATUS,C
+	return						; jeste nemame vsechny parametry
+	; Prisel prikaz 82h s 2bytovym parametrem 
+
+	movfw 0x079					; hlasitost pro levy kanal
+	movwf VSREG_VOL_L	
+	movfw 0x07A					; hlasitost pro pravy kanal
+	movwf VSREG_VOL_H
+	call VS_SET_VOLUME			; nastavime hlasitost	
+
+	movlw h'FF'
+	call WR_USART
+	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	END
