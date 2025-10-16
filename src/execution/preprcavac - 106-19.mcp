@@ -26,6 +26,9 @@ file_006=yes
 file_007=yes
 file_008=yes
 file_009=yes
+file_010=yes
+file_011=yes
+file_012=yes
 [FILE_INFO]
 file_000=main.asm
 file_001=MP3.INC
@@ -37,6 +40,9 @@ file_006=FAT32.ASM
 file_007=filesystem.asm
 file_008=MP3.ASM
 file_009=VS1001.ASM
+file_010=particions.asm
+file_011=commands2.asm
+file_012=loudness.asm
 [SUITE_INFO]
 suite_guid={6B3DAA78-59C1-46DD-B6AA-DBDAE4E06484}
 suite_state=

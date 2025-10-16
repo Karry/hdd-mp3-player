@@ -6,9 +6,9 @@
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;**********************************************************
 ; ZAPOJENI PORTU:
-;       portA - adresove signaly ATA, ERROR_LED, a USART
-; 				5     4     3          2    1    0
-; 				CS1-  CS0-  ERROR_LED  DA2  DA1  DA0  
+;       portA - adresove signaly ATA
+; 				5     4     3      2    1    0
+; 				CS1-  -     CS0-   DA2  DA1  DA0  
 ;				(signaly se znaminkem minus jsou aktivni v logicke 0 !!!)
 ;		portB - ATA datova sbernice (dolnich 8 bitu)
 ;               7   .. 0
@@ -16,7 +16,7 @@
 ;		portD - ATA datova sbernice (hornich 8 bitu)
 ;               15   .. 8
 ;               DD15 .. DD8 
-;		portC - MP3 dekoder vs1001g
+;		portC - MP3 dekoder vs1001k a USART
 ; 				7          6        5  4  3    2     1  0
 ; 				USART out  USART in SI SO SCLK BSYNC CS DREQ
 ;		portE - ridici signaly ATA
@@ -94,7 +94,12 @@ DATA_PORT_HIGH_TRIS	equ TRISD
 ;  pokud disk podporuje LBA 48, tak je zadavani adresy trochu odlisne od LBA27
 ;**********************************************************
 ; toto jsou definice adres ATA registru. Staci udat jejich adresu na ATA_ADDRESS port a dat prikaz ke cteni ci zapisu (DIOR- / DIOW-)
-D_STATUS_A    equ b'00010110'
+
+;       portA - adresove signaly ATA
+; 				5     4     3       2    1    0
+; 				CS1-  -     CS0-    DA2  DA1  DA0  
+;				(signaly se znaminkem minus jsou aktivni v logicke 0 !!!)
+D_STATUS_A    equ b'00011110'
 D_DEVICE_C    equ D_STATUS_A
 D_DATA_R      equ b'00100000'
 D_FEATURES    equ b'00100001'
@@ -196,15 +201,22 @@ LBA_SUPPORT		equ 1	; 1. bit = 1 -> podpora LBA (pokud neni nastaven bit2, tak po
 LBA48_SUPPORT	equ 2	; 2. bit = 1 -> podpora LBA 48 (disk je zrejme vetsi jak 120GB)
 BIG_SECTOR		equ 3	; 3. bit = 1 -> velikost sektoru je vetsi nez 256 !!! (s takovym diskem zatim tento program neumi)
 FAT32_LOAD		equ 4	; 4. bit = 1 -> FATka byla uspesne analyzovana a udaje o ni jsou pravdive
-						; 5. bit  -> nepouzit
-						; 6. bit  -> nepouzit (tyto tri bity treba pouziju pro vlastnosti FATky)
+STANDBY			equ 5	; 5. bit = 1 -> disk ve standby rezimu
+						; 6. bit  -> nepouzit
 APPLICABLE		equ 7	; 7. bit = 1 -> disk je pro nas pouzitelny (LBA, sektor o 512B)
 
+;PARAM_MAX_LBA1	equ 0x02F		; [4B] maximalni hodnota LBA (velikost disku)	
+;PARAM_MAX_LBA2	equ 0x030		; tady pozor, disky mohou byt adresovany az LBA 48, MBR je ale omezen na LBA 32 (2TB)
+;PARAM_MAX_LBA3	equ 0x031		; tak by nemelo smysl vsech 48b kdyz by se nevyuzily. (Navic jsem disk vetsi nez 2TB nevidel :)
+;PARAM_MAX_LBA4	equ 0x032		; (registr s indexem 1 ma nejnizsi vahu)
+; Tyto registry nepotrebuju
+;**********************************************************
+VS_LOUDNESS		equ 0x02F		; registr obsahujici hodnotu s nastavenym ekvalizerem
+;				equ 0x030
+;				equ 0x031
+;				equ 0x032
 
-PARAM_MAX_LBA1	equ 0x02F		; [4B] maximalni hodnota LBA (velikost disku)	
-PARAM_MAX_LBA2	equ 0x030		; tady pozor, disky mohou byt adresovany az LBA 48, MBR je ale omezen na LBA 32 (2TB)
-PARAM_MAX_LBA3	equ 0x031		; tak by nemelo smysl vsech 48b kdyz by se nevyuzily. (Navic jsem disk vetsi nez 2TB nevidel :)
-PARAM_MAX_LBA4	equ 0x032		; (registr s indexem 1 ma nejnizsi vahu)
+;**********************************************************
 
 PARAM_SLOV_V_SEKTORU1	equ 0x33 ; [2B] disky mohou mit velikost sektoru vetsi nez 512 (256sl) 
 PARAM_SLOV_V_SEKTORU2	equ 0x34 
@@ -298,13 +310,14 @@ PREH_D_FRAGMENT1	equ 0x053
 PREH_D_FRAGMENT2	equ 0x054	; 16bit cislo, ktere udava kolik clusteru mp3 dat po sobe je na disku nefragmentovano
 		; pokazde kdyz prehrajeme cluster, tak toto cislo dekrementujeme. Kdyz dosahneme 0, tak zjistime dalsi 
 		; cluster a pocet nefragmentovanych clusteru. (jak dlouha je rada po sobe jdoucich clusteru)
-;				equ 0x055
-;				equ 0x056
-;				equ 0x057
-;				equ 0x058
+CITAC_NECINNOSTI1	equ 0x055	; v preruseni se pokazdych 100ms dekrementuje, dokud neni 0. v hlavni programove smycce 
+CITAC_NECINNOSTI2	equ 0x056 	; se testuje, a kdyz se rovna 0, posle disku prikaz SLEEP. v prikazu ke cteni z disku se do nej umisti konstanta.
+								; to cele zbusobi to, ze po nekolika minutach necinnosti se disk prepne do sleep
+KONST_NECINNOSTI1	equ 0x057
+KONST_NECINNOSTI2	equ 0x058
 ;**********************************************************
 ; registry pro ukladani nastaveni hledani
-HL_PARAMETRY	equ 0x059
+HL_PARAMETRY		equ 0x059
 ;		0. bit = 0 > pokud hledáme soubory, tak pouze MP3
 ;				 1 > pokud hledáme soubory, vrací všechny soubory
 ;		1. bit = 0 > hledáme klasicky (nejdríve adresáre, poté soubory
@@ -319,10 +332,10 @@ HL_PARAMETRY	equ 0x059
 ;				= 0 > adresar je ROOT
 ;				= 1 > adresar neni ROOT
 
-HL_ADR_CL1		equ 0x05A
-HL_ADR_CL2		equ 0x05B
-HL_ADR_CL3		equ 0x05C
-HL_ADR_CL4		equ 0x05D	; v jakem adresari momentalne vyhledavame
+HL_ADR_CL1			equ 0x05A
+HL_ADR_CL2			equ 0x05B
+HL_ADR_CL3			equ 0x05C
+HL_ADR_CL4			equ 0x05D	; v jakem adresari momentalne vyhledavame
 
 ZAZNAMU_vBUFFERU_DISKU	equ 0x05E	; sem nam procedura SKOC_NA_ZAZNAM vraci kolik po sobe
 			; jdoucich zaznamu nam nechala pripravenych v bufferu na disku
@@ -331,8 +344,8 @@ ZAZNAMU_vBUFFERU_DISKU	equ 0x05E	; sem nam procedura SKOC_NA_ZAZNAM vraci kolik 
 ;XXXXXXXXX		equ 0x05F
 ;**********************************************************
 ; registry pro praci procedur v filesystem (dalsi registry pozivane proceduramy v filesystem jsou CLUSTER a POZICE)
-ZAZNAM1			equ 0x060
-ZAZNAM2			equ 0x061	; poradi zaznamu v adresari
+ZAZNAM1				equ 0x060
+ZAZNAM2				equ 0x061	; poradi zaznamu v adresari
 ;**********************************************************
 ; informace potrebne pro prehravani
 PREH_ADR_CL1		equ 0x062

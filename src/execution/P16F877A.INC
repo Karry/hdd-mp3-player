@@ -1,18 +1,18 @@
         LIST
-; P16F877.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+; P16F877A.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
         NOLIST
 
 ; This header file defines configurations, registers, and other useful bits of
-; information for the PIC16F877 microcontroller.  These names are taken to match 
+; information for the PIC16F877A microcontroller.  These names are taken to match 
 ; the data sheets as closely as possible.  
 
 ; Note that the processor must be selected before this file is 
 ; included.  The processor may be selected the following ways:
 
 ;       1. Command line switch:
-;               C:\ MPASM MYFILE.ASM /PIC16F877
+;               C:\ MPASM MYFILE.ASM /PIC16F877A
 ;       2. LIST directive in the source file
-;               LIST   P=PIC16F877
+;               LIST   P=PIC16F877A
 ;       3. Processor Type entry in the MPASM full-screen interface
 
 ;==========================================================================
@@ -22,10 +22,9 @@
 ;==========================================================================
 
 ;Rev:   Date:    Reason:
-
-;1.12   01/12/00 Changed some bit names, a register name, configuration bits
-;                 to match datasheet (DS30292B)
-;1.00   08/07/98 Initial Release
+;1.02	05/28/02 Corrected values for _CP_ALL and _CP_OFF in Configuration Bits section.
+;1.01   09/13/01 Added the PIR2 bit CMIF and the PIE2 bit CMIE
+;1.00   04/19/01 Initial Release (BD - generated from PIC16F877.inc)
 
 ;==========================================================================
 ;
@@ -33,7 +32,7 @@
 ;
 ;==========================================================================
 
-        IFNDEF __16F877
+        IFNDEF __16F877A
            MESSG "Processor-header file mismatch.  Verify selected processor."
         ENDIF
 
@@ -96,6 +95,8 @@ SSPADD                       EQU     H'0093'
 SSPSTAT                      EQU     H'0094'
 TXSTA                        EQU     H'0098'
 SPBRG                        EQU     H'0099'
+CMCON                        EQU     H'009C'
+CVRCON                       EQU     H'009D'
 ADRESL                       EQU     H'009E'
 ADCON1                       EQU     H'009F'
 
@@ -123,9 +124,11 @@ C                            EQU     H'0000'
 GIE                          EQU     H'0007'
 PEIE                         EQU     H'0006'
 T0IE                         EQU     H'0005'
+TMR0IE                       EQU     H'0005'
 INTE                         EQU     H'0004'
 RBIE                         EQU     H'0003'
 T0IF                         EQU     H'0002'
+TMR0IF                       EQU     H'0002'
 INTF                         EQU     H'0001'
 RBIF                         EQU     H'0000'
 
@@ -142,6 +145,7 @@ TMR1IF                       EQU     H'0000'
 
 ;----- PIR2 Bits ----------------------------------------------------------
 
+CMIF			     EQU     H'0006'
 EEIF                         EQU     H'0004'
 BCLIF                        EQU     H'0003'
 CCP2IF                       EQU     H'0000'
@@ -257,6 +261,7 @@ TMR1IE                       EQU     H'0000'
 
 ;----- PIE2 Bits ----------------------------------------------------------
 
+CMIE			     EQU     H'0006'
 EEIE                         EQU     H'0004'
 BCLIE                        EQU     H'0003'
 CCP2IE                       EQU     H'0000'
@@ -314,6 +319,26 @@ TRMT                         EQU     H'0001'
 TX9D                         EQU     H'0000'
 TXD8                         EQU     H'0000'    ; Backward compatibility only
 
+
+;----- CMCON Bits ---------------------------------------------------------
+C2OUT                        EQU     H'0007'
+C1OUT                        EQU     H'0006'
+C2INV                        EQU     H'0005'
+C1INV                        EQU     H'0004'
+CIS                          EQU     H'0003'
+CM2                          EQU     H'0002'
+CM1                          EQU     H'0001'
+CM0                          EQU     H'0000'
+
+;----- CVRCON Bits --------------------------------------------------------
+CVREN                        EQU     H'0007'
+CVROE                        EQU     H'0006'
+CVRR                         EQU     H'0005'
+CVR3                         EQU     H'0003'
+CVR2                         EQU     H'0002'
+CVR1                         EQU     H'0001'
+CVR0                         EQU     H'0000'
+
 ;----- ADCON1 Bits --------------------------------------------------------
 
 ADFM                         EQU     H'0007'
@@ -337,7 +362,7 @@ RD                           EQU     H'0000'
 ;==========================================================================
 
         __MAXRAM H'1FF'
-        __BADRAM H'8F'-H'90', H'95'-H'97', H'9A'-H'9D'
+        __BADRAM H'8F'-H'90', H'95'-H'97', H'9A'-H'9B'
         __BADRAM H'105', H'107'-H'109'
         __BADRAM H'185', H'187'-H'189', H'18E'-H'18F'
 
@@ -347,16 +372,16 @@ RD                           EQU     H'0000'
 ;
 ;==========================================================================
 
-_CP_ALL                      EQU     H'0FCF'
-_CP_HALF                     EQU     H'1FDF'
-_CP_UPPER_256                EQU     H'2FEF'
+_CP_ALL                      EQU     H'1FFF'
 _CP_OFF                      EQU     H'3FFF'
-_DEBUG_ON                    EQU     H'37FF'
 _DEBUG_OFF                   EQU     H'3FFF'
-_WRT_ENABLE_ON               EQU     H'3FFF'
-_WRT_ENABLE_OFF              EQU     H'3DFF'
-_CPD_ON                      EQU     H'3EFF'
+_DEBUG_ON                    EQU     H'37FF'
+_WRT_OFF                     EQU     H'3FFF'    ; No prog memmory write protection
+_WRT_256                     EQU     H'3DFF'    ; First 256 prog memmory write protected
+_WRT_1FOURTH                 EQU     H'3BFF'    ; First quarter prog memmory write protected
+_WRT_HALF                    EQU     H'39FF'    ; First half memmory write protected
 _CPD_OFF                     EQU     H'3FFF'
+_CPD_ON                      EQU     H'3EFF'
 _LVP_ON                      EQU     H'3FFF'
 _LVP_OFF                     EQU     H'3F7F'
 _BODEN_ON                    EQU     H'3FFF'
@@ -365,9 +390,9 @@ _PWRTE_OFF                   EQU     H'3FFF'
 _PWRTE_ON                    EQU     H'3FF7'
 _WDT_ON                      EQU     H'3FFF'
 _WDT_OFF                     EQU     H'3FFB'
-_LP_OSC                      EQU     H'3FFC'
-_XT_OSC                      EQU     H'3FFD'
-_HS_OSC                      EQU     H'3FFE'
 _RC_OSC                      EQU     H'3FFF'
+_HS_OSC                      EQU     H'3FFE'
+_XT_OSC                      EQU     H'3FFD'
+_LP_OSC                      EQU     H'3FFC'
 
         LIST

@@ -21,11 +21,11 @@ RD_ERROR
 	movwf ATA_ERROR
 	return
 ;*****************************************
-RD_STATUS_A     
-	movlw D_STATUS_A    ; Alternate Status 
-	call RUTR 
-	movwf ATA_STATUS_A
-	return
+;RD_STATUS_A     
+;	movlw D_STATUS_A    ; Alternate Status 
+;	call RUTR 
+;	movwf ATA_STATUS_A
+;	return
 ;*****************************************
 RD_SC
 	movlw D_SECTOR_C    ; Sector Count
@@ -198,6 +198,11 @@ READ_DATA
 	goto READ_DATA				; Drq <> 1, cekame dal 
 	
 READ_DATA_CTEME
+	movfw KONST_NECINNOSTI1
+	movwf CITAC_NECINNOSTI1
+	movfw KONST_NECINNOSTI2
+	movwf CITAC_NECINNOSTI2		; disk je vypinan po urcite dobe necinosti
+	bcf ATA_ATTRIBUTES,STANDBY
 
     movlw D_DATA_R
 	movwf ATA_ADDRESS
@@ -392,6 +397,38 @@ READ_SECTOR_LBA48
 	call WR_COMMAND
 	return
 ;**********************************************************
+ATA_STANDBY
+	btfsc ATA_ATTRIBUTES,STANDBY
+	return						; pokud disk jiz je ve standby, nebudeme posilat prikaz
+								; tento bit je nulovan pri cteni z disku
+
+	clrf FEATURES
+	clrf SECTOR_C
+	clrf LBA1
+	clrf LBA2
+	clrf LBA3
+
+	movlw h'96'
+	movwf COMMAND
+
+	call RD_STATUS
+	btfsc ATA_STATUS,ERR
+	goto $+5					; Nastal error disku. Co budeme delat? S*r*m* na to a jdeme dal
+	btfsc ATA_STATUS,BSY
+	goto $-4					; Bsy <> 0, cekame dal 
+	btfss ATA_STATUS,DRDY
+	goto $-6
+
+	call WR_FEATURES
+	call WR_SC
+	call WR_LBA1
+	call WR_LBA2
+	call WR_LBA3
+	call WR_DEVICE
+	call WR_COMMAND
+	bsf ATA_ATTRIBUTES,STANDBY
+	return
+;**********************************************************
 IDENTIFY_DEVICE
 	; ted uz vime, ze mame pripojen nejaky disk, tento podprogram provede prikaz 
 	; identify device a zjisti co je disk zac. Nektere dulezite informace ulozi 
@@ -459,15 +496,15 @@ IDENTIFY_DEVICE
 	
 	call READ_DATA	; 60
 	movfw DATA_L
-	movwf PARAM_MAX_LBA1		; nejnizsi cast adresy
+;	movwf PARAM_MAX_LBA1		; nejnizsi cast adresy
 	movfw DATA_H
-	movwf PARAM_MAX_LBA2	
+;	movwf PARAM_MAX_LBA2	
 	
 	call READ_DATA	; 61
 	movfw DATA_L
-	movwf PARAM_MAX_LBA3
+;	movwf PARAM_MAX_LBA3
 	movfw DATA_H
-	movwf PARAM_MAX_LBA4		; nejvyssi cast adresy
+;	movwf PARAM_MAX_LBA4		; nejvyssi cast adresy
 	
 	;precetli jsme 62 slov, zbyva 194
 	movlw .21
@@ -491,15 +528,15 @@ IDENTIFY_DEVICE
 			; mi precteme ale jen nejnizsi 2 slova, predpokladam totiz ze disk neni vetsi jak 2TB
 			call READ_DATA	; 100
 			movfw DATA_L
-			movwf PARAM_MAX_LBA1		; nejnizsi cast adresy
+;			movwf PARAM_MAX_LBA1		; nejnizsi cast adresy
 			movfw DATA_H
-			movwf PARAM_MAX_LBA2	
+;			movwf PARAM_MAX_LBA2	
 
 			call READ_DATA	; 101
 			movfw DATA_L
-			movwf PARAM_MAX_LBA3
+;			movwf PARAM_MAX_LBA3
 			movfw DATA_H
-			movwf PARAM_MAX_LBA4		; nejvyssi cast adresy			
+;			movwf PARAM_MAX_LBA4		; nejvyssi cast adresy			
 		goto INIT_ATA__DALSI
 INIT_ATA__NOT_SUPPORT_LBA48
 	movlw .2	; 100, 101
@@ -547,9 +584,9 @@ DELAY_25us
 	; (Fosc = 20 MHz , instr. cyklus= 0.20 us) 25us / 0.20 us = 125 instrukcnich cyklu
 	; (Fosc = 16 MHz , instr. cyklus= 0.25 us) 25us / 0.25 us = 100 instrukcnich cyklu
 	; (Fosc = 04 MHz , instr. cyklus= 1.00 us) 25us / 1.00 us =  25 instrukcnich cyklu	
-        MOVLW 0x2A  ;42 DEC -> Delay 127 cycles
-        ;MOVLW 0x21   ;33 DEC -> Delay 100 cycles
-        ;MOVLW 0x08  ;25 DEC -> Delay  25 cycles
+        MOVLW 0x2A		;42 DEC -> Delay 127 cycles
+        ;MOVLW 0x21		;33 DEC -> Delay 100 cycles
+        ;MOVLW 0x08		;25 DEC -> Delay  25 cycles
         MOVWF TEMP1
         DECFSZ TEMP1,F
         GOTO $-1

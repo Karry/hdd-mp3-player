@@ -26,13 +26,13 @@
 ;	- Obcas se nechce vs1001k resetovat. Snad tomu pomuze mala hardwarova uprava.
 ;		...opravdu tomu znacne pomohlo pridani kondiku a odporu na reset jako u PICu (v datasheetu je tato uprava zminovana jen u vs1002.(?))
 ;
-; srpen 2005 - brezen 2006 Karry - lukas.karas@centrum.cz
+; srpen 2005 - duben 2006 Karry - lukas.karas@centrum.cz
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
 ;**********************************************************
-;   VERZE 1.1
+;   VERZE 1.2
 ;**********************************************************
 ; !!!!!!!! VSECHNY CASOVE SMYCKY JSOU POCITANY NA Fosc=20MHz !!!!!
 ; !!!!!!!! NASTAVENI USARTu TAKY !!!!!!!
@@ -74,15 +74,20 @@
 	include "fat32.asm" 	; podprogramy na nacteni a praci s FAT32
 	include "aritmetic.asm"	; podprogramy vykonavajici zakladni aritmetologicke operace
  
+
  org 0x0800					; PAGE 1
 ;#IF VS1001==1
 	include "vs1001.asm"	; podprogramy na ovladani mp3 decoderu
 ;#ENDIF
-	include "commands.asm"	; podprogramy na obsluhu prikazu (od ridiciho procesoru)
+	include "commands.asm"	; prni cast podprogramu na obsluhu prikazu (od ridiciho procesoru)
 	include "filesystem.asm"; podprogramy pro praci s adresari a setrideni obsahu adresaru
+
+
  org 0x1000					; PAGE 2
-	nop						; (aby nas prekladac varoval, az dosahneme teto stranky)
+	include "particions.asm"; podprogramy pro analyzu MBR, nacteni a kontrolu FAT oddilu
+	include "commands2.asm"	; druha cast podprogramu na obsluhu prikazu (od ridiciho procesoru)
+
  org 0x1800					; PAGE 3
-	nop						; (aby nas prekladac varoval, az dosahneme teto stranky)
+	include "loudness.asm"	; plugin dekoderu "loudness" a podprogramy pro jeho nahrani a obsluhu
 ;**********************************************************
 	END

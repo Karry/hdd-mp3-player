@@ -4,7 +4,7 @@ Version=1.0
 [File000]
 Location=main.err
 Folder=Intermediary
-DeviceName=PIC16F877
+DeviceName=PIC16F877A
 LanguageToolSuiteID={6B3DAA78-59C1-46DD-B6AA-DBDAE4E06484}
 LanguageToolID={49D3CA3F-D9A3-4518-9943-226A347E8CC7}
 LanguageToolLocation=C:\Program Files\Microchip\MPASM Suite\MPAsmWin.exe
@@ -15,7 +15,7 @@ ToolArgsString=
 [File001]
 Location=D:\projekty\et4a\karas\myprogram\main.cod
 Folder=Output
-DeviceName=PIC16F877
+DeviceName=PIC16F877A
 LanguageToolSuiteID={6B3DAA78-59C1-46DD-B6AA-DBDAE4E06484}
 LanguageToolID={49D3CA3F-D9A3-4518-9943-226A347E8CC7}
 LanguageToolLocation=C:\Program Files\Microchip\MPASM Suite\MPAsmWin.exe
@@ -26,7 +26,7 @@ ToolArgsString=
 [File002]
 Location=D:\projekty\et4a\karas\myprogram\main.hex
 Folder=Output
-DeviceName=PIC16F877
+DeviceName=PIC16F877A
 LanguageToolSuiteID={6B3DAA78-59C1-46DD-B6AA-DBDAE4E06484}
 LanguageToolID={49D3CA3F-D9A3-4518-9943-226A347E8CC7}
 LanguageToolLocation=C:\Program Files\Microchip\MPASM Suite\MPAsmWin.exe
@@ -37,7 +37,7 @@ ToolArgsString=
 [File003]
 Location=main.lst
 Folder=Output
-DeviceName=PIC16F877
+DeviceName=PIC16F877A
 LanguageToolSuiteID={6B3DAA78-59C1-46DD-B6AA-DBDAE4E06484}
 LanguageToolID={49D3CA3F-D9A3-4518-9943-226A347E8CC7}
 LanguageToolLocation=C:\Program Files\Microchip\MPASM Suite\MPAsmWin.exe

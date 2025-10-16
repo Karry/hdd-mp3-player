@@ -214,6 +214,28 @@ VS_RD_REG	; precte 16bitove slovo (TEMP3,TEMP2) z registru mp3 dekoderu (TEMP1)
 	bsf MP3_CS
 	return
 ;**********************************************************
+VS_SOFT_RESET_NO_PLUG	; provede softwarovy reset dekoderu bez resetu pluginu
+	PROG_PAGE_0
+	call DELAY_200ms
+	PROG_PAGE_1
+
+	movlw VSADDR_MODE
+	movwf TEMP1
+	bsf VSREG_MODE_L,2	; soft reset=1
+	movfw VSREG_MODE_L
+	movwf TEMP2
+	movlw .0			; MODE_H
+	movwf TEMP3
+	call VS_WR_REG
+
+	PROG_PAGE_0
+	call DELAY_2ms
+	PROG_PAGE_1
+	call VS_SEND_1024_NULL	
+
+	bcf VSREG_MODE_L,2	; soft reset=0
+	return
+;**********************************************************
 VS_SOFT_RESET	; provede softwarovy reset dekoderu (pri zapnuti a pote po skonceni kazde mp3)
 	PROG_PAGE_0
 	call DELAY_200ms
@@ -234,6 +256,41 @@ VS_SOFT_RESET	; provede softwarovy reset dekoderu (pri zapnuti a pote po skoncen
 	call VS_SEND_1024_NULL	
 
 	bcf VSREG_MODE_L,2	; soft reset=0
+
+	movlw VSADDR_AIADDR
+	movwf TEMP1
+	movlw 0x00
+	movwf TEMP2	
+	movlw 0x42
+	movwf TEMP3
+	call VS_WR_REG				; nastavime zacatek uzivatelskeho programu (0x4200)
+
+	movlw VSADDR_AICTRL0
+	movwf TEMP1
+	movlw 0x00
+	movwf TEMP2	
+	movlw 0x00
+	movwf TEMP3
+	call VS_WR_REG				; resetujeme plugin
+
+	movlw VSADDR_AICTRL0
+	movwf TEMP1
+	movlw VS_LOUDNESS
+	movwf TEMP2	
+	movlw 0x00
+	movwf TEMP3
+	call VS_WR_REG				; nastavime pouzivany filter
+
+	movfw VS_LOUDNESS
+	andlw h'FF'
+	btfss STATUS,Z
+	return
+
+	movlw VSADDR_AIADDR
+	movwf TEMP1
+	clrf TEMP2	
+	clrf TEMP3
+	call VS_WR_REG				; pokud je filter 0, vypneme plugin
 	return
 ;**********************************************************
 VS_SEND_32_NULL
@@ -327,7 +384,7 @@ VS_INIT
 	movwf VSREG_VOL_L		; VOL=0x40 => nenastavuji maximalni hlasitost, protoze kdyz jsou pripojena sluchatka, tak by z toho jeden ohluchl...
 	movwf VSREG_VOL_H
 
-	call VS_SOFT_RESET		; resetujeme
+	call VS_SOFT_RESET_NO_PLUG		; resetujeme
 	
 	movlw .3
 	movwf TEMP5
@@ -339,7 +396,7 @@ VS_INIT
 	; proto jej 5x za sebou resetuji a zapinam pokusnou sinusovku...
 	
 	call VS_END_BEEP
-	call VS_SOFT_RESET		; resetujeme
+	call VS_SOFT_RESET_NO_PLUG		; resetujeme
 
 	return
 ;**********************************************************

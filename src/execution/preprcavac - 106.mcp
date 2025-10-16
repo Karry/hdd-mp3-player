@@ -32,15 +32,15 @@ file_009=yes
 
 [FILE_INFO]
 file_000=main.asm
-file_001=P16F877.INC
-file_002=MP3.INC
+file_001=MP3.INC
+file_002=P16f877a.inc
 file_003=aritmetic.asm
-file_004=Ata.asm
+file_004=ATA.ASM
 file_005=commands.asm
-file_006=Fat32.asm
+file_006=FAT32.ASM
 file_007=filesystem.asm
-file_008=Mp3.asm
-file_009=Vs1001.asm
+file_008=MP3.ASM
+file_009=VS1001.ASM
 
 [SUITE_INFO]
 suite_guid={6B3DAA78-59C1-46DD-B6AA-DBDAE4E06484}

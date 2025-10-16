@@ -5,6 +5,7 @@
 ; Pokud je v zasobniku prikaz pro nejakou proceduru, musi tato procedura nastavit byt STAV_PRIKAZU do 1 (i kdyz treba nema vsechny parametry)
 ; Pokud procedura najde svuj prikaz a jsou prijate vsechny parametry, musi odeslat nejakou odpoved po USARTu a smazat reg. PRIJATYCH_DAT!!!
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+; CAST 1
 CEKEJ_PRIKAZ					; ceka dokud nedostaneme nejaky prikaz
 	movfw PRIJATYCH_DAT
 	andlw h'FF'
@@ -68,7 +69,7 @@ PRIKAZ_03h						; 03h – nastav oddil
 	movwf LBA3
 	movfw 0x07C
 	movwf LBA4
-	PROG_PAGE_0
+	PROG_PAGE_2
 	call NACTI_FAT32			; nacte parametry zvoleneho oddilu
 	PROG_PAGE_1
 
@@ -416,125 +417,6 @@ PRIKAZ_0Ah_KONEC
 	call ODESLI_BUFFER2			; odesleme si zaznam o souboru	
 	PROG_PAGE_1
 
-	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
-	return
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_0Bh						; 0Bh – zjisti velikost fragmentu
-	movfw 0x078					; prvni byte zasobniku prikazu
-	sublw h'0b'					
-	btfss STATUS,Z
-	return						; nebyl prijat prikaz 0Bh
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 0Bh, nastavime byt STAV_PRIKAZU
-	movfw PRIJATYCH_DAT
-	sublw .4					; pro prikaz 0Bh museji prijit 5 bytu (prikaz + 4byty parametr)
-	btfsc STATUS,C
-	return						; jeste nemame vsechny parametry
-	; Prisel prikaz 0Bh s 4bytovym parametrem 
-
-	movfw 0x079					; nejnizsi cast clusteru
-	movwf CLUSTER1
-	movfw 0x07A
-	movwf CLUSTER2
-	movfw 0x07B
-	movwf CLUSTER3
-	movfw 0x07C
-	movwf CLUSTER4
-
-	PROG_PAGE_0
-	call ZJISTI_FRAGMENT
-	PROG_PAGE_1
-; v CLUSTER[1-4] prijme cislo clusteru a do FRAGMENT[1-2] umisti kolik clusteru 
-; po tomto clusteru nasledujich (vcetne) tvori jeden fragment
-
-; Pokud soucasny cluster je prazdny (coz by se stat nemelo) vrati v POZICE FFh
-; Jinak, pokud s vse povede, dame do POZICE 0
-
-; ! PODPROGRAM NENI POUZITELNY PRO CLUSTER 0 (prvni cluster ROOT adresare)
-; ! PODPROGRAM NETESTUJE ZDA NEBYLO ZADANO VETSI CISLO NEZ JE POCET CLUSTERU !!!
-	
-	PROG_PAGE_0
-	movfw POZICE 
-	call WR_USART
-	movfw FRAGMENT1
-	call WR_USART
-	movfw FRAGMENT2
-	call WR_USART
-	PROG_PAGE_1
-	
-	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
-	return
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_0Ch						; 0Ch – najdi záznam o tomto adresáøi v nadøazeném adresáøi
-	movfw 0x078					; prvni byte zasobniku prikazu
-	sublw h'0C'					
-	btfss STATUS,Z
-	return						; nebyl prijat prikaz 0Ch
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 0Ch, nastavime byt STAV_PRIKAZU
-	movfw PRIJATYCH_DAT
-	sublw .4					; pro prikaz 0Ch museji prijit 5 bytu (prikaz + 4byty parametr)
-	btfsc STATUS,C
-	return						; jeste nemame vsechny parametry
-	; Prisel prikaz 0Ch s 4bytovym parametrem 
-
-	movfw 0x079					; nejnizsi cast clusteru
-	movwf CLUSTER1
-	movfw 0x07A
-	movwf CLUSTER2
-	movfw 0x07B
-	movwf CLUSTER3
-	movfw 0x07C
-	movwf CLUSTER4
-
-	movfw CLUSTER1
-	iorwf CLUSTER2,W
-	iorwf CLUSTER3,W
-	iorwf CLUSTER4,W
-	btfsc STATUS,Z
-	goto PRIKAZ_0Ch_JEROOT		; pokud CLUSTER[1-4]=0, tak se jedna o 1. cluster ROOT adr., proto nemusime dale resit co tam je...
-
-	call PRVNI_CL_ADRESARE		; V POZICE vrati 00h, pokud cluster je prvni cluster nejakeho adresare, FFh, pokud neobsahuje adresar
-	movfw POZICE
-	andlw h'FF'
-	btfss STATUS,Z
-	goto PRIKAZ_0Ch_NENI_ZACATEK_ADR	
-
-	call HLEDEJ_V_NADRAZENEM
-
-	movlw h'00'
-	goto PRIKAZ_0Ch_ODESLI
-PRIKAZ_0Ch_NENI_ZACATEK_ADR
-	movlw h'81'
-	goto PRIKAZ_0Ch_ODESLI
-PRIKAZ_0Ch_JEROOT
-	movlw h'01'
-PRIKAZ_0Ch_ODESLI
-
-	PROG_PAGE_0
-	call WR_USART
-
-	INDF_BANK_3
-	movlw h'90'
-	movwf FSR
-
-	movfw INDF
-	call WR_USART
-	incf FSR,f
-	movfw INDF
-	call WR_USART
-	incf FSR,f
-	movfw INDF
-	call WR_USART
-	incf FSR,f
-	movfw INDF
-	call WR_USART
-	incf FSR,f
-
-	movfw ZAZNAM1
-	call WR_USART
-	movfw ZAZNAM2
-	call WR_USART
-	PROG_PAGE_1
-	
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

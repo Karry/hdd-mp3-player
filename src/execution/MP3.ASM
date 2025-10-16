@@ -6,10 +6,10 @@ START
 	call DELAY_25us 	; zezacatku dost kolisa...
 	call DELAY_25us
 
-;	call POZDRAV				; abych se u kompu nenudil
-
 	PROG_PAGE_1
 	call VS_INIT
+	PROG_PAGE_3
+	call VS_LOAD_PLUGIN
 	PROG_PAGE_0
 
 	call ATA_RESET				; resetujeme disk, koukneme zda tu nejakej mame
@@ -35,7 +35,10 @@ CEK_PRIKAZ_01h
 	call WR_USART
 	call ODESLI_MODEL_NUMBER	; odesleme jmeno disku 
 
+
+	PROG_PAGE_2
 	call SCAN_MBR				; najdeme oddily s FAT32 a jejich seznam dame do bufferu 2
+	PROG_PAGE_0
 CEK_PRIKAZ_02h_03h
 	PROG_PAGE_1
 	call CEKEJ_PRIKAZ			; pockame si na prikaz
@@ -73,20 +76,38 @@ BIG_LOOP
 	call PRIKAZ_08h				; --- // ---
 	call PRIKAZ_09h				; --- // ---
 	call PRIKAZ_0Ah				; --- // ---
+	PROG_PAGE_2
 	call PRIKAZ_0Bh				; --- // ---
 	call PRIKAZ_0Ch				; --- // ---
+	call PRIKAZ_0Dh				; --- // ---
+	PROG_PAGE_1
 
 	call PRIKAZ_80h				; --- // ---
 	call PRIKAZ_81h				; --- // ---
 	call PRIKAZ_82h				; --- // ---
 	call PRIKAZ_83h				; --- // ---
 	call PRIKAZ_84h				; --- // ---
+	PROG_PAGE_2
+	call PRIKAZ_85h				; --- // ---
 	PROG_PAGE_0
 	
 	btfss STAV_PRIKAZU,0		; Pokud si zadna z procedur prikaz neprevzala, ...
 	clrf PRIJATYCH_DAT			; ...vymazeme zasobnik prikazu. (prikaz neni pro tuto chvili platny)
 
 BIG_LOOP__NENI_PRIKAZ
+	movfw KONST_NECINNOSTI1
+	andwf KONST_NECINNOSTI2,w
+	sublw h'FF'
+	btfsc STATUS,Z
+	goto BIG_LOOP__NO_STANDBY	; pokud je KONST_NECINNOSTI = h'FFFF', tak disk nechame porad zapnuty
+	
+	movfw CITAC_NECINNOSTI1
+	iorwf CITAC_NECINNOSTI2,w
+	btfsc STATUS,Z
+	call ATA_STANDBY			; pokud z disku jsme jiz dlouho nic necetli, tak jej dame do STANDBY
+								; potrebna doba je v KONST_NECINNOSTI
+
+BIG_LOOP__NO_STANDBY
 
 	btfss PREH_STAV0,0			; Pokud je zvoleno play,...
 	goto MP3_NOT_PLAY
@@ -148,6 +169,35 @@ BIG_LOOP_DALSI_FRAGMENT
 
 	goto SEND_MP3_DATA
 BIG_LOOP_DEC_FRAGMENT
+	;----------------------------
+	movfw VS_LOUDNESS
+	andlw h'FF'
+	btfsc STATUS,Z				; pokud je nastaven nejaky filter, tak jej reaktivujeme...
+	goto BIG_LOOP_DEC_FRAGMENT_NO_PLUG
+
+	movlw VSADDR_AIADDR
+	movwf TEMP1
+	movlw 0x00
+	movwf TEMP2	
+	movlw 0x42
+	movwf TEMP3
+	PROG_PAGE_1
+	call VS_WR_REG				; nastavime zacatek uzivatelskeho programu (0x4200)
+	PROG_PAGE_0
+
+	movlw VSADDR_AICTRL0
+	movwf TEMP1
+	movfw VS_LOUDNESS
+	movwf TEMP2	
+	movlw 0x00
+	movwf TEMP3
+	PROG_PAGE_1	
+	call VS_WR_REG				; nastavime pozadovany filter
+	PROG_PAGE_0
+
+BIG_LOOP_DEC_FRAGMENT_NO_PLUG
+	;----------------------------
+
 	; PREH_D_FRAGMENT1 --
 	movlw .1
 	subwf PREH_D_FRAGMENT1,f
@@ -462,6 +512,12 @@ INIT_PORT
 	return
 ;**********************************************************
 INIT_CONFIG 	; nakonfiguruje preruseni, WDT, USART, pull ups....
+	BANK_0
+	MOVLW b'00110001'	; preddelicka 1:8, timer1 on, interni osc
+	MOVWF T1CON			; 
+	clrf TMR1H
+	clrf TMR1L
+
 	BANK_1
 	movlw b'11000111'	; ...pull up a podobny koniny
 		; PORTB Pull-up Enable bit		1 = pull up enabled
@@ -476,6 +532,7 @@ INIT_CONFIG 	; nakonfiguruje preruseni, WDT, USART, pull ups....
 	movwf PIE1	
 	movlw b'00000000'	; ostatni vnejsi preruseni vymaskujeme
 	movwf PIE2			
+	bsf PIE1, TMR1IE	; Enable Timer1 interrupt
 
 	movlw b'11000000' 	; povolime preruseni na vnejsi zarizeni (USART)				
 	movwf INTCON
@@ -496,6 +553,12 @@ INIT_CONFIG 	; nakonfiguruje preruseni, WDT, USART, pull ups....
 	clrf ADCON0			; pro jistotu (vypneme A/D prevodniky)
 
 	clrf PRIJATYCH_DAT	; zasobnik prikazu prazdny...
+	movlw h'70'	
+	movwf KONST_NECINNOSTI1
+	movlw h'17'			; 1770h = 6000d => pri 0.1s preruseni 10 minut
+	movwf KONST_NECINNOSTI2
+KONST_NECINNOSTI2	equ 0x058
+
 	return
 ;**********************************************************
 WR_USART	; odesle slovo ve workingu po USARTu
@@ -509,18 +572,18 @@ WR_USART	; odesle slovo ve workingu po USARTu
 	return
 ;**********************************************************
 ; tento podprogram bude pro budouci praci zbytecny, je zde jen proto, abych na PC videl ze program byl spusten...
-POZDRAV  ; odesle po seriove lince pozdrav
-	movlw 'A'	
-	call WR_USART
-	movlw 'h'
-	call WR_USART
-	movlw 'o'
-	call WR_USART
-	movlw 'j'
-	call WR_USART
-	movlw '!'
-	call WR_USART
-	return
+;POZDRAV  ; odesle po seriove lince pozdrav
+;	movlw 'A'	
+;	call WR_USART
+;	movlw 'h'
+;	call WR_USART
+;	movlw 'o'
+;	call WR_USART
+;	movlw 'j'
+;	call WR_USART
+;	movlw '!'
+;	call WR_USART
+;	return
 ;**********************************************************
 ; odesle data, ktera jdou z disku USARTEM. Pocet dat je v reg. TEMP1
 ODESLI_DATA
@@ -588,8 +651,37 @@ ODESLI_BUFFER2_ODESILANI
 	return
 ;**********************************************************
 INTERRUPT					; sem se skace po zavolani preruseni (uz jsou vyreseny ulohy dulezitych registru)
-	btfss PIR1,RCIF			; Meli bychom mit povoleno sice jen jedno preruseni (od USARTU), jeden ale nikdy nevi, proto ten test
-	goto END_OF_INTERRUPT	; Pokud nejde o preruseni od USARTU, tak koncime...
+	btfsc PIR1,RCIF			; testujeme o jake preruseni jde
+	goto INTERRUPT_USART	; Pokud jde o preruseni od USARTU, skocime...
+	btfsc PIR1,TMR1IF		; testujeme o jake preruseni jde
+	goto INTERRUPT_TIMER1	; Pokud jde o preruseni od TIMER1, skocime...
+	goto END_OF_INTERRUPT	; Pokud jde o jine preruseni, koncime
+
+INTERRUPT_TIMER1
+	bcf PIR1,TMR1IF
+	movlw h'df'
+	movwf TMR1L
+	movlw h'0b'
+	movwf TMR1H
+
+;	movfw CITAC_NECINNOSTI1
+;	iorwf CITAC_NECINNOSTI2,w
+;	btfsc STATUS,Z
+;	call WR_USART
+
+	movfw CITAC_NECINNOSTI1
+	iorwf CITAC_NECINNOSTI2,w
+	btfsc STATUS,Z
+	goto END_OF_INTERRUPT	; pokud je CITAC_NECINNOSTI = 0, nic se nedekrementuje
+	
+	movlw .1
+	subwf CITAC_NECINNOSTI1,f
+	btfss STATUS,C
+	subwf CITAC_NECINNOSTI2,f
+
+	goto END_OF_INTERRUPT
+
+INTERRUPT_USART
 	movfw RCREG				; !!! vynulovat pøíznak !!!	
 	movwf PRIJATE_DATO
 
@@ -646,26 +738,6 @@ DELAY_200ms
         MOVLW 0x59  ;89 DEC
         MOVWF TMP1
         MOVLW 0x0B1  ;177 DEC
-        MOVWF TMP0
-        DECFSZ TMP0,F
-        GOTO $-1
-        DECFSZ TMP1,F
-        GOTO $-5
-        DECFSZ TMP2,F
-        GOTO $-9
-;End of Delay
-	return
-;**********************************************************
-DELAY_500ms
-; (Fosc = 16 MHz , instr. cyklus= 250 ns) 500 000us / 0.25 us = 2 000 000 instrukcnich cyklu
-; (Fosc = 20 MHz , instr. cyklus= 200 ns) 500 000us / 0.2  us = 2 500 000 instrukcnich cyklu
-;Variables: TMP2, TMP1, TMP0
-;Delay 2500001 cycles
-        MOVLW 0x28  ;40 DEC
-        MOVWF TMP2
-        MOVLW 0x7E  ;126 DEC
-        MOVWF TMP1
-        MOVLW 0x0A4  ;164 DEC
         MOVWF TMP0
         DECFSZ TMP0,F
         GOTO $-1
