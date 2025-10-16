@@ -19,7 +19,7 @@ filter_lib=*.lib
 filter_lkr=*.lkr
 
 [FILE_INFO]
-file_000=MP3.ASM
+file_000=hlavni.asm
 file_001=P16F877.INC
 file_002=MP3.INC
 

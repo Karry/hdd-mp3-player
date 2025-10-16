@@ -26,10 +26,11 @@ SOUCET
 	movfw OPERAND_X2
 	addwf OPERAND_Y2,W
 	movwf VYSLEDEK2
+	movlw .1
 	btfsc STATUS,C
 		bsf PRETECENI,0
 	btfsc PRETECENI,1
-		incf VYSLEDEK2,F
+		addwf VYSLEDEK2,F
 	btfsc STATUS,C
 		bsf PRETECENI,0
 	bcf PRETECENI,1
@@ -37,10 +38,11 @@ SOUCET
 	movfw OPERAND_X3
 	addwf OPERAND_Y3,W
 	movwf VYSLEDEK3
+	movlw .1
 	btfsc STATUS,C
 		bsf PRETECENI,1
 	btfsc PRETECENI,0
-		incf VYSLEDEK3,F
+		addwf VYSLEDEK3,F
 	btfsc STATUS,C
 		bsf PRETECENI,1
 	bcf PRETECENI,0
@@ -48,10 +50,11 @@ SOUCET
 	movfw OPERAND_X4
 	addwf OPERAND_Y4,W
 	movwf VYSLEDEK4
+	movlw .1
 	btfsc STATUS,C
 		bsf PRETECENI,0
 	btfsc PRETECENI,1
-		incf VYSLEDEK4,F
+		addwf VYSLEDEK4,F
 	btfsc STATUS,C
 		bsf PRETECENI,0
 	bcf PRETECENI,1	
@@ -74,10 +77,11 @@ ROZDIL	; VYSLEDEK := X - Y
 	movfw OPERAND_Y2
 	subwf OPERAND_X2,W	; W = X - Y	
 	movwf VYSLEDEK2
+	movlw .1
 	btfss STATUS,C
 		bsf PRETECENI,0
 	btfsc PRETECENI,1
-		decf VYSLEDEK2,F
+		subwf VYSLEDEK2,F
 	btfss STATUS,C
 		bsf PRETECENI,0
 	bcf PRETECENI,1	
@@ -85,10 +89,11 @@ ROZDIL	; VYSLEDEK := X - Y
 	movfw OPERAND_Y3
 	subwf OPERAND_X3,W	; W = X - Y	
 	movwf VYSLEDEK3
+	movlw .1
 	btfss STATUS,C
 		bsf PRETECENI,1
 	btfsc PRETECENI,0
-		decf VYSLEDEK3,F
+		subwf VYSLEDEK3,F
 	btfss STATUS,C
 		bsf PRETECENI,1
 	bcf PRETECENI,0
@@ -96,14 +101,36 @@ ROZDIL	; VYSLEDEK := X - Y
 	movfw OPERAND_Y4
 	subwf OPERAND_X4,W	; W = X - Y	
 	movwf VYSLEDEK4
+	movlw .1
 	btfss STATUS,C
 		bsf PRETECENI,0
 	btfsc PRETECENI,1
-		decf VYSLEDEK4,F
+		subwf VYSLEDEK4,F
 	btfss STATUS,C
 		bsf PRETECENI,0
 	bcf PRETECENI,1	
 	
+	BANK_0
+	return
+;**********************************************************
+DEKREMENTUJ	; X := X - 1
+	BANK_1
+	movlw .1
+
+	subwf OPERAND_X1,f
+	btfsc STATUS,C
+	goto DEKREMENTUJ_KONEC
+	
+	subwf OPERAND_X2,f
+	btfsc STATUS,C
+	goto DEKREMENTUJ_KONEC
+
+	subwf OPERAND_X3,f
+	btfsc STATUS,C
+	goto DEKREMENTUJ_KONEC
+
+	subwf OPERAND_X4,f
+DEKREMENTUJ_KONEC
 	BANK_0
 	return
 ;**********************************************************
@@ -175,6 +202,39 @@ POSUNDOLEVA_5	; X := X * 32
 	clrf PRETECENI
 	bcf STATUS,C
 	
+	call POSUNDOLEVA
+	call POSUNDOLEVA
+	call POSUNDOLEVA
+	call POSUNDOLEVA
+	call POSUNDOLEVA
+
+	BANK_0
+	return
+;**********************************************************
+POSUNDOLEVA_6	; X := X * 64
+				; X > 0xFFFF FFFF => PRETECENI obsahuje bity navic
+	BANK_1
+	clrf PRETECENI
+	bcf STATUS,C
+	
+	call POSUNDOLEVA
+	call POSUNDOLEVA
+	call POSUNDOLEVA
+	call POSUNDOLEVA
+	call POSUNDOLEVA
+	call POSUNDOLEVA
+
+	BANK_0
+	return
+;**********************************************************
+POSUNDOLEVA_7	; X := X * 128
+				; X > 0xFFFF FFFF => PRETECENI obsahuje bity navic
+	BANK_1
+	clrf PRETECENI
+	bcf STATUS,C
+	
+	call POSUNDOLEVA
+	call POSUNDOLEVA
 	call POSUNDOLEVA
 	call POSUNDOLEVA
 	call POSUNDOLEVA
@@ -257,6 +317,23 @@ POSUNDOPRAVA_5	; X := X div 32
 	andlw b'00011111'
 	movwf PRETECENI		; PRETECENI := X mod 32
 	
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
+	call POSUNDOPRAVA
+
+	BANK_0
+	return
+;**********************************************************
+POSUNDOPRAVA_6	; X := X div 64
+				; PRETECENI := X mod 64
+	BANK_1
+	movfw OPERAND_X1
+	andlw b'00111111'
+	movwf PRETECENI		; PRETECENI := X mod 64
+	
+	call POSUNDOPRAVA
 	call POSUNDOPRAVA
 	call POSUNDOPRAVA
 	call POSUNDOPRAVA

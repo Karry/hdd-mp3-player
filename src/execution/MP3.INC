@@ -6,7 +6,7 @@
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;**********************************************************
 ; ZAPOJENI PORTU:
-;       portA - MP3 dekoder vs1001g (alespon doufam ze sezenem tenhle typ, je totiz naprosto spickovej!!!)
+;       portA - MP3 dekoder vs1001g
 ;				5      4     3   2     1         0
 ;				BSYNC  DREQ  CS  SCLK  SI/SDATA  SO
 ;		portB - ATA datova sbernice (dolnich 8 bitu)
@@ -109,6 +109,23 @@ D_STATUS      equ b'00100111'
 D_COMMAND     equ D_STATUS
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+; ROZLOZENI PAMETI PROGRAMU
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+;	page 0	0x0000 - 0x07FF
+;				- mp3.asm (hlavni smycka)
+;				- ata.asm
+;				- fat32.asm
+;				- aritmetic.asm
+;	page 1	0x0800 - 0x0FFF
+;				- vs1001.asm
+;				- commands.asm
+;	page 2	0x1000 - 0x17FF
+;	page 3	0x1800 - 0x1FFF
+;
+; Vsechny podprogramy by mely nechat nastaven PCLATH na hodnotu jak se do nich vstoupilo...
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ; DEFINICE PROMENNYCH
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -117,29 +134,30 @@ D_COMMAND     equ D_STATUS
 ;				0x020 - 0x07F = misto (96bytu) pro nase registry:
 ;					0x020 - 0x034 -> 21bytu pro registry a parametry HDD
 ;					0x035 - 0x03a -> 6bytu pro parametry podprogramu (musime zajistit, abychom nepouzivali registry, ktere pouzivaji i podprogramy!!!)
-;					0x03B - 0x04C -> parametry FATky 
+;					0x03B - 0x04C -> parametry FATky
 ;					0x04D - 0x050 -> registry pro praci s VS1001
-;					0x051 - 0x052 -> 
-;					0x060 - 0x06F -> informace potrebne pro prehravani
+;					0x051 - 0x05E -> ---------------------------
+;					0x05F - 0x06F -> informace potrebne pro prehravani
 ;				0x070 - 0x07F -> registry pro potreby preruseni (dostupne z kterekoliv banky)
 ;					0x070 - 0x072 -> 3 registry slouzici k zalohovani W, STATUS, FSR
-;					0x073 - 0x077 -> vlajka prikazu, ....
+;					0x073 - 0x076 -> registry pro prikazy a preruseni + zaloha pro PCLATH
+;					0x077         -> ---------------------------
 ;					0x078 - 0x07F -> 8 bytu zasobniku prikazu (obsahujici data prikazu prisla po USARTU)
 ;
 ; 	BANK 1: 	0x080 - 0x09F = specialni registry,
 ;				0x0A0 - 0x0EF = volne misto (80bytu)
 ;					0x0A0 - 0x0AC -> parametry a navratove hodnoty z aritmeto/logickych podprogramu
-;					0x0AD - 0x0EF -> 67bytu nepouzito
+;					0x0AD - 0x0EF -> --------------------------- (67bytu)
 ;
 ; 	BANK 2: 	0x100 - 0x10F = specialni registry,
 ;				0x110 - 0x16F = misto (96bytu) pro nase registry:
-;					0x110 - 0x14F -> 64bytu BUFFER_2 pro dlouhe nazvy souboru, tabulku oddilu, a treba pro cast fatky
-;					0x150 - 0x16F -> 32bytu nepouzito
+;					0x110 - 0x14F -> 64bytu BUFFER_2 (pro dlouhe nazvy souboru, tabulku oddilu, a treba pro cast fatky)
+;					0x150 - 0x16F -> --------------------------- (32bytu)
 ;
 ; 	BANK 3: 	0x180 - 0x18F = specialni registry,
 ;				0x190 - 0x1EF = misto (96bytu) pro nase registry:
-; 					0x190 - 0x1CF -> 64bytu BUFFER_1 pro ruzna data pri cteni...
-;					0x1D0 - 0x1EF -> 32 bytu nepouzito
+; 					0x190 - 0x1CF -> 64bytu BUFFER_1 (pro ruzna data pri cteni...)
+;					0x1D0 - 0x1EF -> --------------------------- (32 bytu)
 
 ; prectena ci zapisovana data
 DATA_L 			equ 0x020 ; res 1
@@ -242,7 +260,7 @@ VSADDR_STATUS		equ .1		; slouzi pouze pro zapnuti / vypnuti analogove casti (MUT
 VSADDR_CLOCKF		equ .3		; informuje dekoder o jeho krystalu. !! je nutne pro spravne dekodovani !!
 VSADDR_DECODE_TIME	equ .4		; obsahuje cas dekodovani aktualni MP3 !! neaktualizuje se pri skocich (previjeni)
 VSADDR_AUDATA		equ .5		; obsahuje informace o datovem toku a vzorkovaci frekvenci MP3
-	; bit 15 = 1 => STEREO; = 1 => MONO
+	; bit 15 = 1 => STEREO; = 0 => MONO
 	; bity 12-9 obsahuji vzorkovaci frekvenci v Hz
 	;	0000 -> neznama vzorkovaci frekvence
 	;	0001 -> 44 100
@@ -255,6 +273,7 @@ VSADDR_AUDATA		equ .5		; obsahuje informace o datovem toku a vzorkovaci frekvenc
 	;	1000 -> 12 000
 	;	1001 ->  8 000
 	; bity 8-0 obsahuji bitrate v kbps 
+
 VSADDR_WRAM		equ .6			; Slouzi k zapisovani uzivatelskeho programu, dato se zapise na adresu v WRAMADDR
 VSADDR_WRAMADDR	equ .7			; Adresuje uzivatelskou pamet dekoderu
 VSADDR_HDAT0	equ .8			; Obsahuje informace ziskane z hlavicky MP3
@@ -269,8 +288,25 @@ VSADDR_AICTRL1	equ .14			; Registr pro ovladani uzivatelskeho programu
 ; dekoder VS1001 ma vsechny registry 16bitove, proto za jmeno pisu _L /_H (u nekterych registru potrebuji pouze jednu cast)
 VSREG_MODE_L	equ 0x04D
 VSREG_STATUS_L	equ 0x04E
-VSREG_VOL_L		equ 0x04F		; levy kanal
-VSREG_VOL_H		equ 0x050		; pravy kanal
+VSREG_VOL_L		equ 0x04F		; pravy kanal
+VSREG_VOL_H		equ 0x050		; levy kanal
+;				equ 0x051
+;				equ 0x052
+;				equ 0x053
+;				equ 0x054
+;				equ 0x055
+;				equ 0x056
+;				equ 0x057
+;				equ 0x058
+;				equ 0x059
+;				equ 0x05A
+;				equ 0x05B
+;				equ 0x05C
+;				equ 0x05D
+PREH_CITAC_PREV	equ 0x05E		; pokud je mp3 previjena pomalu, sem se zapisuje kolik sektoru se jiz previnulo. 
+								; pokud dosahne urcite velikosti, tak se vzdy jeden sektor pusti normalni rychlosti...
+PREH_STAV1		equ 0x05F		; popis registru je pod popisem registru PREH_STAV0
+;**********************************************************
 ;**********************************************************
 ; informace potrebne pro prehravani
 PREH_ADDR_CL1		equ 0x060
@@ -278,19 +314,49 @@ PREH_ADDR_CL2		equ 0x061
 PREH_ADDR_CL3		equ 0x062
 PREH_ADDR_CL4		equ 0x063
 PREH_ADDR_POZICE	equ 0x064
-PREH_ADDR_ZAZNAM	equ 0x065
+PREH_ADDR_ZAZNAM	equ 0x065	; zaznam v adresari ktery se zrovna prehrava (soubor mp3)
 
 PREH_DATA_CL1		equ 0x066
 PREH_DATA_CL2		equ 0x067
 PREH_DATA_CL3		equ 0x068
 PREH_DATA_CL4		equ 0x069
-PREH_DATA_POZICE	equ 0x06A
+PREH_DATA_POZICE	equ 0x06A	; aktualni cluster, ktery se prehrava
 
-PREH_STAV			equ 0x06B
-				; registr obsahuje informace o stavu aktualniho prehravani
-				; 0. bit = 1 => prehrava se soubor / 0 => neprehrava se soubor (muze byt ale pouze pauza)
-				; 1. bit = 1 => je soubor pripraven k prehravani (muze byt pauza) / 0=> neni zadny soubor k prehravani (prikaz play nema zadny ucinek)
-				; 2. bit = 1 => je nastaven, kdyz se automaticky zneni prehravany soubor (predchozi skonci) do doby, nez prijde prikaz na dotaz STAVU...
+PREH_STAV0			equ 0x06B	; registr obsahuje informace o stavu aktualniho prehravani
+				; 0. bit = 	0 => stop nebo pausa (nic nehraje)
+				;			1 => play            (nejaky soubor je prehravan)
+				; 1. bit = 	0 => neni zadny soubor k prehravani (nastaveni bitu play nema zadny ucinek)
+				;			1 => je soubor pripraven k prehravani (muze byt ale pauza - nic nehraje)
+				; 2. bit = 	1 => je nastaven, kdyz se zmeni prehravany soubor (bez volani prikazu) do doby, nez prijde prikaz na dotaz STAVU... (81h)
+				; 3. bit = 	0 => po skonceni souboru se pokracuje v prehravani (zavisi na nastaveni repeatu)
+				; 			1 => po skonceni prehravani souboru se nic neprehrava (ceka se na prijeti prikazu k prehravani)
+				; 4. bit = 	0 => repeat off
+				;			1 => repeat on
+				; 5. bit =	0 => repeat adresare (prvni cluster adresare musi byt nastaven v PREH_ADDR_ZACATEK_CL[1-4] )
+				;			1 => repeat souboru (po skonceni prehravani souboru se ten samy soubor zacne prehravat znova)
+				; 6. bit =	0 => 
+				;			1 => rezervovano (pro nahodny vyber, nebo jiny rezim prehravani...)
+				; 7. bit =  0 => 
+				;			1 => rezervovano
+;PREH_STAV1			equ 0x05F
+				; 0. bit =  0 => normalni prehravani
+				;			1 => previjeni mp3 dopredu
+				; 1. bit =  0 => 
+				;			1 => rezervovano (pro previjeni dozadu)
+				; 2. bit =	zpusob previjeni,	0 => previji se rychle, potichu
+				;								1 => previji se pomalu, vzdy se po nejake dobe kratky usek souboru prehraje
+				; 3. bit =	0 => normalni nastaveni zvuku
+				;			1 => zvyrazneni basu a vysek (moznost dekoderu vs1001 "bass/treble enhancer")
+				; 4. bit =	0 => NO MUTE
+				;			1 => MUTE
+				; 5., 6., 7. bit 
+				;			=> rezervovano
+
+
+PREH_ADDR_ZACATEK_CL1	equ 0x06C
+PREH_ADDR_ZACATEK_CL2	equ 0x06D
+PREH_ADDR_ZACATEK_CL3	equ 0x06E
+PREH_ADDR_ZACATEK_CL4	equ 0x06F	; prvni cluster adresare, jez se prave prehrava (pokud je nastaven repeat adresare, tak se po dosazeni konce adresare zacne prehravat znova)
 
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -303,6 +369,7 @@ PRIJATE_DATO	equ 0x074		; pomocna promenna v preruseni
 STAV_PRIKAZU	equ 0x075		; pomocny registr signalizujici stav prikazu umisteneho v zasobniku prikazu
 								; pokud zadna procedura nenastavi do 1, je prikaz v tuto chvili neplatny
 								; pokud prikaz je pro proceduru ale nama zatim dost parametru, muji tento byt nastavit take do 1
+TEMP_PCLATH		equ 0x076
 ; 0x078 - 0x07F		-> zasobnik prikazu (data prisla po USARTU)
 ;**********************************************************
 ; BANK_1	s touto bankou pracuji procedury provadejici 32 bitove 
@@ -356,5 +423,22 @@ INDF_BANK_2	macro
 			endm
 INDF_BANK_3	macro             
 			bsf STATUS,IRP    
+			endm
+;**********************************************************
+PROG_PAGE_0	macro             
+			bcf PCLATH,3
+			bcf PCLATH,4
+			endm
+PROG_PAGE_1	macro             
+			bsf PCLATH,3
+			bcf PCLATH,4
+			endm
+PROG_PAGE_2	macro             
+			bcf PCLATH,3
+			bsf PCLATH,4
+			endm
+PROG_PAGE_3	macro             
+			bsf PCLATH,3
+			bsf PCLATH,4
 			endm
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

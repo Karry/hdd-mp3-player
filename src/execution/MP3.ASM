@@ -1,59 +1,3 @@
-;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-;  MP3 PREPRCAVAC
-; ================
-; 
-; Program mp3 prehravace pouzivajici jako zdroj dat ATA disk.
-; 
-; Umi identifikovat disk, precist libovolny sektor, v MBR  najit oddily se systemem souboru FAT32, 
-; nacist spousteci zaznam FAT32, praci s FAT32, prehravani mp3 pres vs1001 a komunikaci s vs1001.
-;
-;
-; dodelat:
-;	- po skonceni mp3 nacist dalsi mp3
-;	- Nejak udelat aby soubory byly prehravany podle abecedy
-;	- pak uz jen vychytavky...	(napr. do vs1001 naprogramovat ekvalizer a nejak ho ovladat...)
-;
-; srpen 2005 - rijen 2005 Karry - lukas.karas@centrum.cz
-;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-
-;**********************************************************
-;   HLAVNI SOUBOR 
-;**********************************************************
-; !!!!!!!! VSECHNY CASOVE SMYCKY JSOU POCITANY NA Fosc=16MHz !!!!!
-; !!!!!!!! NASTAVENI USARTu TAKY !!!!!!!
-	LIST    	p=PIC16f877,C=132,n=60
-	__CONFIG	_WDT_OFF & _HS_OSC & _PWRTE_OFF & _BODEN_OFF & _LVP_OFF 
-			; LVP_OFF = RB3 jako digitalni I/O
-	errorlevel -302		; vypnuti Message [302]: Register in operand not in bank 0.
-						; ! zjednoduseni vypisu, ale riziko prehlednuti chyby
-	#DEFINE VS1001 1	; 1 = vs1001 pripojen, casti kodu pro vs1001 se prekladaji, ...
-						; ...pokud 0 je pripojen pouze disk, na port se nic neposila
-;**********************************************************
-
-	include "P16F877.inc" 	; definice blbosti kolem procesoru
-	include "mp3.inc" 		; definice promennych, konstant a portu
-
-;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-; PROGRAM
-;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-	org 0
-  	goto START
-	org	4
-	goto INTERRUPT
-;**********************************************************
-
-	include "ata.asm" 		; podprogramy na ovladani ATA disku
-	include "fat32.asm" 	; podprogramy na nacteni a praci s FAT32
-	include "vs1001.asm"	; podprogramy na ovladani mp3 decoderu
-	include "aritmetic.asm"	; podprogramy vykonavajici zakladni aritmetologicke operace
-
-;**********************************************************
 START
 	call INIT_CONFIG	; nakonfiguruje preruseni, WDT, USART, pull ups...
 	call INIT_PORT		; nastavy trisy, a porty do vychozi polohy
@@ -65,7 +9,9 @@ START
 	call POZDRAV				; abych se u kompu nenudil
 
 #IF VS1001==1
+	PROG_PAGE_1
 	call VS_INIT
+	PROG_PAGE_0
 #ENDIF
 
 	call ATA_RESET				; resetujeme disk, koukneme zda tu nejakej mame
@@ -74,29 +20,37 @@ START
 	nop							; ...pokud tam zadny disk neni, tak bychom se stejne ani sem nemeli dostat, protoze budem porad cekat na WAIT_FOR_READY
 
 	call IDENTIFY_DEVICE		; koukneme co disk umi
+
 CEK_PRIKAZ_01h
+	PROG_PAGE_1
 	call CEKEJ_PRIKAZ
+	PROG_PAGE_0
+
+
 	movfw 0x078					; prvni byte prikazoveho zasobniku
 	clrf PRIJATYCH_DAT			; prikaz byl vybran -> prazdny zasobnik
 	sublw h'01'					; ...pokud to byl prikaz 01h...
 	btfss STATUS,Z
 	goto CEK_PRIKAZ_01h
+
 	movfw ATA_ATTRIBUTES		; ...vodesleme zpet vlastnosti disku a jeho jmenovku (vis. popis protokolu)
 	call WR_USART
 	call ODESLI_MODEL_NUMBER	; odesleme jmeno disku 
 
 	call SCAN_MBR				; najdeme oddily s FAT32 a jejich seznam dame do bufferu 2
 CEK_PRIKAZ_02h_03h
+	PROG_PAGE_1
 	call CEKEJ_PRIKAZ			; pockame si na prikaz
 	clrf STAV_PRIKAZU			; smazeme registr signalizujici platnost prikazu
 	call PRIKAZ_02h				; testujeme zda prisel prikaz 02h, pokud ano tak jej provedeme a nastavime platnost prikazu
 	call PRIKAZ_03h				; ---//---
+	PROG_PAGE_0
 	btfss STAV_PRIKAZU,0		; Pokud si zadna z procedur prikaz neprevzala, ...
 	clrf PRIJATYCH_DAT			; ...vymazeme zasobnik prikazu. (prikaz neni pro tuto chvili platny)
 	btfss ATA_ATTRIBUTES,FAT32_LOAD	; cekame dokud nedojde k nasteni nejakeho oddilu
 	goto CEK_PRIKAZ_02h_03h		; pokud byl oddil vporadku nacten, pokracujeme...
 
-	clrf PREH_STAV
+	clrf PREH_STAV0
 ;********************************************************************************************************************
 ;********************************************************************************************************************
 ;********************************************************************************************************************
@@ -104,7 +58,7 @@ CEK_PRIKAZ_02h_03h
 BIG_LOOP
 	; Tady ta smycka beha po nacteni disku a nejake FATky porad dokola.
 	; Pri kazdem prubehu smyckou vyresime prikazy, ktere prisly, a pokud prehravame 
-	; nejakou mp3 a dekoder chce po nas data, tak ho nakrmime alespon jednim sektorem...
+	; nejakou mp3 tak dekoder nakrmime jednim sektorem...
 	; Mimo to musime v teto smycce osefovat, ze kdyz skonci mp3, nacteme dalsi...
 	movfw PRIJATYCH_DAT
 	andlw h'FF'
@@ -113,6 +67,7 @@ BIG_LOOP
 	
 	clrf STAV_PRIKAZU			; smazeme registr signalizujici platnost prikazu
 	; Pokud jsme tady, tak prisel nejaky prikaz, jdem predat prikaz jednotlivym proceduram
+	PROG_PAGE_1
 	call PRIKAZ_04h				; testujeme zda prisel prikaz 04h, pokud ano tak jej provedeme a nastavime platnost prikazu
 	call PRIKAZ_05h				; --- // ---
 	call PRIKAZ_06h				; --- // ---
@@ -122,14 +77,20 @@ BIG_LOOP
 	call PRIKAZ_80h				; --- // ---
 	call PRIKAZ_81h				; --- // ---
 	call PRIKAZ_82h				; --- // ---
+	call PRIKAZ_83h				; --- // ---
+	call PRIKAZ_84h				; --- // ---
+	PROG_PAGE_0
 	
 	btfss STAV_PRIKAZU,0		; Pokud si zadna z procedur prikaz neprevzala, ...
 	clrf PRIJATYCH_DAT			; ...vymazeme zasobnik prikazu. (prikaz neni pro tuto chvili platny)
 
 BIG_LOOP__NENI_PRIKAZ
 
-#IF VS1001==1					; pokud mame pripojen dekoder...
-	btfss PREH_STAV,0			; ...a pokud se prehrava mp3...
+#IF VS1001==1					; pokud mame pripojen dekoder,...
+	btfss PREH_STAV0,0			; ...je zvoleno play,...
+	goto MP3_NOT_PLAY
+
+	btfss PREH_STAV0,1			; ...a je co prehravat...
 	goto MP3_NOT_PLAY
 	
 	movfw PREH_DATA_POZICE
@@ -157,15 +118,51 @@ BIG_LOOP__NENI_PRIKAZ
 	movfw CLUSTER4
 	movwf PREH_DATA_CL4
 	
-	btfss POZICE,0				; Pokud byl cluster posledni v retezci, skoncime s prehravanim...
+	btfss POZICE,0				; Pokud byl cluster posledni v retezci...
 	goto SEND_MP3_DATA
-	
-	bcf PREH_STAV,0
-	bcf PREH_STAV,1
-	bcf PREH_STAV,2
+
+	call DALSI_SKLADBA			; ...tak najdeme dalsi soubor co se ma prehrat (pokud je nastaven repeat a dalsi kraviny)
+	; otestujeme zda se ma nejaka dalsi mp3 prehravat
+	btfss PREH_STAV0,0			; Je zvoleno play?
+	goto MP3_NOT_PLAY
+	btfss PREH_STAV0,1			; Je co prehravat?
 	goto MP3_NOT_PLAY
 
 SEND_MP3_DATA
+	btfss PREH_STAV1,0			; 0. bit = 1 => previjeni mp3 dopredu
+	goto NOT_MP3_REWIND_FORWARD
+	bsf VSREG_MODE_L,1			; fast forward on
+
+	btfss PREH_STAV1,2			; 2. bit = 1 => previji se pomalu, vzdy se po nejake dobe kratky usek souboru prehraje	
+	goto MP3_REWIND_FORWARD
+
+	movfw PREH_CITAC_PREV		; MP3 previjime pomalu...
+	sublw .20					; ...podivame se kolik sektoru jsme previnuly...
+	btfsc STATUS,C				; ...pokud jich je vic jak 20...
+	goto MP3_REWIND_FORWARD		; 
+	
+	bcf VSREG_MODE_L,1			; ...tak dalsi pustime normalne. (fast forward off)
+
+	movfw PREH_CITAC_PREV
+	sublw .25
+	btfss STATUS,Z				; pokud jsme jich uz normalne pustily 5, ... (25-20)
+	goto MP3_REWIND_FORWARD
+
+	clrf PREH_CITAC_PREV		; ...vymazeme citac previjeni (zas nejaky sektory pustime rychle)
+MP3_REWIND_FORWARD
+	movlw VSADDR_MODE
+	movwf TEMP1
+	movfw VSREG_MODE_L
+	movwf TEMP2
+	clrf TEMP3
+	PROG_PAGE_1	
+	call VS_WR_REG
+	PROG_PAGE_0
+	
+	btfsc PREH_STAV1,2			; 2. bit = 1 => previji se pomalu, vzdy se po nejake dobe kratky usek souboru prehraje	
+	incf PREH_CITAC_PREV,f
+NOT_MP3_REWIND_FORWARD
+
 	movfw PREH_DATA_CL1			; Mame zjisteny cluster a jeho cast, kterou mame prehravat...
 	movwf CLUSTER1
 	movfw PREH_DATA_CL2
@@ -186,12 +183,16 @@ SEND_MP3_DATA
 	movlw .0					; posilame celkem 256 slov
 	movwf TEMP1		
 SEND_MP3_WORD
+	PROG_PAGE_1
 	call WAIT_FOR_VSDREQ
+	PROG_PAGE_0
 	call READ_DATA
 	movfw DATA_L
+	PROG_PAGE_1
 	call VS_WR_BYTE
 	movfw DATA_H
 	call VS_WR_BYTE
+	PROG_PAGE_0
 	decfsz TEMP1,f	
 	goto SEND_MP3_WORD
 
@@ -203,6 +204,12 @@ MP3_NOT_PLAY
 ;********************************************************************************************************************
 ;********************************************************************************************************************
 ;********************************************************************************************************************
+;********************************************************************************************************************
+DALSI_SKLADBA
+	bcf PREH_STAV0,0
+	bcf PREH_STAV0,1
+	bcf PREH_STAV0,2	
+	return
 ;********************************************************************************************************************
 INIT_PORT
 	BANK_1
@@ -341,15 +348,7 @@ ODESLI_BUFFER2_ODESILANI
 	INDF_BANK_0		
 	return
 ;**********************************************************
-INTERRUPT					; sem se skace po zavolani preruseni...
-	movwf TEMP_WORKING
-	movfw STATUS
-	movwf TEMP_STATUS
-	movfw FSR
-	movwf TEMP_FSR
-	BANK_0
-	INDF_BANK_0
-
+INTERRUPT					; sem se skace po zavolani preruseni (uz jsou vyreseny ulohy dulezitych registru)
 	btfss PIR1,RCIF			; Meli bychom mit povoleno sice jen jedno preruseni (od USARTU), jeden ale nikdy nevi, proto ten test
 	goto END_OF_INTERRUPT	; Pokud nejde o preruseni od USARTU, tak koncime...
 	movfw RCREG				; !!! vynulovat pøíznak !!!	
@@ -375,6 +374,8 @@ INTERRUPT					; sem se skace po zavolani preruseni...
 ;	movlw ']'
 ;	call WR_USART	
 END_OF_INTERRUPT			; sem skocime kdyz mame vsechny veci kolem preruseni vyrizeny
+	movfw TEMP_PCLATH
+	movwf PCLATH
 	movfw TEMP_FSR
 	movwf FSR
 	movfw TEMP_STATUS
@@ -427,443 +428,3 @@ DELAY_500ms
 ;End of Delay
 	return
 ;**********************************************************
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-; tady jsou procedury resici jednotlive prikazy
-; Pokud je v zasobniku prikaz pro nejakou proceduru, musi tato procedura nastavit byt STAV_PRIKAZU do 1 (i kdyz treba nema vsechny parametry)
-; Pokud procedura najde svuj prikaz a jsou prijate vsechny parametry, musi odeslat nejakou odpoved po USARTu a smazat reg. PRIJATYCH_DAT!!!
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-CEKEJ_PRIKAZ					; ceka dokud nedostaneme nejaky prikaz
-	movfw PRIJATYCH_DAT
-	andlw h'FF'
-	btfsc STATUS,Z				; koukneme se zda prisel nejaky prikaz...
-	goto CEKEJ_PRIKAZ
-	return
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_02h						; 02h - vrat oddily se systemem FAT32
-	movfw 0x078					; prvni byte zasobniku prikazu
-	sublw h'02'					
-	btfss STATUS,Z
-	return						; nebyl prijat prikaz 02h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 02h, nastavime byt STAV_REGISTRU
-	movfw PRIJATYCH_DAT
-	sublw .1					; pro prikaz 02h museji prijit 2 byty (prikaz + 1 parametr)
-	btfsc STATUS,C
-	return						; jeste nemame vsechny parametry
-	; Prisel prikaz 02h s jednim parametrem (vrat oddily se systemem FAT32)
-
-	movfw 0x079					; parametr prikazu 02h (cislo svazku, jehoz parametry chceme vratit)
-	andlw b'00000011'			; parametr musi byt v rozsahu 0-3
-	movwf TEMP1
-	bcf STATUS,C
-	rlf TEMP1,F
-	rlf TEMP1,F
-	rlf TEMP1,F
-	rlf TEMP1,W					; parametr vynasobime 16
-	addlw 0x10					; buffer 2 je v bance 2 na adrese 0x10
-	movwf FSR
-	INDF_BANK_2
-	movlw .16					; budeme odesilat 16 bytu
-	movwf TEMP1
-PRIKAZ_02h__ODESILANI_ODDILU
-	movfw INDF
-	call WR_USART
-	incf FSR,F
-	decfsz TEMP1,F
-	goto PRIKAZ_02h__ODESILANI_ODDILU
-	clrf PRIJATYCH_DAT
-	return
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_03h						; 03h – nastav oddil
-	movfw 0x078					; prvni byte zasobniku prikazu
-	sublw h'03'					
-	btfss STATUS,Z
-	return						; nebyl prijat prikaz 03h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 03h, nastavime byt STAV_REGISTRU
-	movfw PRIJATYCH_DAT
-	sublw .4					; pro prikaz 03h museji prijit 5 byty (prikaz + 4byty parametr)
-	btfsc STATUS,C
-	return						; jeste nemame vsechny parametry
-	; Prisel prikaz 03h s 4bytovym parametrem (nacti oddily se systemem FAT32)
-
-	movfw 0x079					; parametrem prikazu 03h ma byt 4bytova adresa zacatku svazku, ktery se ma nacist
-	movwf LBA1
-	movfw 0x07A
-	movwf LBA2
-	movfw 0x07B
-	movwf LBA3
-	movfw 0x07C
-	movwf LBA4
-	call NACTI_FAT32			; nacte parametry zvoleneho oddilu
-
-	movfw ATA_ATTRIBUTES
-	call WR_USART
-	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
-	return
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_04h						; 04h – vrat velikost clusteru
-	movfw 0x078					; prvni byte zasobniku prikazu
-	sublw h'04'					
-	btfss STATUS,Z
-	return						; nebyl prijat prikaz 04h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 04h, nastavime byt STAV_REGISTRU
-	; pro prikaz 04h nejsou definovany zadne parametry, proto jiz nic jineho netestujeme
-
-	movfw CLUSTER_SIZE
-	call WR_USART
-	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
-	return
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_05h						; 05h – vrat jmeno a adresu souboru
-	movfw 0x078					; prvni byte zasobniku prikazu
-	sublw h'05'					
-	btfss STATUS,Z
-	return						; nebyl prijat prikaz 05h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 05h, nastavime byt STAV_REGISTRU
-	movfw PRIJATYCH_DAT
-	sublw .6					; pro prikaz 05h museji prijit 7 bytu (prikaz + 6byty parametr)
-	btfsc STATUS,C
-	return						; jeste nemame vsechny parametry
-	; Prisel prikaz 05h s 6bytovym parametrem 
-
-	movfw 0x07D					; 5. parametr prikazu (cast adresare) Muze byt v rozsahu 0..[CLUSTER_SIZE -1]
-	movwf POZICE
-	subwf CLUSTER_SIZE,W		; W := CLUSTER_SIZE - [sektor v clusteru]
-								; pokud W <= 0 tak je 5. parametr mimo rozsah. Prvni byte odpovedi bude 80h
-	btfsc STATUS,Z				; pokud neni vysledek nula...
-	goto PRIKAZ_05h__PAR_OK		; ...je parametr OK
-	btfsc STATUS,C				; Pokud neni vysledek zaporny...
-	goto PRIKAZ_05h__PAR_OK		; ...je parametr OK
-
-	;Parametr byl zadan prilis velky (v jednom clusteru je CLUSTER_SIZE * 16 zaznamu)
-PRIKAZ_05h__PAR_NOT_OK
-	INDF_BANK_2
-	movlw 0x10					; 1. byte bufferu 2
-	movwf FSR
-	movlw h'80'					; jako prvni byte odpovedi dame 80h (parametr byl prilis velky)
-	movwf INDF
-	goto PRIKAZ_05h__KONEC
-PRIKAZ_05h__PAR_OK	
-	; Parametr "castClusteru" byl zadan spravne, jdem se podivat zda parametr "CisloZaznamu" je v rozsahu 0..15
-	movfw 0x07E					; kolikaty zaznam v casti adersare (sektoru) mame precist
-	andlw b'11110000'
-	btfss STATUS,Z				; pokud je parametr vetsi jak 15...
-	goto PRIKAZ_05h__PAR_NOT_OK	; ...tak odesleme jako prvni byte odpovedi 80h
-
-	; Jdem precist sektor clusteru, v kterem se nachazi pozadovany zaznam. Cislo tohoto sektoru (offset v clusteru) mame v POZICE.
-	movfw 0x079					; nejnizsi cast clusteru adresare
-	movwf CLUSTER1
-	movfw 0x07A
-	movwf CLUSTER2
-	movfw 0x07B
-	movwf CLUSTER3
-	movfw 0x07C
-	movwf CLUSTER4
-	call CLUSTER_TO_LBA			; zjistime si skutecnou polohu zaznamu na disku
-	movlw .1
-	movwf SECTOR_C
-	call READ_SECTOR			; dame prikaz jej precist
-
-	movfw 0x07E					; kolikaty zaznam v casti adersare (sektoru) mame precist
-	andlw b'00001111'
-	movwf TEMP1					; rozsah by mel byt spravne, pro jistotu jej ale orizneme [0..15]
-	andlw h'FF'
-	btfsc STATUS,Z				; pokud chceme prvni soubor ze sektoru...
-	goto PRIKAZ_05h__MAME_SOUBOR	; ...skocime rovnou na jeho cteni.
-
-	swapf TEMP1,F				; protoze kazdy zaznam o souboru ma 32B=16slov, tak musime TEMP1 vynasobit 16...
-	call PRESKOC				; a tolik slov preskocit (tolik slov je pro nas nepotrebnych)
-PRIKAZ_05h__MAME_SOUBOR
-	call FILE_INFO
-PRIKAZ_05h__KONEC
-	; At uz bylo v zaznamu cokoli, odesleme 16 bytu z BUFFERU 2
-	movlw .16
-	movwf TEMP1
-	call ODESLI_BUFFER2			; odesleme si zaznam o souboru	
-
-	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
-	return
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_06h						; 06h – vrat cislo dalsiho clusteru v alokacnim retezu
-	movfw 0x078					; prvni byte zasobniku prikazu
-	sublw h'06'					
-	btfss STATUS,Z
-	return						; nebyl prijat prikaz 06h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 06h, nastavime byt STAV_REGISTRU
-	movfw PRIJATYCH_DAT
-	sublw .4					; pro prikaz 06h museji prijit 5 bytu (prikaz + 4byty parametr)
-	btfsc STATUS,C
-	return						; jeste nemame vsechny parametry
-	; Prisel prikaz 06h s 4bytovym parametrem 
-
-	movfw 0x079					; nejnizsi cast clusteru
-	movwf CLUSTER1
-	movfw 0x07A
-	movwf CLUSTER2
-	movfw 0x07B
-	movwf CLUSTER3
-	movfw 0x07C
-	movwf CLUSTER4
-	call NEXT_CLUSTER
-	movfw POZICE				; pokud POZICE = 00h, je vse v poradku (vratime c. dalsiho clusteru v retezci). 
-								; Pokud POZICE = FFh byl predany cluster posledni v retezu, nebo byl prazdny...
-	call WR_USART
-	movfw CLUSTER1
-	call WR_USART
-	movfw CLUSTER2
-	call WR_USART
-	movfw CLUSTER3
-	call WR_USART
-	movfw CLUSTER4
-	call WR_USART
-	
-	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
-	return
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_07h						; 07h – cti cluster
-	movfw 0x078					; prvni byte zasobniku prikazu
-	sublw h'07'					
-	btfss STATUS,Z
-	return						; nebyl prijat prikaz 07h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 07h, nastavime byt STAV_REGISTRU
-	movfw PRIJATYCH_DAT
-	sublw .4					; pro prikaz 07h museji prijit 5 bytu (prikaz + 4byty parametr)
-	btfsc STATUS,C
-	return						; jeste nemame vsechny parametry
-	; Prisel prikaz 06h s 4bytovym parametrem 
-
-	movfw 0x079					; nejnizsi cast clusteru
-	movwf CLUSTER1
-	movfw 0x07A
-	movwf CLUSTER2
-	movfw 0x07B
-	movwf CLUSTER3
-	movfw 0x07C
-	movwf CLUSTER4
-	clrf POZICE
-	call CLUSTER_TO_LBA			; zjistime si skutecnou polohu pozadovaneho clusteru na disku...
-	movfw CLUSTER_SIZE
-	movwf SECTOR_C				; tentokrat cteme cely cluster a ne sector
-	call READ_SECTOR;S
-
-	movfw CLUSTER_SIZE
-	movwf TEMP2					; kolik sektoru budeme odesilat
-
-PRIKAZ_07h__ODESLI_SECTOR
-	movlw .0					; budeme odesilat cely sector (256slov = 512bytu)
-	movwf TEMP1
-	call ODESLI_DATA
-	decfsz TEMP2,F 				; a to tolikrat, kolik ma cluster sektroru
-	goto PRIKAZ_07h__ODESLI_SECTOR
-	
-	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
-	return
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_08h						; 08h – vrat velikost souboru
-	movfw 0x078					; prvni byte zasobniku prikazu
-	sublw h'08'					
-	btfss STATUS,Z
-	return						; nebyl prijat prikaz 08h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 08h, nastavime byt STAV_REGISTRU
-	movfw PRIJATYCH_DAT
-	sublw .6					; pro prikaz 08h museji prijit 7 bytu (prikaz + 6byty parametr)
-	btfsc STATUS,C
-	return						; jeste nemame vsechny parametry
-	; Prisel prikaz 08h s 6bytovym parametrem 
-
-	movfw 0x07D					; 5. parametr prikazu (cast adresare) Muze byt v rozsahu 0..[CLUSTER_SIZE -1]
-	movwf POZICE
-	subwf CLUSTER_SIZE,W		; W := CLUSTER_SIZE - [sektor v clusteru]
-								; pokud W <= 0 tak je 5. parametr mimo rozsah. Prvni byte odpovedi bude 80h
-	btfsc STATUS,Z				; pokud neni vysledek nula...
-	goto PRIKAZ_08h__PAR_OK		; ...je parametr OK
-	btfsc STATUS,C				; Pokud neni vysledek zaporny...
-	goto PRIKAZ_08h__PAR_OK		; ...je parametr OK
-
-	;Parametr byl zadan prilis velky (v jednom clusteru je CLUSTER_SIZE * 16 zaznamu)
-PRIKAZ_08h__PAR_NOT_OK
-	movlw h'80'					; jako prvni byte odpovedi dame 80h (parametr byl prilis velky)
-	movwf TEMP2
-	goto PRIKAZ_08h__KONEC
-PRIKAZ_08h__PAR_OK	
-	; Parametr "castClusteru" byl zadan spravne, jdem se podivat zda parametr "CisloZaznamu" je v rozsahu 0..15
-	movfw 0x07E					; kolikaty zaznam v casti adersare (sektoru) mame precist
-	andlw b'11110000'
-	btfss STATUS,Z				; pokud je parametr vetsi jak 15...
-	goto PRIKAZ_08h__PAR_NOT_OK	; ...tak odesleme jako prvni byte odpovedi 80h
-
-	; Jdem precist sektor clusteru, v kterem se nachazi pozadovany zaznam. Cislo tohoto sektoru (offset v clusteru) mame v POZICE.
-	movfw 0x079					; nejnizsi cast clusteru adresare
-	movwf CLUSTER1
-	movfw 0x07A
-	movwf CLUSTER2
-	movfw 0x07B
-	movwf CLUSTER3
-	movfw 0x07C
-	movwf CLUSTER4
-	call CLUSTER_TO_LBA			; zjistime si skutecnou polohu zaznamu na disku
-	movlw .1
-	movwf SECTOR_C
-	call READ_SECTOR			; dame prikaz jej precist
-
-	movfw 0x07E					; kolikaty zaznam v casti adersare (sektoru) mame precist
-	andlw b'00001111'
-	movwf TEMP1					; rozsah by mel byt spravne, pro jistotu jej ale orizneme [0..15]
-	andlw h'FF'
-	btfsc STATUS,Z				; pokud chceme prvni soubor ze sektoru...
-	goto PRIKAZ_08h__MAME_SOUBOR	; ...skocime rovnou na jeho cteni.
-
-	swapf TEMP1,F				; protoze kazdy zaznam o souboru ma 32B=16slov, tak musime TEMP1 vynasobit 16...
-	call PRESKOC				; a tolik slov preskocit (tolik slov je pro nas nepotrebnych)
-PRIKAZ_08h__MAME_SOUBOR
-	movlw h'00'					; jako prvni byte odpovedi dame 00h -> spravne parametry
-	movwf TEMP2
-	call FILE_SIZE
-PRIKAZ_08h__KONEC
-	movfw TEMP2
-	call WR_USART				; signalizace stavu odpovedi
-
-	movlw .4
-	movwf TEMP1
-	call ODESLI_BUFFER2			; odesleme si velikost souboru
-
-	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
-	return
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_80h						; 80h – hraj mp3 soubor
-	movfw 0x078					; prvni byte zasobniku prikazu
-	sublw h'80'
-	btfss STATUS,Z
-	return						; nebyl prijat prikaz 80h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 80h, nastavime byt STAV_REGISTRU
-	movfw PRIJATYCH_DAT
-	sublw .6					; pro prikaz 80h museji prijit 7 bytu (prikaz + 6byty parametr)
-	btfsc STATUS,C
-	return						; jeste nemame vsechny parametry
-	; Prisel prikaz 08h s 6bytovym parametrem 
-
-	movfw 0x07D					; 5. parametr prikazu (cast adresare) Muze byt v rozsahu 0..[CLUSTER_SIZE -1]
-	movwf POZICE
-	subwf CLUSTER_SIZE,W		; W := CLUSTER_SIZE - [sektor v clusteru]
-								; pokud W <= 0 tak je 5. parametr mimo rozsah. Prvni byte odpovedi bude 80h
-	btfsc STATUS,Z				; pokud neni vysledek nula...
-	goto PRIKAZ_80h__PAR_OK		; ...je parametr OK
-	btfsc STATUS,C				; Pokud neni vysledek zaporny...
-	goto PRIKAZ_80h__PAR_OK		; ...je parametr OK
-
-	;Parametr byl zadan prilis velky (v jednom clusteru je CLUSTER_SIZE * 16 zaznamu)
-PRIKAZ_80h__PAR_NOT_OK
-	INDF_BANK_2
-	movlw 0x10					; 1. byte bufferu 2
-	movwf FSR
-	movlw h'80'					; jako prvni byte odpovedi dame 80h (parametr byl prilis velky)
-	movwf INDF
-	goto PRIKAZ_80h__KONEC
-PRIKAZ_80h__PAR_OK	
-	; Parametr "castClusteru" byl zadan spravne, jdem se podivat zda parametr "CisloZaznamu" je v rozsahu 0..15
-	movfw 0x07E					; kolikaty zaznam v casti adersare (sektoru) mame precist
-	andlw b'11110000'
-	btfss STATUS,Z				; pokud je parametr vetsi jak 15...
-	goto PRIKAZ_80h__PAR_NOT_OK	; ...tak odesleme jako prvni byte odpovedi 80h
-
-	; Jdem precist sektor clusteru, v kterem se nachazi pozadovany zaznam. Cislo tohoto sektoru (offset v clusteru) mame v POZICE.
-	movfw 0x079					; nejnizsi cast clusteru adresare
-	movwf CLUSTER1
-	movfw 0x07A
-	movwf CLUSTER2
-	movfw 0x07B
-	movwf CLUSTER3
-	movfw 0x07C
-	movwf CLUSTER4
-	call CLUSTER_TO_LBA			; zjistime si skutecnou polohu zaznamu na disku
-	movlw .1
-	movwf SECTOR_C
-	call READ_SECTOR			; dame prikaz jej precist
-
-	movfw 0x07E					; kolikaty zaznam v casti adersare (sektoru) mame precist
-	andlw b'00001111'
-	movwf TEMP1					; rozsah by mel byt spravne, pro jistotu jej ale orizneme [0..15]
-	andlw h'FF'
-	btfsc STATUS,Z				; pokud chceme prvni soubor ze sektoru...
-	goto PRIKAZ_80h__MAME_SOUBOR	; ...skocime rovnou na jeho cteni.
-
-	swapf TEMP1,F				; protoze kazdy zaznam o souboru ma 32B=16slov, tak musime TEMP1 vynasobit 16...
-	call PRESKOC				; a tolik slov preskocit (tolik slov je pro nas nepotrebnych)
-PRIKAZ_80h__MAME_SOUBOR
-	call FILE_INFO
-
-	INDF_BANK_2
-	movlw 0x10					; 1. byte bufferu 2
-	movwf FSR
-	movfw INDF
-	sublw h'06'					; pokud na zadanem miste se nachazi soubor s priponou mp3...
-	btfss STATUS,Z
-	goto PRIKAZ_80h__KONEC
-			
-	; ...nastavime jej jako prehravany soubor.
-	movlw 0x1C					; 13. byte bufferu 2
-	movwf FSR
-	movfw INDF
-	movwf PREH_DATA_CL1
-	incf FSR,f
-	movfw INDF
-	movwf PREH_DATA_CL2
-	incf FSR,f
-	movfw INDF
-	movwf PREH_DATA_CL3
-	incf FSR,f
-	movfw INDF
-	movwf PREH_DATA_CL4
-	
-	clrf PREH_DATA_POZICE
-	movlw b'00000011'
-	movwf PREH_STAV
-
-PRIKAZ_80h__KONEC
-	INDF_BANK_2
-	movlw 0x10					; 1. byte bufferu 2
-	movwf FSR
-	movfw INDF
-	call WR_USART	
-	
-	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
-	return
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_81h						; 81h – vrat stav prehravaneho souboru
-	movfw 0x078					; prvni byte zasobniku prikazu
-	sublw h'81'
-	btfss STATUS,Z
-	return						; nebyl prijat prikaz 04h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 04h, nastavime byt STAV_REGISTRU
-	; pro prikaz 04h nejsou definovany zadne parametry, proto jiz nic jineho netestujeme
-
-	movfw PREH_STAV
-	call WR_USART
-	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
-	return
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_82h						; 82h – nastav hlasitost
-	movfw 0x078					; prvni byte zasobniku prikazu
-	sublw h'82'
-	btfss STATUS,Z
-	return						; nebyl prijat prikaz 82h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 82h, nastavime byt STAV_REGISTRU
-	movfw PRIJATYCH_DAT
-	sublw .2					; pro prikaz 82h museji prijit 3 byty (prikaz + 2byty parametr)
-	btfsc STATUS,C
-	return						; jeste nemame vsechny parametry
-	; Prisel prikaz 82h s 2bytovym parametrem 
-
-	movfw 0x079					; hlasitost pro levy kanal
-	movwf VSREG_VOL_L	
-	movfw 0x07A					; hlasitost pro pravy kanal
-	movwf VSREG_VOL_H
-	call VS_SET_VOLUME			; nastavime hlasitost	
-
-	movlw h'FF'
-	call WR_USART
-	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik
-	return
-; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-	END
