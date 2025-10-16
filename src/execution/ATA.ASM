@@ -547,8 +547,8 @@ DELAY_25us
 	; (Fosc = 20 MHz , instr. cyklus= 0.20 us) 25us / 0.20 us = 125 instrukcnich cyklu
 	; (Fosc = 16 MHz , instr. cyklus= 0.25 us) 25us / 0.25 us = 100 instrukcnich cyklu
 	; (Fosc = 04 MHz , instr. cyklus= 1.00 us) 25us / 1.00 us =  25 instrukcnich cyklu	
-        ;MOVLW 0x2A  ;42 DEC -> Delay 127 cycles
-        MOVLW 0x21   ;33 DEC -> Delay 100 cycles
+        MOVLW 0x2A  ;42 DEC -> Delay 127 cycles
+        ;MOVLW 0x21   ;33 DEC -> Delay 100 cycles
         ;MOVLW 0x08  ;25 DEC -> Delay  25 cycles
         MOVWF TEMP1
         DECFSZ TEMP1,F

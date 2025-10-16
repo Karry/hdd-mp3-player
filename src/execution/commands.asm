@@ -17,7 +17,7 @@ PRIKAZ_02h						; 02h - vrat oddily se systemem FAT32
 	sublw h'02'					
 	btfss STATUS,Z
 	return						; nebyl prijat prikaz 02h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 02h, nastavime byt STAV_REGISTRU
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 02h, nastavime byt STAV_PRIKAZU
 	movfw PRIJATYCH_DAT
 	sublw .1					; pro prikaz 02h museji prijit 2 byty (prikaz + 1 parametr)
 	btfsc STATUS,C
@@ -53,7 +53,7 @@ PRIKAZ_03h						; 03h – nastav oddil
 	sublw h'03'					
 	btfss STATUS,Z
 	return						; nebyl prijat prikaz 03h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 03h, nastavime byt STAV_REGISTRU
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 03h, nastavime byt STAV_PRIKAZU
 	movfw PRIJATYCH_DAT
 	sublw .4					; pro prikaz 03h museji prijit 5 byty (prikaz + 4byty parametr)
 	btfsc STATUS,C
@@ -84,7 +84,7 @@ PRIKAZ_04h						; 04h – vrat velikost clusteru
 	sublw h'04'					
 	btfss STATUS,Z
 	return						; nebyl prijat prikaz 04h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 04h, nastavime byt STAV_REGISTRU
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 04h, nastavime byt STAV_PRIKAZU
 	; pro prikaz 04h nejsou definovany zadne parametry, proto jiz nic jineho netestujeme
 
 	movfw CLUSTER_SIZE
@@ -99,7 +99,7 @@ PRIKAZ_05h						; 05h – zjisti, zda je cluster prvni v adresari
 	sublw h'05'
 	btfss STATUS,Z
 	return						; nebyl prijat prikaz 05h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 05h, nastavime byt STAV_REGISTRU
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 05h, nastavime byt STAV_PRIKAZU
 	movfw PRIJATYCH_DAT
 	sublw .6					; pro prikaz 05h musi prijit 7 bytu (prikaz + 6bytu parametr)
 	btfsc STATUS,C
@@ -164,7 +164,7 @@ PRIKAZ_06h						; 06h – vrat cislo dalsiho clusteru v alokacnim retezu
 	sublw h'06'					
 	btfss STATUS,Z
 	return						; nebyl prijat prikaz 06h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 06h, nastavime byt STAV_REGISTRU
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 06h, nastavime byt STAV_PRIKAZU
 	movfw PRIJATYCH_DAT
 	sublw .4					; pro prikaz 06h museji prijit 5 bytu (prikaz + 4byty parametr)
 	btfsc STATUS,C
@@ -202,12 +202,12 @@ PRIKAZ_07h						; 07h – cti cluster
 	sublw h'07'					
 	btfss STATUS,Z
 	return						; nebyl prijat prikaz 07h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 07h, nastavime byt STAV_REGISTRU
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 07h, nastavime byt STAV_PRIKAZU
 	movfw PRIJATYCH_DAT
 	sublw .4					; pro prikaz 07h museji prijit 5 bytu (prikaz + 4byty parametr)
 	btfsc STATUS,C
 	return						; jeste nemame vsechny parametry
-	; Prisel prikaz 06h s 4bytovym parametrem 
+	; Prisel prikaz 07h s 4bytovym parametrem 
 
 	movfw 0x079					; nejnizsi cast clusteru
 	movwf CLUSTER1
@@ -245,7 +245,7 @@ PRIKAZ_08h						; 08h – zjisti velikost souboru
 	sublw h'08'
 	btfss STATUS,Z
 	return						; nebyl prijat prikaz 08h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 08h, nastavime byt STAV_REGISTRU
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 08h, nastavime byt STAV_PRIKAZU
 	movfw PRIJATYCH_DAT
 	sublw .6					; pro prikaz 08h musi prijit 7 bytu (prikaz + 6bytu parametr)
 	btfsc STATUS,C
@@ -302,12 +302,12 @@ PRIKAZ_08h_KONEC
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-PRIKAZ_09h						; 09h – nastav hledání
+PRIKAZ_09h						; 09h – hledej zaznam
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'09'
 	btfss STATUS,Z
 	return						; nebyl prijat prikaz 09h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 09h, nastavime byt STAV_REGISTRU
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 09h, nastavime byt STAV_PRIKAZU
 	movfw PRIJATYCH_DAT
 	sublw .7					; pro prikaz 09h musi prijit 8 bytu (prikaz + 7bytu parametr)
 	btfsc STATUS,C
@@ -368,7 +368,7 @@ PRIKAZ_0Ah						; 0Ah – precti dlouhe jmeno
 	sublw h'0A'
 	btfss STATUS,Z
 	return						; nebyl prijat prikaz 0Ah
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 0Ah, nastavime byt STAV_REGISTRU
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 0Ah, nastavime byt STAV_PRIKAZU
 	movfw PRIJATYCH_DAT
 	sublw .6					; pro prikaz 0Ah musi prijit 7 bytu (prikaz + 6bytu parametr)
 	btfsc STATUS,C
@@ -419,12 +419,131 @@ PRIKAZ_0Ah_KONEC
 	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
 	return
 ; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+PRIKAZ_0Bh						; 0Bh – zjisti velikost fragmentu
+	movfw 0x078					; prvni byte zasobniku prikazu
+	sublw h'0b'					
+	btfss STATUS,Z
+	return						; nebyl prijat prikaz 0Bh
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 0Bh, nastavime byt STAV_PRIKAZU
+	movfw PRIJATYCH_DAT
+	sublw .4					; pro prikaz 0Bh museji prijit 5 bytu (prikaz + 4byty parametr)
+	btfsc STATUS,C
+	return						; jeste nemame vsechny parametry
+	; Prisel prikaz 0Bh s 4bytovym parametrem 
+
+	movfw 0x079					; nejnizsi cast clusteru
+	movwf CLUSTER1
+	movfw 0x07A
+	movwf CLUSTER2
+	movfw 0x07B
+	movwf CLUSTER3
+	movfw 0x07C
+	movwf CLUSTER4
+
+	PROG_PAGE_0
+	call ZJISTI_FRAGMENT
+	PROG_PAGE_1
+; v CLUSTER[1-4] prijme cislo clusteru a do FRAGMENT[1-2] umisti kolik clusteru 
+; po tomto clusteru nasledujich (vcetne) tvori jeden fragment
+
+; Pokud soucasny cluster je prazdny (coz by se stat nemelo) vrati v POZICE FFh
+; Jinak, pokud s vse povede, dame do POZICE 0
+
+; ! PODPROGRAM NENI POUZITELNY PRO CLUSTER 0 (prvni cluster ROOT adresare)
+; ! PODPROGRAM NETESTUJE ZDA NEBYLO ZADANO VETSI CISLO NEZ JE POCET CLUSTERU !!!
+	
+	PROG_PAGE_0
+	movfw POZICE 
+	call WR_USART
+	movfw FRAGMENT1
+	call WR_USART
+	movfw FRAGMENT2
+	call WR_USART
+	PROG_PAGE_1
+	
+	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
+	return
+; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+PRIKAZ_0Ch						; 0Ch – najdi záznam o tomto adresáøi v nadøazeném adresáøi
+	movfw 0x078					; prvni byte zasobniku prikazu
+	sublw h'0C'					
+	btfss STATUS,Z
+	return						; nebyl prijat prikaz 0Ch
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 0Ch, nastavime byt STAV_PRIKAZU
+	movfw PRIJATYCH_DAT
+	sublw .4					; pro prikaz 0Ch museji prijit 5 bytu (prikaz + 4byty parametr)
+	btfsc STATUS,C
+	return						; jeste nemame vsechny parametry
+	; Prisel prikaz 0Ch s 4bytovym parametrem 
+
+	movfw 0x079					; nejnizsi cast clusteru
+	movwf CLUSTER1
+	movfw 0x07A
+	movwf CLUSTER2
+	movfw 0x07B
+	movwf CLUSTER3
+	movfw 0x07C
+	movwf CLUSTER4
+
+	movfw CLUSTER1
+	iorwf CLUSTER2,W
+	iorwf CLUSTER3,W
+	iorwf CLUSTER4,W
+	btfsc STATUS,Z
+	goto PRIKAZ_0Ch_JEROOT		; pokud CLUSTER[1-4]=0, tak se jedna o 1. cluster ROOT adr., proto nemusime dale resit co tam je...
+
+	call PRVNI_CL_ADRESARE		; V POZICE vrati 00h, pokud cluster je prvni cluster nejakeho adresare, FFh, pokud neobsahuje adresar
+	movfw POZICE
+	andlw h'FF'
+	btfss STATUS,Z
+	goto PRIKAZ_0Ch_NENI_ZACATEK_ADR	
+
+	call HLEDEJ_V_NADRAZENEM
+
+	movlw h'00'
+	goto PRIKAZ_0Ch_ODESLI
+PRIKAZ_0Ch_NENI_ZACATEK_ADR
+	movlw h'81'
+	goto PRIKAZ_0Ch_ODESLI
+PRIKAZ_0Ch_JEROOT
+	movlw h'01'
+PRIKAZ_0Ch_ODESLI
+
+	PROG_PAGE_0
+	call WR_USART
+
+	INDF_BANK_3
+	movlw h'90'
+	movwf FSR
+
+	movfw INDF
+	call WR_USART
+	incf FSR,f
+	movfw INDF
+	call WR_USART
+	incf FSR,f
+	movfw INDF
+	call WR_USART
+	incf FSR,f
+	movfw INDF
+	call WR_USART
+	incf FSR,f
+
+	movfw ZAZNAM1
+	call WR_USART
+	movfw ZAZNAM2
+	call WR_USART
+	PROG_PAGE_1
+	
+	clrf PRIJATYCH_DAT			; vyprazdnime zasobnik prikazu
+	return
+; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 PRIKAZ_80h						; 80h – hraj mp3 soubor
 	movfw 0x078					; prvni byte zasobniku prikazu
 	sublw h'80'
 	btfss STATUS,Z
 	return						; nebyl prijat prikaz 80h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 80h, nastavime byt STAV_REGISTRU
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 80h, nastavime byt STAV_PRIKAZU
 	movfw PRIJATYCH_DAT
 	sublw .6					; pro prikaz 80h musi prijit 7 bytu (prikaz + 6bytu parametr)
 	btfsc STATUS,C
@@ -486,15 +605,35 @@ PRIKAZ_80h_PAR2_OK
 	movwf FSR
 	movfw INDF
 	movwf PREH_DATA_CL1
+	movwf CLUSTER1
 	incf FSR,f
 	movfw INDF
 	movwf PREH_DATA_CL2
+	movwf CLUSTER2
 	incf FSR,f
 	movfw INDF
 	movwf PREH_DATA_CL3
+	movwf CLUSTER3
 	incf FSR,f
 	movfw INDF
 	movwf PREH_DATA_CL4
+	movwf CLUSTER4
+
+	PROG_PAGE_0
+	call ZJISTI_FRAGMENT
+	PROG_PAGE_1
+; v CLUSTER[1-4] prijme cislo clusteru a do FRAGMENT[1-2] umisti kolik clusteru 
+; po tomto clusteru nasledujich (vcetne) tvori jeden fragment
+
+; Pokud soucasny cluster je prazdny (coz by se stat nemelo) vrati v POZICE FFh
+; Jinak, pokud s vse povede, dame do POZICE 0
+
+; ! PODPROGRAM NENI POUZITELNY PRO CLUSTER 0 (prvni cluster ROOT adresare)
+; ! PODPROGRAM NETESTUJE ZDA NEBYLO ZADANO VETSI CISLO NEZ JE POCET CLUSTERU !!!
+	movfw FRAGMENT1
+	movwf PREH_D_FRAGMENT1
+	movfw FRAGMENT2
+	movwf PREH_D_FRAGMENT2
 	
 	movfw 0x07D
 	movwf PREH_ZAZNAM1
@@ -545,7 +684,7 @@ PRIKAZ_81h						; 81h – vrat stav prehravaneho souboru
 	sublw h'81'
 	btfss STATUS,Z
 	return						; nebyl prijat prikaz 81h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 81h, nastavime byt STAV_REGISTRU
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 81h, nastavime byt STAV_PRIKAZU
 	; pro prikaz 81h nejsou definovany zadne parametry, proto jiz nic jineho netestujeme
 
 	movfw PREH_STAV0
@@ -567,7 +706,7 @@ PRIKAZ_81h						; 81h – vrat stav prehravaneho souboru
 	PROG_PAGE_0
 	call WR_USART
 	movfw TEMP3
-	call WR_USART	
+	call WR_USART
 	PROG_PAGE_1
 
 ;	movlw VSADDR_STATUS
@@ -586,7 +725,7 @@ PRIKAZ_82h						; 82h – nastav hlasitost
 	sublw h'82'
 	btfss STATUS,Z
 	return						; nebyl prijat prikaz 82h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 82h, nastavime byt STAV_REGISTRU
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 82h, nastavime byt STAV_PRIKAZU
 	movfw PRIJATYCH_DAT
 	sublw .2					; pro prikaz 82h museji prijit 3 byty (prikaz + 2byty parametr)
 	btfsc STATUS,C
@@ -611,7 +750,7 @@ PRIKAZ_83h						; 83h – vrat informace o prehravanem souboru
 	sublw h'83'
 	btfss STATUS,Z
 	return						; nebyl prijat prikaz 83h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 83h, nastavime byt STAV_REGISTRU
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 83h, nastavime byt STAV_PRIKAZU
 	; pro prikaz 83h nejsou definovane zadne parametry, proto jiz nic jineho netestujeme
 
 	movlw VSADDR_AUDATA
@@ -669,7 +808,7 @@ PRIKAZ_84h						; 84h – nastav stav prehravani
 	sublw h'84'
 	btfss STATUS,Z
 	return						; nebyl prijat prikaz 84h
-	bsf STAV_PRIKAZU,0			; mame tu prikaz 84h, nastavime byt STAV_REGISTRU
+	bsf STAV_PRIKAZU,0			; mame tu prikaz 84h, nastavime byt STAV_PRIKAZU
 	movfw PRIJATYCH_DAT
 	sublw .2					; pro prikaz 8h museji prijit 3 byty (prikaz + 2byty parametr)
 	btfsc STATUS,C
@@ -714,6 +853,10 @@ PRIKAZ_84h						; 84h – nastav stav prehravani
 	movwf TEMP2
 	clrf TEMP3
 	call VS_WR_REG
+
+	btfss PREH_STAV1,4			; 4. bit = 1 => MUTE
+	call VS_SET_VOLUME			; nastavime hlasitost
+								; nevim sice proc, ale kdyz prepisu VS reg. STATUS, zmeni se hlasitost
 
 	PROG_PAGE_0
 	movlw h'FF'

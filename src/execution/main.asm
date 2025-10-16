@@ -12,26 +12,31 @@
 ;
 ;
 ; dodelat:
-;	- Podporu dlouhych nazvu souboru
 ;	- podporu ID3v1
 ;	- pak uz jen vychytavky...	(napr. do vs1001 naprogramovat ekvalizer a nejak ho ovladat...)
 ;	- najit a zabit chyby
 ;
 ; chyby o kterych vim:
-;	- Obcas se nechce vs1001k resetovat. Snad tomu pomuze mala hardwarova uprava.
-;	- Naopak se nekdy stane, ze se resetuje samovolne, snad tomu pomuze pridani tlumivek na napajeni.
 ;
-; srpen 2005 - rijen 2005 Karry - lukas.karas@centrum.cz
+; vyreseen chyby:
+;	- Pri cteni SCI (registru VS1001k) dochazi k praskani na vystupu a obcas k resetovani dekoderu
+;		...vyreseno postavenim konecne faze hardwaru
+;	- pri cteni nekterych clusteru jsou precteny clustery jine
+;		...tato chyba byla zpusobena chybnym scitanim (MPLAB SIM se chova jinak nez PIC - decf u picu nemeni priznak Carry!!!)
+;	- Obcas se nechce vs1001k resetovat. Snad tomu pomuze mala hardwarova uprava.
+;		...opravdu tomu znacne pomohlo pridani kondiku a odporu na reset jako u PICu (v datasheetu je tato uprava zminovana jen u vs1002.(?))
+;
+; srpen 2005 - brezen 2006 Karry - lukas.karas@centrum.cz
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
 ;**********************************************************
-;   VERZE 1.0
+;   VERZE 1.1
 ;**********************************************************
-; !!!!!!!! VSECHNY CASOVE SMYCKY JSOU POCITANY NA Fosc=16MHz !!!!!
+; !!!!!!!! VSECHNY CASOVE SMYCKY JSOU POCITANY NA Fosc=20MHz !!!!!
 ; !!!!!!!! NASTAVENI USARTu TAKY !!!!!!!
-	LIST		p=PIC16f877,C=132,n=60
+	LIST		p=PIC16F877A,C=132,n=60
 	__CONFIG	_WDT_OFF & _HS_OSC & _PWRTE_OFF & _BODEN_OFF & _LVP_OFF 
 			; LVP_OFF = RB3 jako digitalni I/O
 	errorlevel -302		; vypnuti Message [302]: Register in operand not in bank 0.
@@ -39,7 +44,7 @@
 						; ! zjednoduseni vypisu, ale riziko prehlednuti chyby
 ;**********************************************************
 
-	include "P16F877.inc" 	; definice blbosti kolem procesoru
+	include "P16F877A.inc" 	; definice blbosti kolem procesoru
 	include "mp3.inc" 		; definice promennych, konstant a portu
 
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -76,6 +81,8 @@
 	include "commands.asm"	; podprogramy na obsluhu prikazu (od ridiciho procesoru)
 	include "filesystem.asm"; podprogramy pro praci s adresari a setrideni obsahu adresaru
  org 0x1000					; PAGE 2
+	nop						; (aby nas prekladac varoval, az dosahneme teto stranky)
  org 0x1800					; PAGE 3
+	nop						; (aby nas prekladac varoval, az dosahneme teto stranky)
 ;**********************************************************
 	END

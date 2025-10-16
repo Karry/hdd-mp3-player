@@ -170,6 +170,11 @@ VS_WR_REG	; zapise 16bitove slovo (TEMP2,TEMP3) do registru mp3 dekoderu (TEMP1)
 			; 16bit dato se odesila od nejvyssiho bitu (15,14...8,7...1,0)
 			; kde TEMP3 = bity 15-8 ; TEMP2 = bity 7-0
 ; pri praci pouziva TEMP1, TEMP2, TEMP3, TEMPW
+	btfss MP3_DREQ
+	goto $-1
+	; v datasheetu k VS1001k o tom sice nic nepisou, v diskuzi na ikoras.iglu.cz mi bylo al porazeno, 
+	; ze necekani na DREQ pri cteni/zapisu registru muze zpusobovat praskani n vystupu...
+
 	bcf MP3_CS			; po SI posilame prikaz
 	movlw b'00000010'	; write
 	call VS_WR_BYTE	
@@ -179,6 +184,8 @@ VS_WR_REG	; zapise 16bitove slovo (TEMP2,TEMP3) do registru mp3 dekoderu (TEMP1)
 	call VS_WR_BYTE
 	movfw TEMP2 		; dolni slabika
 	call VS_WR_BYTE
+
+	call DELAY_5us		; pozor, prepise TEMP1
 	bsf MP3_CS
 	return
 ;**********************************************************
@@ -188,6 +195,11 @@ VS_WR_REG	; zapise 16bitove slovo (TEMP2,TEMP3) do registru mp3 dekoderu (TEMP1)
 VS_RD_REG	; precte 16bitove slovo (TEMP3,TEMP2) z registru mp3 dekoderu (TEMP1)
 			; kde TEMP3 = bity 15-8 ; TEMP2 = bity 7-0
 ; pri praci pouziva TEMP1, TEMP2, TEMP3, TEMPW
+	btfss MP3_DREQ
+	goto $-1
+	; v datasheetu k VS1001k o tom sice nic nepisou, v diskuzi na ikoras.iglu.cz mi bylo al porazeno, 
+	; ze necekani na DREQ pri cteni/zapisu registru muze zpusobovat praskani n vystupu...
+
 	bcf MP3_CS			; po SI posilame prikaz
 	movlw b'00000011'	; read
 	call VS_WR_BYTE	
@@ -197,6 +209,8 @@ VS_RD_REG	; precte 16bitove slovo (TEMP3,TEMP2) z registru mp3 dekoderu (TEMP1)
 	movwf TEMP3 		; horni slabika
 	call VS_RD_BYTE
 	movwf TEMP2 		; dolni slabika
+
+	call DELAY_5us		; pozor, prepise TEMP1
 	bsf MP3_CS
 	return
 ;**********************************************************
@@ -283,8 +297,8 @@ VS_END_BEEP
 	return
 ;**********************************************************
 VS_BEEP
-	call VS_SOFT_RESET
-	call WAIT_FOR_VSDREQ
+;	call VS_SOFT_RESET
+;	call WAIT_FOR_VSDREQ
 
 	bsf MP3_CS			; po SI posilam data
 	movlw h'53'
@@ -327,5 +341,18 @@ VS_INIT
 	call VS_END_BEEP
 	call VS_SOFT_RESET		; resetujeme
 
+	return
+;**********************************************************
+DELAY_5us
+	; pouziva TEMP1
+	; (Fosc = 20 MHz , instr. cyklus= 0.20 us) 5us / 0.20 us = 25 instrukcnich cyklu
+	; (Fosc = 16 MHz , instr. cyklus= 0.25 us) 5us / 0.25 us = 20 instrukcnich cyklu
+;Variable: TMP0
+;Delay 25 cycles
+        MOVLW 0x08  ;8 DEC
+        MOVWF TEMP1
+        DECFSZ TEMP1,F
+        GOTO $-1
+;End of Delay
 	return
 ;**********************************************************

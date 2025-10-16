@@ -6,7 +6,7 @@ START
 	call DELAY_25us 	; zezacatku dost kolisa...
 	call DELAY_25us
 
-	call POZDRAV				; abych se u kompu nenudil
+;	call POZDRAV				; abych se u kompu nenudil
 
 	PROG_PAGE_1
 	call VS_INIT
@@ -57,7 +57,7 @@ BIG_LOOP
 	; Tady ta smycka beha po nacteni disku a nejake FATky porad dokola.
 	; Pri kazdem prubehu smyckou vyresime prikazy, ktere prisly, a pokud prehravame 
 	; nejakou mp3 tak dekoder nakrmime jednim sektorem...
-	; Mimo to musime v teto smycce osefovat, ze kdyz skonci mp3, nacteme dalsi...
+	; Mimo to je v teto smycce osefovano, ze kdyz skonci mp3, nacteme dalsi... (v zavislosti na nastaveni repeatu)
 	movfw PRIJATYCH_DAT
 	andlw h'FF'
 	btfsc STATUS,Z
@@ -73,6 +73,8 @@ BIG_LOOP
 	call PRIKAZ_08h				; --- // ---
 	call PRIKAZ_09h				; --- // ---
 	call PRIKAZ_0Ah				; --- // ---
+	call PRIKAZ_0Bh				; --- // ---
+	call PRIKAZ_0Ch				; --- // ---
 
 	call PRIKAZ_80h				; --- // ---
 	call PRIKAZ_81h				; --- // ---
@@ -97,6 +99,11 @@ BIG_LOOP__NENI_PRIKAZ
 	btfss STATUS,Z				; ...podivame se zda jiz nejsme na konci clusteru...
 	goto SEND_MP3_DATA
 
+	movfw PREH_D_FRAGMENT1		; ...pokud ano, podivame se zda nejsme na posledni casti fragmentu...
+	iorwf PREH_D_FRAGMENT2,w
+	btfss STATUS,Z
+	goto BIG_LOOP_DEC_FRAGMENT	; ...pokud ne, tak PREH_D_FRAGMENT1-- ; PREH_DATA_CL++
+
 	movfw PREH_DATA_CL1			; ...pokud jo, tak si najdeme dalsi cluster v retezci.
 	movwf CLUSTER1
 	movfw PREH_DATA_CL2
@@ -118,7 +125,7 @@ BIG_LOOP__NENI_PRIKAZ
 	movwf PREH_DATA_CL4
 	
 	btfss POZICE,0				; Pokud byl cluster posledni v retezci...
-	goto SEND_MP3_DATA
+	goto BIG_LOOP_DALSI_FRAGMENT
 
 	call DALSI_SKLADBA			; ...tak najdeme dalsi soubor co se ma prehrat (pokud je nastaven repeat a dalsi kraviny)
 	; otestujeme zda se ma nejaka dalsi mp3 prehravat
@@ -126,6 +133,41 @@ BIG_LOOP__NENI_PRIKAZ
 	goto MP3_NOT_PLAY
 	btfss PREH_STAV0,1			; Je co prehravat?
 	goto MP3_NOT_PLAY
+	goto SEND_MP3_DATA
+
+BIG_LOOP_DALSI_FRAGMENT
+	call ZJISTI_FRAGMENT
+
+	movfw FRAGMENT1
+	movwf PREH_D_FRAGMENT1
+	movfw FRAGMENT2
+	movwf PREH_D_FRAGMENT2
+
+	;movlw 'F'
+	;call WR_USART
+
+	goto SEND_MP3_DATA
+BIG_LOOP_DEC_FRAGMENT
+	; PREH_D_FRAGMENT1 --
+	movlw .1
+	subwf PREH_D_FRAGMENT1,f
+	btfsc STATUS,C
+	goto $+2
+	subwf PREH_D_FRAGMENT2,f
+
+	; PREH_DATA_CL ++
+	incf PREH_DATA_CL1,f
+	btfss STATUS,Z
+	goto $+8
+	incf PREH_DATA_CL2,f
+	btfss STATUS,Z
+	goto $+5
+	incf PREH_DATA_CL3,f
+	btfss STATUS,Z
+	goto $+2
+	incf PREH_DATA_CL4,f
+
+	clrf PREH_DATA_POZICE
 
 SEND_MP3_DATA
 	btfss PREH_STAV1,0			; 0. bit = 1 => previjeni mp3 dopredu
@@ -250,15 +292,27 @@ DALSI_SKLADBA_REPAT_SOUBORU
 	movwf FSR
 	movfw INDF
 	movwf PREH_DATA_CL1
+	movwf CLUSTER1
 	incf FSR,f
 	movfw INDF
 	movwf PREH_DATA_CL2
+	movwf CLUSTER2
 	incf FSR,f
 	movfw INDF
 	movwf PREH_DATA_CL3
+	movwf CLUSTER3
 	incf FSR,f
 	movfw INDF
 	movwf PREH_DATA_CL4
+	movwf CLUSTER4
+
+	call ZJISTI_FRAGMENT
+
+	movfw FRAGMENT1
+	movwf PREH_D_FRAGMENT1
+	movfw FRAGMENT2
+	movwf PREH_D_FRAGMENT2
+
 	goto DALSI_SKLADBA_PLAY		; nic jineho nemusime nastavovat, protoze hrajeme ten samy soubor co predtim
 DALSI_SKLADBA_NO_R_S
 ; PREH_STAV0
@@ -336,21 +390,33 @@ DALSI_SKLADBA_MAME_SOUBOR
 	movwf FSR
 	movfw INDF
 	movwf PREH_DATA_CL1
+	movwf CLUSTER1
 	incf FSR,f
 	movfw INDF
 	movwf PREH_DATA_CL2
+	movwf CLUSTER2
 	incf FSR,f
 	movfw INDF
 	movwf PREH_DATA_CL3
+	movwf CLUSTER3
 	incf FSR,f
 	movfw INDF
 	movwf PREH_DATA_CL4
+	movwf CLUSTER4
 	incf FSR,f
 	movfw INDF
 	movwf PREH_ZAZNAM1
 	incf FSR,f
 	movfw INDF
 	movwf PREH_ZAZNAM2
+
+	call ZJISTI_FRAGMENT
+
+	movfw FRAGMENT1
+	movwf PREH_D_FRAGMENT1
+	movfw FRAGMENT2
+	movwf PREH_D_FRAGMENT2
+
 
 DALSI_SKLADBA_PLAY
 	clrf PREH_DATA_POZICE
@@ -377,10 +443,9 @@ DALSI_SKLADBA_PLAY
 INIT_PORT
 	BANK_1
 
-	movlw b'00010001' 			; bity SO a DREQ jako vstupy (signaly z dekoderu)
-
+	movlw b'10010001' 			; bity SO a DREQ jako vstupy (signaly z dekoderu)
 	movwf MP3_PORT_TRIS
-	movlw b'10000000'			; adresovani disku jako vystupy
+	movlw b'00000000'			; adresovani disku jako vystupy
 	movwf ATA_ADDRESS_TRIS		
 	movlw .0
 	movwf ATA_CONTROL_TRIS		; ovladani disku jako vystupy
@@ -421,8 +486,8 @@ INIT_CONFIG 	; nakonfiguruje preruseni, WDT, USART, pull ups....
 	movlw b'10010000'	;zapnu USART
 	movwf RCSTA
 	BANK_1
-	;movlw .129 		; Fosc = 20 MHz, BRGH=1 => rychlost = 9615 bps
-	movlw .103 			; Fosc = 16 MHz, BRGH=1 => rychlost = 9615 bps
+	movlw .129 		; Fosc = 20 MHz, BRGH=1 => rychlost = 9615 bps
+	;movlw .103 	; Fosc = 16 MHz, BRGH=1 => rychlost = 9615 bps
 	movwf SPBRG	
 
 	movlw b'00000111'
@@ -558,40 +623,49 @@ END_OF_INTERRUPT			; sem skocime kdyz mame vsechny veci kolem preruseni vyrizeny
 	retfie
 ;**********************************************************
 DELAY_2ms
-;Delay 8000 cycles
-        MOVLW 0x13  ;19 DEC
+; (Fosc = 20 MHz , instr. cyklus= 200 ns) 2 000us / 0.2  us = 10 000 instrukcnich cyklu
+;Variables: TMP1, TMP0
+;Delay 10001 cycles
+        MOVLW 0x10  ;16 DEC
         MOVWF TMP1
-        MOVLW 0x8B  ;139 DEC
+        MOVLW 0x0CF  ;207 DEC
         MOVWF TMP0
         DECFSZ TMP0,F
         GOTO $-1
         DECFSZ TMP1,F
         GOTO $-5
-;End of Delay	
+;End of Delay
 	return
 ;**********************************************************
 DELAY_200ms
-;Delay 197123 cycles
-        MOVLW 0x00  ;0 DEC
+; (Fosc = 20 MHz , instr. cyklus= 200 ns) 200 000us / 0.2  us = 1 000 000 instrukcnich cyklu
+;Variables: TMP2, TMP1, TMP0
+;Delay 1000000 cycles
+        MOVLW 0x15  ;21 DEC
+        MOVWF TMP2
+        MOVLW 0x59  ;89 DEC
         MOVWF TMP1
-        MOVLW 0x00  ;0 DEC
+        MOVLW 0x0B1  ;177 DEC
         MOVWF TMP0
         DECFSZ TMP0,F
         GOTO $-1
         DECFSZ TMP1,F
-        GOTO $-3
+        GOTO $-5
+        DECFSZ TMP2,F
+        GOTO $-9
 ;End of Delay
 	return
 ;**********************************************************
 DELAY_500ms
-; (Fosc = 16 MHz , instr. cyklus= 0.25 us) 500 000us / 0.25 us = 2 000 000 instrukcnich cyklu
+; (Fosc = 16 MHz , instr. cyklus= 250 ns) 500 000us / 0.25 us = 2 000 000 instrukcnich cyklu
+; (Fosc = 20 MHz , instr. cyklus= 200 ns) 500 000us / 0.2  us = 2 500 000 instrukcnich cyklu
 ;Variables: TMP2, TMP1, TMP0
-;Delay 2000000 cycles
-        MOVLW 0x47  ;71 DEC
+;Delay 2500001 cycles
+        MOVLW 0x28  ;40 DEC
         MOVWF TMP2
-        MOVLW 0x2B  ;43 DEC
+        MOVLW 0x7E  ;126 DEC
         MOVWF TMP1
-        MOVLW 0x0D9  ;217 DEC
+        MOVLW 0x0A4  ;164 DEC
         MOVWF TMP0
         DECFSZ TMP0,F
         GOTO $-1

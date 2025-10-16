@@ -8,8 +8,7 @@
 
 ;**************************************************************************
 PRVNI_CL_ADRESARE
-	; V CLUSTER[1-4] prijme cislo clusteru, zkontroluje, zda zadany sluster obsahuje 
-	; zacatek adresare
+	; V CLUSTER[1-4] prijme cislo clusteru. Zkontroluje, zda zadany sluster obsahuje zacatek adresare
 	; V POZICE vrati 00h, pokud cluster je prvni cluster nejakeho adresare, FFh, pokud neobsahuje adresar
 	clrf POZICE
 
@@ -101,6 +100,9 @@ SKOC_NA_ZAZNAM
 	movfw PRETECENI
 	BANK_0
 	movwf TEMP5
+	BANK_1
+	clrf PRETECENI				; pokud CLUSTER_SIZE = 1 tak preteceni := 0 a X zustane stejne
+	BANK_0
 
 	btfsc CLUSTER_SIZE,1		; 2
 	call POSUNDOPRAVA_1			; X := X div 2
@@ -162,7 +164,7 @@ SKOC_NA_ZAZNAM_PRESKOC_CL
 	BANK_0	
 
 	PROG_PAGE_0
-	call DEKREMENTUJ
+	call DEKREMENTUJ	; X := X - 1
 	PROG_PAGE_1
 
 	goto SKOC_NA_ZAZNAM_PRESKOC_CL
@@ -265,7 +267,7 @@ FILE_INFO__READ_NAME
 	goto FILE_INFO__CTI20_KONEC		; pokud zaznam je dlouhy nazav souboru, koncime
 	btfsc DATA_H,3
 	goto FILE_INFO__CTI20_KONEC		; if (atributy and 08h) = 08h -> jmenovka disku
-	btfsc DATA_H,4				; if (atributy and 16h) = 16h -> adresar
+	btfsc DATA_H,4				; if (atributy and 10h) = 10h -> adresar
 	goto FILE_INFO__DIR
 
 	movlw h'02'					; zaznam je soubor
@@ -1049,10 +1051,10 @@ LONG_NAME
 ; Tato procedura prevezme v HL_ADR_CL[1-4] cislo prvniho clusteru adresare a v ZAZNAM[1-2] cislo zaznamu 
 ; od kteremu se pokusi najit dlouhe jmeno. Toto dlouhe jmeno umisti do bufferu 2
 ; Dlouhe jmeno je ukonceno nulovym bytem. Pokud v bufferu 2 se nulovy byt nevyskytuje, je delka dlouheho
-; jmena delsi ci rovna 64.
+; jmena delsi ci rovna 65.
 ; V POZICE vraci 00h pri nenalezeni dlouheho jmena a 01h pri pravdepodobnem nalezeni dlouheho jmena.
 
-; 64 znaku neni moc, neco se tam ale vejde "1-3. G & D - Purify (Gabriel & Dresden Remix) featuring Balligom"   (ingo.mp3)
+; 65 znaku neni moc, neco se tam ale vejde "1-3. G & D - Purify (Gabriel & Dresden Remix) featuring Balligom"   (ingo.mp3)
 ; vyvojak:
 ;
 ; CLEAR_BUFFER2
@@ -1237,5 +1239,166 @@ LONG_NAME_ENDWHILE					; endwhile
 LONG_NAME_MIMO_ROZSAH
 	movlw .0
 	movwf POZICE
+	return
+;**************************************************************************
+HLEDEJ_V_NADRAZENEM
+; v CLUSTER prijme prvni cluster adresare
+
+; v nadrazenem adresari se pokusi najit zaznam odkazujici na tento adresar
+; na zacatek BUFFERU 1 da cislo clusteru se zacatkem nadrazeneho adresare, 
+; do HL_ADR_CL da prvni cluster hledaneho adresare a v ZAZNAM vratime cislo 
+; zaznamu odkazujici na HL_ADR_CL
+	movfw CLUSTER1
+	movwf HL_ADR_CL1
+	movfw CLUSTER2
+	movwf HL_ADR_CL2
+	movfw CLUSTER3
+	movwf HL_ADR_CL3
+	movfw CLUSTER4
+	movwf HL_ADR_CL4
+
+	clrf POZICE
+	PROG_PAGE_0
+	call CLUSTER_TO_LBA
+	movlw .1
+	movwf SECTOR_C
+	call READ_SECTOR	; precteme prvni sektor z prvniho clusteru adresare	
+	movlw .26			; prvnich 26 slov je ted nepotrebnych
+	movwf TEMP1
+	call PRESKOC
+
+	call READ_DATA
+	movfw DATA_L
+	movwf CLUSTER3
+	movfw DATA_H
+	movwf CLUSTER4
+
+	movlw .2			; dalsi 4 byty jsou ted nepotrebne
+	movwf TEMP1
+	call PRESKOC
+
+	call READ_DATA
+	movfw DATA_L
+	movwf CLUSTER1
+	movfw DATA_H
+	movwf CLUSTER2
+	PROG_PAGE_1
+
+	; v CLUSTER ted mame cislo prvniho clusteru nadrazeneho adresare. Umistime jej na zacatek BUFFERU 1
+	INDF_BANK_3
+	movlw h'90'
+	movwf FSR
+	movfw CLUSTER1
+	movwf INDF
+	incf FSR,f
+	movfw CLUSTER2
+	movwf INDF
+	incf FSR,f
+	movfw CLUSTER3
+	movwf INDF
+	incf FSR,f
+	movfw CLUSTER4
+	movwf INDF
+	incf FSR,f
+	
+	clrf ZAZNAM1
+	clrf ZAZNAM2
+HLEDEJVNAD_CLUSTER
+	clrf POZICE
+HLEDEJVNAD_SECTOR
+	PROG_PAGE_0
+	call CLUSTER_TO_LBA
+	movlw .1
+	movwf SECTOR_C
+	call READ_SECTOR
+	PROG_PAGE_1
+
+	movlw .16
+	movwf TEMP2
+HLEDEJVNAD_ZAZNAM
+	clrf TEMP3					; pokud bude zaznam vyhovovat, bude TEMP3 0
+	PROG_PAGE_0
+	call READ_DATA
+	movfw DATA_L
+	andlw h'FF'
+	btfsc STATUS,Z				; pokud 1. znak jmena souboru = 00h, je zaznam prazdny
+	bsf TEMP3,0
+
+	movfw DATA_L
+	sublw h'E5'
+	btfsc STATUS,Z				; pokud 1. znak jmena souboru = E5h, je zaznam prazdny
+	bsf TEMP3,0
+
+	movlw .4
+	movwf TEMP1
+	call PRESKOC				; jmeno (8) a priponu (3) ted nepotrebujeme
+
+	call READ_DATA
+	movfw DATA_H
+	andlw h'10'
+	sublw h'10'
+	btfss STATUS,Z				; if (atributy and 10h) = 10h -> adresar
+	bsf TEMP3,0
+
+	movlw .4
+	movwf TEMP1
+	call PRESKOC				; dalsich 8 bytu je nam k nicemu
+
+	call READ_DATA
+	movfw DATA_L
+	subwf HL_ADR_CL3,w
+	btfss STATUS,Z
+	bsf TEMP3,0
+	movfw DATA_H
+	subwf HL_ADR_CL4,w
+	btfss STATUS,Z
+	bsf TEMP3,0
+
+	movlw .2					; dalsi 4 byty jsou ted nepotrebne
+	movwf TEMP1
+	call PRESKOC
+
+	call READ_DATA
+	movfw DATA_L
+	subwf HL_ADR_CL1,w
+	btfss STATUS,Z
+	bsf TEMP3,0
+	movfw DATA_H
+	subwf HL_ADR_CL2,w
+	btfss STATUS,Z
+	bsf TEMP3,0
+
+	movlw .2					; musime precist i posledni 4 byty ze zaznamu
+	movwf TEMP1
+	call PRESKOC
+	PROG_PAGE_1
+	
+	movfw TEMP3
+	andlw h'FF'
+	btfsc STATUS,Z
+	goto HLEDEJVNAD_KONEC		; pokud se cluster shodoval, koncime
+
+	incf ZAZNAM1,f
+	btfsc STATUS,Z
+	incf ZAZNAM2,f				; ZAZNAM ++
+
+	decfsz TEMP2,f
+	goto HLEDEJVNAD_ZAZNAM
+
+	incf POZICE,f
+	movfw POZICE
+	subwf CLUSTER_SIZE,w
+	btfss STATUS,Z
+	goto HLEDEJVNAD_SECTOR
+
+	PROG_PAGE_0
+	call NEXT_CLUSTER
+	PROG_PAGE_1
+	movfw POZICE
+	andlw h'FF'
+	btfsc STATUS,Z
+	goto HLEDEJVNAD_CLUSTER
+
+HLEDEJVNAD_KONEC
 	return
 ;**************************************************************************

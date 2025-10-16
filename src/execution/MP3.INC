@@ -6,33 +6,33 @@
 ;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ;**********************************************************
 ; ZAPOJENI PORTU:
-;       portA - MP3 dekoder vs1001g
-;				5      4     3   2     1         0
-;				BSYNC  DREQ  CS  SCLK  SI/SDATA  SO
+;       portA - adresove signaly ATA, ERROR_LED, a USART
+; 				5     4     3          2    1    0
+; 				CS1-  CS0-  ERROR_LED  DA2  DA1  DA0  
+;				(signaly se znaminkem minus jsou aktivni v logicke 0 !!!)
 ;		portB - ATA datova sbernice (dolnich 8 bitu)
 ;               7   .. 0
 ;               DD7 .. DD0
 ;		portD - ATA datova sbernice (hornich 8 bitu)
 ;               15   .. 8
 ;               DD15 .. DD8 
-;		portC - adresove signaly ATA, ERROR_LED, a USART
-; 				7          6         5     4     3          2    1    0
-; 				USART out  USART in  CS1-  CS0-  ERROR_LED  DA2  DA1  DA0  
-;				(signaly se znaminkem minus jsou aktivni v logicke 0 !!!)
+;		portC - MP3 dekoder vs1001g
+; 				7          6        5  4  3    2     1  0
+; 				USART out  USART in SI SO SCLK BSYNC CS DREQ
 ;		portE - ridici signaly ATA
 ;				2       1      0
 ;				DIOR-	DIOW-  RESET-
 ;				(signaly se znaminkem minus jsou aktivni v logicke 0 !!!)
 ;**********************************************************
-MP3_PORT		equ PORTA
-MP3_PORT_TRIS	equ TRISA
+MP3_PORT		equ PORTC
+MP3_PORT_TRIS	equ TRISC
 ; BITY MP3_PORT
-#define MP3_SO		MP3_PORT,0	; serial output - tady dostavame z dekoderu data
-#define MP3_SI		MP3_PORT,1	; serial input  - pokud MP3_CS=1, tak posilame mp3 data, pokud =0, tak posilame prikaz
-#define MP3_SCLK	MP3_PORT,2	; clock - nabezna hrana urcuje platnost dat pri seriovem prenosu
-#define MP3_CS		MP3_PORT,3	; cable select  - pokud MP3_CS=1, tak po SI posilame mp3 data, pokud =0, tak posilame prikaz
-#define MP3_DREQ	MP3_PORT,4	; data request  - pokud =1, tak dekoder pozaduje dalsi mp3 data
-#define MP3_BSYNC	MP3_PORT,5	; pro synchronizaci - ma byt nastaven pri prvnim prenasenem bitu kazdeho bytu
+#define MP3_SO		MP3_PORT,4	; serial output - tady dostavame z dekoderu data
+#define MP3_SI		MP3_PORT,5	; serial input  - pokud MP3_CS=1, tak posilame mp3 data, pokud =0, tak posilame prikaz
+#define MP3_SCLK	MP3_PORT,3	; clock - nabezna hrana urcuje platnost dat pri seriovem prenosu
+#define MP3_CS		MP3_PORT,1	; cable select  - pokud MP3_CS=1, tak po SI posilame mp3 data, pokud =0, tak posilame prikaz
+#define MP3_DREQ	MP3_PORT,0	; data request  - pokud =1, tak dekoder pozaduje dalsi mp3 data
+#define MP3_BSYNC	MP3_PORT,2	; pro synchronizaci - ma byt nastaven pri prvnim prenasenem bitu kazdeho bytu
 ;**********************************************************
 ; pokud jsem dobre pochopil dataSheat dekoderu vs1001, tak staci do nej jen cpat data, a kdyz skonci mp3, tak odeslat 1024 nulovych bytu,
 ; softwarove resetovat a posilat dalsi mp3...
@@ -42,13 +42,12 @@ MP3_PORT_TRIS	equ TRISA
 ; ovladani hlasitosti a dalsi spousty uzitecnych informaci
 ;**********************************************************
 ; PORTY DISKU
-ATA_ADDRESS 		equ PORTC
+ATA_ADDRESS 		equ PORTA
 ATA_CONTROL 		equ PORTE
 DATA_PORT_LOW 		equ PORTB
 DATA_PORT_HIGH 		equ PORTD
 
-
-ATA_ADDRESS_TRIS 	equ TRISC
+ATA_ADDRESS_TRIS 	equ TRISA
 ATA_CONTROL_TRIS	equ TRISE
 DATA_PORT_LOW_TRIS 	equ TRISB
 DATA_PORT_HIGH_TRIS	equ TRISD
@@ -291,10 +290,14 @@ VSREG_MODE_L	equ 0x04D
 VSREG_STATUS_L	equ 0x04E
 VSREG_VOL_L		equ 0x04F		; pravy kanal
 VSREG_VOL_H		equ 0x050		; levy kanal
-;				equ 0x051
-;				equ 0x052
-;				equ 0x053
-;				equ 0x054
+;**********************************************************
+FRAGMENT1		equ 0x051
+FRAGMENT2		equ 0x052
+;**********************************************************
+PREH_D_FRAGMENT1	equ 0x053
+PREH_D_FRAGMENT2	equ 0x054	; 16bit cislo, ktere udava kolik clusteru mp3 dat po sobe je na disku nefragmentovano
+		; pokazde kdyz prehrajeme cluster, tak toto cislo dekrementujeme. Kdyz dosahneme 0, tak zjistime dalsi 
+		; cluster a pocet nefragmentovanych clusteru. (jak dlouha je rada po sobe jdoucich clusteru)
 ;				equ 0x055
 ;				equ 0x056
 ;				equ 0x057
@@ -304,11 +307,11 @@ VSREG_VOL_H		equ 0x050		; levy kanal
 HL_PARAMETRY	equ 0x059
 ;		0. bit = 0 > pokud hledáme soubory, tak pouze MP3
 ;				 1 > pokud hledáme soubory, vrací všechny soubory
-;		1. bit = 0 > hledáme klasicky (nejdøíve adresáøe, poté soubory
-;				 1 > hledáme pouze adresáøe, nebo soubory
+;		1. bit = 0 > hledáme klasicky (nejdríve adresáre, poté soubory
+;				 1 > hledáme pouze adresáre, nebo soubory
 ;		2. bit = 0 > je-li nastaven 1. bit, hledáme pouze adresáøe
 ;				 1 > je-li nastaven 1. bit, hledáme pouze soubory
-;		3. bit = 0 > hledáme podle èísla záznamu buï následující èi pøedchozí záznam
+;		3. bit = 0 > hledáme podle cisla zaznamu bud následující ci predchozi zaznam
 ;				 1 > hledáme první záznam v adresáøi
 ;		4. bit = 0 > hledáme NÁSLEDUJÍCÍ záznam
 ;				 1 > hledáme PØEDCHOZÍ záznam
