@@ -117,7 +117,10 @@ D_COMMAND     equ D_STATUS
 ;				0x020 - 0x07F = misto (96bytu) pro nase registry:
 ;					0x020 - 0x034 -> 21bytu pro registry a parametry HDD
 ;					0x035 - 0x03a -> 6bytu pro parametry podprogramu (musime zajistit, abychom nepouzivali registry, ktere pouzivaji i podprogramy!!!)
-;					0x03B - 0x069 -> 50bytu rezervovano pro parametry oddilu, pozici v mp3 a dalsi blbosti
+;					0x03B - 0x04C -> parametry FATky 
+;					0x04D - 0x050 -> registry pro praci s VS1001
+;					0x051 - 0x052 -> 
+;					0x060 - 0x06F -> informace potrebne pro prehravani
 ;				0x070 - 0x07F -> registry pro potreby preruseni (dostupne z kterekoliv banky)
 ;					0x070 - 0x072 -> 3 registry slouzici k zalohovani W, STATUS, FSR
 ;					0x073 - 0x077 -> vlajka prikazu, ....
@@ -205,7 +208,7 @@ TMP1			equ 0x036
 TMP2			equ 0x037
 TMP0			equ 0x038
 ;**********************************************************
-; registry pro raci s FATkou
+; registry pro praci s FATkou
 POZICE			equ 0x03B		; na ukladani aktualni pozice v slusteru, pripadne jine kokotiny
 CLUSTER1		equ 0x03C
 CLUSTER2		equ 0x03D
@@ -227,9 +230,69 @@ ROOT_DIR_CL2	equ 0x049
 ROOT_DIR_CL3	equ 0x04A
 ROOT_DIR_CL4	equ 0x04B
 
-CLUSTER_SIZE	equ 0x04C		; velikost clusteru (pocet sektoru na claster)
-
+CLUSTER_SIZE	equ 0x04C		; velikost clusteru (pocet sektoru na cluster)
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+; DEFINICE PROMENNYCH a KONSTANT PRO PRACI S VS1001
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+; adresy registru VS1001
+VSADDR_MODE			equ .0		; nastaveni VS1001
+VSADDR_STATUS		equ .1		; slouzi pouze pro zapnuti / vypnuti analogove casti (MUTE)
+VSADDR_CLOCKF		equ .3		; informuje dekoder o jeho krystalu. !! je nutne pro spravne dekodovani !!
+VSADDR_DECODE_TIME	equ .4		; obsahuje cas dekodovani aktualni MP3 !! neaktualizuje se pri skocich (previjeni)
+VSADDR_AUDATA		equ .5		; obsahuje informace o datovem toku a vzorkovaci frekvenci MP3
+	; bit 15 = 1 => STEREO; = 1 => MONO
+	; bity 12-9 obsahuji vzorkovaci frekvenci v Hz
+	;	0000 -> neznama vzorkovaci frekvence
+	;	0001 -> 44 100
+	;	0010 -> 48 000
+	;	0011 -> 32 000
+	;	0100 -> 22 050
+	;	0101 -> 24 000 
+	;	0110 -> 16 000
+	;	0111 -> 11 025
+	;	1000 -> 12 000
+	;	1001 ->  8 000
+	; bity 8-0 obsahuji bitrate v kbps 
+VSADDR_WRAM		equ .6			; Slouzi k zapisovani uzivatelskeho programu, dato se zapise na adresu v WRAMADDR
+VSADDR_WRAMADDR	equ .7			; Adresuje uzivatelskou pamet dekoderu
+VSADDR_HDAT0	equ .8			; Obsahuje informace ziskane z hlavicky MP3
+VSADDR_HDAT1	equ .9			; Obsahuje informace ziskane z hlavicky MP3
+VSADDR_AIADDR	equ .10			; Start uzivatelskeho programu (vis. datasheet)
+VSADDR_VOL		equ .11			; ovladani hlasitosti (pro oba kanaly) Horni byte je levy kanal, dolni byte je pravy kanal
+								; (hodnota 0000h znamena hlasitost na max., FF00h hraje pouze pravy kanal, FFFFh je ticho)
+VSADDR_AICTRL0	equ .13			; Registr pro ovladani uzivatelskeho programu
+VSADDR_AICTRL1	equ .14			; Registr pro ovladani uzivatelskeho programu
 ;**********************************************************
+; registry pro praci s VS1001	
+; dekoder VS1001 ma vsechny registry 16bitove, proto za jmeno pisu _L /_H (u nekterych registru potrebuji pouze jednu cast)
+VSREG_MODE_L	equ 0x04D
+VSREG_STATUS_L	equ 0x04E
+VSREG_VOL_L		equ 0x04F		; pravy kanal
+VSREG_VOL_H		equ 0x050		; levy kanal
+;**********************************************************
+; informace potrebne pro prehravani
+PREH_ADDR_CL1		equ 0x060
+PREH_ADDR_CL2		equ 0x061
+PREH_ADDR_CL3		equ 0x062
+PREH_ADDR_CL4		equ 0x063
+PREH_ADDR_POZICE	equ 0x064
+PREH_ADDR_ZAZNAM	equ 0x065
+
+PREH_DATA_CL1		equ 0x066
+PREH_DATA_CL2		equ 0x067
+PREH_DATA_CL3		equ 0x068
+PREH_DATA_CL4		equ 0x069
+PREH_DATA_POZICE	equ 0x06A
+
+PREH_STAV			equ 0x06B
+				; registr obsahuje informace o stavu aktualniho prehravani
+				; 0. bit = 1 => prehrava se soubor / 0 => neprehrava se soubor (muze byt ale pouze pauza)
+				; 1. bit = 1 => je soubor pripraven k prehravani (muze byt pauza) / 0=> neni zadny soubor k prehravani (prikaz play nema zadny ucinek)
+
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ; registry pro potreby preruseni + prace s prikazy (jsou totiz dostupne odkudkoliv)
 TEMP_WORKING	equ 0x070
 TEMP_STATUS		equ 0x071

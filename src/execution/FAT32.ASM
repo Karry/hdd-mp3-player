@@ -59,9 +59,9 @@ SCAN_BR
 	movlw 0x94				; 90h (buffer1) + 4 (pozice kde je ulozen identifikator souboroveho systemu prvniho zaznamu BR)
 	movwf FSR
 	movfw INDF
-	sublw h'0B'				; Pokud se FileSystem <> 0Bh...
+	sublw h'0C'				; Pokud se FileSystem <> 0Ch...
 	btfss STATUS,Z
-	sublw .1				; ...nebo 0Ch...
+	sublw .1				; ...ani 0Bh...
 	btfss STATUS,Z
 	goto SCAN_MBR__HLEDEJ_ROZSIRENY_ODDIL	; ...tak hledej rozsireny oddil.
 
@@ -598,6 +598,8 @@ NEXT_CLUSTER
 	; Pokud pozadovany cluster byl posledni v retezu vrati v reg. POZICE konstantu FFh
 	; Pokud soucasny cluster je prazdny (coz by se stat nemelo) vrati taky v POZICE FFh
 	; Jinak, pokud s vse povede, dame do POZICE 0
+
+	; ! PODPROGRAM NETESTUJE ZDA NEBYLO ZADANO VETSI CISLO NEZ JE POCET CLUSTERU !!!
 	
 	clrf POZICE
 	; LBA := [(CLUSTER * 4) / 512 ] + POCATEK_FAT
@@ -869,5 +871,35 @@ FILE_INFO__FILE
 	
 	; Pak jsou v zaznamu jeste 4 byty, ktere obsahuji velikost souboru. Ty mi ale nepotrebujeme...	
 FILE_INFO__KONEC
+	return
+;**************************************************************************
+FILE_SIZE
+	; z disku nam ted ma prijit 32bytu dat, ktere reprezentuji jeden zaznam ve slozce
+	; Zaznam by mel byt soubor, podprogram toto nekontroluje (zda zaznam neni adresar)
+	; Na zacatek bufferu 1 da 4 byty obsahujici velikost zaznamu
+	movlw .14					; my ted potrebujeme jen posledni 4 byty ze zaznamu, tam se nachazi velikost souboru
+	movwf TEMP1
+	call PRESKOC
+
+	INDF_BANK_2
+	movlw 0x10					; 1. byte bufferu 1
+	movwf FSR
+
+	call READ_DATA
+	movfw DATA_L
+	movwf INDF
+	incf FSR,F
+	movfw DATA_H
+	movwf INDF
+	incf FSR,F
+
+	call READ_DATA
+	movfw DATA_L
+	movwf INDF
+	incf FSR,F
+	movfw DATA_H
+	movwf INDF
+	incf FSR,F
+
 	return
 ;**************************************************************************
